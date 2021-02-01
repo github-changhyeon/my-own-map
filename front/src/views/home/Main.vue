@@ -112,7 +112,7 @@ import constants from '@/lib/constants';
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 
 export default {
-  components: {NaverLogin},
+  // components: {NaverLogin},
   created() {
     getArticles(
       1,
