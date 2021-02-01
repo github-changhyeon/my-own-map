@@ -154,6 +154,11 @@ export default {
         this.imageUrl = URL.createObjectURL(file);
         this.imgs.push(this.imageUrl);
       }
+      console.log('hi')
+      console.log(e.target.files)
+      console.log('hi')
+      console.log(this.imgs)
+
     },
     // addHash() {
     //   const newHash = {
