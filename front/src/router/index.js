@@ -59,14 +59,15 @@ const routes = [
     props: true,
   },
   {
-    path: '/users/login',
-    name: 'login',
+    path: '/login',
+    name: constants.URL_TYPE.USER.LOGIN,
     component: Login,
+    props: true,
   },
   {
     path: '/agreement',
     name: Agreement,
-    component: Agreement
+    component: Agreement,
   },
 ];
 

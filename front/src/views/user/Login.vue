@@ -6,24 +6,26 @@
       <input type="password" name="password" v-model="loginForm.username" /><br />
       <button @click="login">로그인</button>
     </form>
-    <a :href="naverLoginURL">네아로
-    <!--<img src='../assets/Naver_login.PNG'/>-->
-    </a>
+    <NaverLogin />
   </div>
 </template>
 
 <script>
 import { login } from '@/api/user.js';
+import NaverLogin from '@/components/user/NaverLogin';
 
 export default {
-  name: 'NaverLogin',
+  name: 'Login',
+  components: {
+    NaverLogin,
+  },
   data() {
     return {
-      CLIENT_ID: 'yPZ8zfbupxQS3jRvZDvP',
-      redirectURI: 'http://localhost:8080/naver/login',
-      //  FIXME state 값 random string 으로 변경
-      state: 123,
-      naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',
+      // CLIENT_ID: 'yPZ8zfbupxQS3jRvZDvP',
+      // redirectURI: 'http://localhost:8080/naver/login',
+      // //  FIXME state 값 random string 으로 변경
+      // state: 123,
+      // naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',
 
       loginForm: {
         username: '',
@@ -44,9 +46,9 @@ export default {
     );
   },
   created() {
-    this.naverLoginURL += '&client_id=' + this.CLIENT_ID;
-    this.naverLoginURL += '&redirect_uri=' + this.redirectURI;
-    this.naverLoginURL += '&state=' + this.state;
+    // this.naverLoginURL += '&client_id=' + this.CLIENT_ID;
+    // this.naverLoginURL += '&redirect_uri=' + this.redirectURI;
+    // this.naverLoginURL += '&state=' + this.state;
   },
 };
 </script>
