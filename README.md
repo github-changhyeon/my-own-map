@@ -1,4 +1,4 @@
-# Mockup test2
+# Mockup
 
 ## 로그인, 회원가입 화면 
 
