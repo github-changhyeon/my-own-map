@@ -48,20 +48,17 @@
     </div>
     <br />
     <div class="inline">
-      이 장소의 사진 (개발진행중입니다.)
+      이 장소의 사진
       <br />
       <br />
-      <!-- <input type="file" @change="onFileSelected">
-      <button @click="onUpload">+</button> -->
       <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
-      <div v-for="(img, idx) in imgs" :key="idx">
-        <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
+      <v-carousel>
+        <v-carousel-item v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+      </v-carousel>
+      <!-- <div v-for="(img, idx) in imgs" :key="idx">
         <img :src="img" alt="" class="picture-size" />
-        <div>
-          <!-- {{ img }} -->
-        </div>
-      </div>
+      </div> -->
     </div>
     <br />
     <div>
