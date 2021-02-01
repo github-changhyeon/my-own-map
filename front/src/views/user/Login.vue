@@ -1,20 +1,35 @@
 <template>
-  <div>
-    <div class="main">
-      <h1 class="main-title">Log In</h1>
-    </div>
-    <div class="login-form">
-      <div>
-        <label for="email">이메일 </label>
-        <input placeholder="아이디를 입력해주세요" type="text" id="email" v-model="loginForm.email" />
-      </div>
-      <div class="password-input">
-        <label for="password">비밀번호 </label>
-        <input placeholder="비밀번호를 입력해주세요" type="password" id="password" v-model="loginForm.password" @keypress.enter="login(loginForm)" />
-      </div>
-      <v-button variant="primary" @click="checkLogin">로그인</v-button>
-      <NaverLogin />
-    </div>
+  <div id="app">
+    <v-app>
+      <main>
+        <v-container fluid fill-height class="loginOverlay">
+          <v-layout flex align-center justify-center>
+            <v-flex xs12 sm4 elevation-6>
+              <v-toolbar class="pt-5 blue darken-4">
+                <v-toolbar-title class="white--text"><h4>MOM에 오신 것을 환영합니다.</h4></v-toolbar-title>
+              </v-toolbar>
+              <v-card>
+                <v-card-text class="pt-4">
+                  <div>
+                    <v-form v-model="valid" ref="form">
+                      <v-text-field name="email" type="email" label="이메일을 입력해 주세요." v-model="loginForm.email"></v-text-field>
+                      <v-text-field name="password" type="password" label="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
+                      <v-layout justify-space-between>
+                        <v-btn @click="checkLogin">로그인 하기</v-btn>
+                        <!-- <a :href="naverLoginURL">네이버 아이디로 로그인하기 -->
+                        <NaverLogin />
+                        <a href="">비밀번호 찾기</a>
+                        <router-link to="/users/join"><a href="">회원가입</a></router-link>
+                      </v-layout>
+                    </v-form>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </main>
+    </v-app>
   </div>
 </template>
 
