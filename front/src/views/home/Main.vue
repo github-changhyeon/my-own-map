@@ -183,6 +183,14 @@ export default {
   methods: {
     clickSearchTitleBar() {
       this.searchTitle = '';
+      this.clusterer.clear();
+      let markers = [];
+      for (let i = 0; i < this.articles.length; ++i) {
+        if (this.selectedArticleTitles.includes(this.articles[i].title)) {
+          markers.push(this.kakaoMarkers[i]);
+        }
+      }
+      this.clusterer.addMarkers(markers);
     },
     goToCreateArticle() {
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
