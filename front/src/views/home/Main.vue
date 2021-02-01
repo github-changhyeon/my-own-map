@@ -1,78 +1,75 @@
 <template>
   <div>
-    <!-- <div> -->
-    <v-app-bar style="position:fixed; top:0; z-index:2">
-      <v-spacer></v-spacer>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-    </v-app-bar>
-    <!-- </div> -->
-    <v-navigation-drawer v-model="drawer" absolute right temporary>
-      <v-list>
-        <v-list-item @click="goToMyPage">
-          <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
-            <!-- <v-icon>mdi-chevron-right</v-icon> -->
-          </v-list-item-icon>
-          <v-list-item-title>마이페이지</v-list-item-title>
-        </v-list-item>
-        <NaverLogin/>
-        <v-list-item @click="logout">
-          <v-list-item-title>로그아웃</v-list-item-title>
-        </v-list-item>
-
-        <v-list-group prepend-icon="mdi-account-circle">
-          <template v-slot:activator>
-            <v-list-item-title>해시태그</v-list-item-title>
-          </template>
-
-          <v-list-item>
-            <v-switch @click="clickShowAllSwitch(selectAllSwitch)" v-model="selectAllSwitch" label="전체보기"></v-switch>
-          </v-list-item>
-          <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
-            <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-            <v-switch @click="clickHashtagSwitch(userHashtagSwitches[i])" v-model="userHashtagSwitches[i]" :label="hashtag.hashtagName"></v-switch>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
-    </v-navigation-drawer>
+    <v-row justify="end">
+      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 10px; right: 5px; z-index: 2">
+        <v-icon dark> mdi-pound </v-icon>
+      </v-btn>
+    </v-row>
 
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="switchDrawer = !switchDrawer" style="position: fixed; top: 160px; right:5px; z-index: 2;">
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 10px; right: 50px; z-index: 2">
+        <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
-      <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
-      <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
-      <!-- </v-btn> -->
+    </v-row>
+    <v-row justify="center">
+      <v-autocomplete
+        v-model="selectedArticleTitles"
+        :items="articleTitles"
+        multiple
+        dense
+        solo
+        background-color="white"
+        :search-input.sync="searchTitle"
+        @change="clickSearchTitleBar"
+        label="Title을 검색해주세요"
+        style="position: fixed; top: 10px; z-index: 2"
+      ></v-autocomplete>
     </v-row>
 
     <v-navigation-drawer v-model="switchDrawer" absolute right temporary>
       <v-list-item>
         <h3>해시태그</h3>
       </v-list-item>
-      <v-list-time>
-        <v-autocomplete v-model="selectedHashtags" :items="userHashtagNames" multiple dense filled :search-input.sync="search" @change="search = ''" label="Filled"></v-autocomplete>
-      </v-list-time>
+      <v-list-item>
+        <v-autocomplete
+          v-model="selectedHashtagNames"
+          :items="userHashtagNames"
+          chips
+          small-chips
+          multiple
+          dense
+          filled
+          :search-input.sync="searchHashtag"
+          @change="searchHashtag = ''"
+          label="Filled"
+        ></v-autocomplete>
+      </v-list-item>
       <v-list-item>
         <v-switch @click="clickShowAllSwitch(selectAllSwitch)" v-model="selectAllSwitch" label="전체보기"></v-switch>
       </v-list-item>
-      <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
-        <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-        <v-switch
-          v-if="selectedHashtags.length == 0 || selectedHashtags.includes(hashtag.hashtagName)"
-          @click="clickHashtagSwitch(userHashtagSwitches[i])"
-          v-model="userHashtagSwitches[i]"
-          :label="hashtag.hashtagName"
-        ></v-switch>
-      </v-list-item>
+      <div v-if="selectedHashtagNames.length == 0">
+        <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
+          <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
+          <v-switch
+            @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)])"
+            v-model="userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]"
+            :label="hashtag.hashtagName"
+          ></v-switch>
+        </v-list-item>
+      </div>
+      <div v-if="selectedHashtagNames.length > 0">
+        <v-list-item v-for="(hashtagName, i) in selectedHashtagNames" :key="i" link>
+          <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
+          <v-switch @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtagName)])" v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]" :label="hashtagName"></v-switch>
+        </v-list-item>
+      </div>
     </v-navigation-drawer>
 
-    <div id="map" style="width: 100vw; height: 100vh; z-index: 1;"></div>
+    <div id="map" style="width: 100vw; height: 100vh; z-index: 1"></div>
     <!-- <div style="position: fixed; bottom: 0; z-index: 2"> -->
     <v-expand-x-transition>
       <v-row justify="center" v-if="expand">
-        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 0; z-index: 2; ">
+        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 0; z-index: 2">
           <v-slide-group v-model="model" class="pa-4" show-arrows>
             <v-slide-item v-for="(article, i) in recentArticles" :key="i">
               <v-card class="ma-4" height="100" width="70" @click="goToArticleDetail(article)">
@@ -85,15 +82,13 @@
       </v-row>
     </v-expand-x-transition>
     <!-- </div> -->
-    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 160px; z-index: 2;">
+    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 160px; z-index: 2">
       <v-icon v-if="!expand">mdi-chevron-right</v-icon>
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;">
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
+      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" style="position: fixed; bottom: 160px; right: 5px; z-index: 2">
+        <v-icon dark> mdi-plus </v-icon>
       </v-btn>
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
@@ -107,18 +102,28 @@
 // import { login } from '@/api/user.js';
 import { getArticles, getRecentArticles, getUserHashtags } from '@/api/article.js';
 import constants from '@/lib/constants';
-
+// import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
+const fullStarHtml = '<button type="button" tabindex="-1" aria-label="Rating 1 of 5" class="v-icon notranslate v-icon--link mdi mdi-star theme--light orange--text" style="font-size: 20px"></button>';
+const halfStarHtml =
+  '<button type="button" tabindex="-1" aria-label="Rating 4 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-half-full theme--light orange--text" style="font-size: 20px"></button>';
+const emptyStarHtml =
+  '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
 
 export default {
-  components: {NaverLogin},
+  components: {
+    // NaverLogin
+  },
   created() {
     getArticles(
       1,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
+          for (let i = 0; i < this.articles.length; ++i) {
+            this.articleTitles.push(this.articles[i].title);
+          }
           window.kakao && window.kakao.maps ? this.showMap(this.articles) : this.addScript();
           // alert('article list를 받았습니다.');
         } else {
@@ -175,6 +180,9 @@ export default {
   mounted() {},
   watch: {},
   methods: {
+    clickSearchTitleBar() {
+      this.searchTitle = '';
+    },
     goToCreateArticle() {
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
     },
@@ -265,20 +273,62 @@ export default {
           // image: markerImage,
         });
 
-        // TODO : 커스텀 오버레이
-        let infowindow = new kakao.maps.InfoWindow({
-          content: data.title, // 인포윈도우에 표시할 내용
+        let starHtml = '';
+        let starCnt;
+        for (starCnt = 0; starCnt < data.evaluation / 2; ++starCnt) {
+          starHtml += fullStarHtml;
+        }
+        if (data.evaluation % 2 !== 0) {
+          starHtml += halfStarHtml;
+          starCnt += 1;
+        }
+        for (starCnt; starCnt < 5; ++starCnt) {
+          starHtml += emptyStarHtml;
+        }
+
+        let content =
+          '<div class="wrap">' +
+          '    <div class="infos">' +
+          '        <div class="title" >' +
+          data.title +
+          '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+          '        </div>' +
+          '        <div class="body">' +
+          '            <div class="img">' +
+          '                <img src="https://cdn.vuetifyjs.com/images/cards/cooking.png" width="73" height="70">' +
+          '           </div>' +
+          '            <div class="desc">' +
+          '                <div class="ellipsis">' +
+          data.address +
+          '</div>' +
+          // '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
+          starHtml +
+          '            </div>' +
+          '        </div>' +
+          '    </div>' +
+          '</div>';
+
+        let overlay = new kakao.maps.CustomOverlay({
+          content: content,
+          map: map,
+          position: nowMarker.getPosition(),
         });
+
+        // TODO : 커스텀 오버레이
+        // let infowindow = new kakao.maps.InfoWindow({
+        //   content: data.title, // 인포윈도우에 표시할 내용
+        // });
         kakao.maps.event.addListener(nowMarker, 'mouseover', function() {
-          infowindow.open(map, nowMarker);
+          overlay.setMap(map);
         });
         kakao.maps.event.addListener(nowMarker, 'mouseout', function() {
-          infowindow.close();
+          overlay.setMap(null);
         });
         kakao.maps.event.addListener(nowMarker, 'click', function() {
           // TODO : 라우터 이동
           _this.goToArticleDetail(data);
         });
+        overlay.setMap(null);
         return nowMarker;
       });
 
@@ -301,8 +351,13 @@ export default {
   },
   data: () => {
     return {
-      selectedHashtags: [],
-      search: '',
+      starValue: 4,
+      articleTitles: [],
+      selectedHashtagNames: [],
+      selectedArticleTitles: [],
+      searchHashtag: '',
+      searchTitle: '',
+      followDrawer: false,
       switchDrawer: false,
       expand: false,
       recentArticles: [],
@@ -325,5 +380,98 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.wrap {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  width: 288px;
+  height: 132px;
+  margin-left: -144px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  line-height: 1.5;
+}
+.wrap * {
+  padding: 0;
+  margin: 0;
+}
+.wrap .infos {
+  width: 286px;
+  height: 120px;
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+}
+.wrap .infos:nth-child(1) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.infos .title {
+  padding: 5px 0 0 10px;
+  height: 30px;
+  background: #eee;
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
+  font-weight: bold;
+}
+.infos .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+.infos .close:hover {
+  cursor: pointer;
+}
+.infos .body {
+  position: relative;
+  overflow: hidden;
+}
+.infos .desc {
+  position: relative;
+  margin: 13px 0 0 90px;
+  height: 75px;
+}
+.desc .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desc .jibun {
+  font-size: 11px;
+  color: #888;
+  margin-top: -2px;
+}
+.infos .img {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 73px;
+  height: 71px;
+  border: 1px solid #ddd;
+  color: #888;
+  overflow: hidden;
+}
+.infos:after {
+  content: '';
+  position: absolute;
+  margin-left: -12px;
+  left: 50%;
+  bottom: 0;
+  width: 22px;
+  height: 12px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+.infos .link {
+  color: #5085bb;
 }
 </style>
