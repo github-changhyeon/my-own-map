@@ -55,7 +55,7 @@ import lombok.RequiredArgsConstructor;
 //@CrossOrigin(origins = { "http://localhost:3000" })
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping(value="/user")
+@RequestMapping(value="/users")
 @RequiredArgsConstructor
 public class UserController {
 	

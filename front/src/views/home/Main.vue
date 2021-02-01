@@ -15,7 +15,7 @@
           </v-list-item-icon>
           <v-list-item-title>마이페이지</v-list-item-title>
         </v-list-item>
-        <NaverLogin/>
+        <!-- <NaverLogin/> -->
         <v-list-item @click="logout">
           <v-list-item-title>로그아웃</v-list-item-title>
         </v-list-item>
@@ -108,11 +108,10 @@
 import { getArticles, getRecentArticles, getUserHashtags } from '@/api/article.js';
 import constants from '@/lib/constants';
 
-
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 
 export default {
-  components: {NaverLogin},
+  components: {},
   created() {
     getArticles(
       1,
