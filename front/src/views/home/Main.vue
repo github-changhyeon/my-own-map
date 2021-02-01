@@ -110,6 +110,7 @@ const halfStarHtml =
   '<button type="button" tabindex="-1" aria-label="Rating 4 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-half-full theme--light orange--text" style="font-size: 20px"></button>';
 const emptyStarHtml =
   '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
+const STAR_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
 
 export default {
   components: {
@@ -124,7 +125,7 @@ export default {
           for (let i = 0; i < this.articles.length; ++i) {
             this.articleTitles.push(this.articles[i].title);
           }
-          window.kakao && window.kakao.maps ? this.showMap(this.articles) : this.addScript();
+          window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
           // alert('article list를 받았습니다.');
         } else {
           alert('article list 실패');
@@ -199,7 +200,7 @@ export default {
       if (isOn) {
         this.selectAllSwitch = false;
       }
-      let showDatas = [];
+      let markers = [];
       // let dataSet = new Set();
       // for (let i = 0; i < this.userHashtags.length; ++i) {
       //   if (this.userHashtagSwitches[this.hashtagMap.get(this.userHashtags[i].name)]) {
@@ -223,24 +224,25 @@ export default {
         }
         // alert(cnt);
         if (cnt != 0 && cnt == switchOnCnt) {
-          showDatas.push(this.articles[i]);
+          markers.push(this.kakaoMarkers[i]);
         }
       }
-      this.showMap(showDatas);
+      // this.showMap(showDatas);
+      // this.initMap();
+      this.clusterer.clear();
+      this.clusterer.addMarkers(markers);
     },
     clickShowAllSwitch(isOn) {
+      this.clusterer.clear();
       if (isOn) {
         for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
           this.userHashtagSwitches[i] = false;
         }
-        this.showMap(this.articles);
-      } else {
-        let empties = [];
-        this.showMap(empties);
+        this.clusterer.addMarkers(this.kakaoMarkers);
       }
     },
 
-    showMap(datas) {
+    initMap() {
       let _this = this;
       let element = document.getElementById('map');
       while (element.firstChild) {
@@ -254,7 +256,7 @@ export default {
       });
 
       // 마커 클러스터러를 생성합니다
-      var clusterer = new kakao.maps.MarkerClusterer({
+      _this.clusterer = new kakao.maps.MarkerClusterer({
         map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
         averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
         minLevel: 10, // 클러스터 할 최소 지도 레벨
@@ -267,11 +269,14 @@ export default {
       // // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
       // var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
-      let markers = datas.map((data) => {
-        let nowMarker = new window.kakao.maps.Marker({
+      let markers = this.articles.map((data) => {
+        let imageSize = new kakao.maps.Size(24, 35);
+        let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+        let nowMarker = new kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
-          // image: markerImage,
+          image: markerImage,
         });
+        this.kakaoMarkers.push(nowMarker);
 
         let starHtml = '';
         let starCnt;
@@ -332,8 +337,10 @@ export default {
         return nowMarker;
       });
 
+      // console.log(markers);
       // 클러스터러에 마커들을 추가합니다
-      clusterer.addMarkers(markers);
+      _this.clusterer.addMarkers(markers);
+      // _this.clusterer.clear();
       //   });
     },
     addScript() {
@@ -343,7 +350,7 @@ export default {
       let _this = this;
       script.onload = () =>
         kakao.maps.load(function() {
-          _this.showMap(_this.articles);
+          _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
       document.head.appendChild(script);
@@ -351,6 +358,8 @@ export default {
   },
   data: () => {
     return {
+      clusterer: {},
+      kakaoMarkers: [],
       starValue: 4,
       articleTitles: [],
       selectedHashtagNames: [],
