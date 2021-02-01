@@ -91,6 +91,7 @@ public class NaverLoginController {
         } catch (Exception e) {
             System.out.println(e);
         }
+        System.out.println(access_token);
         return "redirect:http://localhost:8081/agreement?token=" + access_token;
     }
 	private String getUserInfo(String access_token) {
