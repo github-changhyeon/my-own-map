@@ -289,8 +289,7 @@ export default {
           map: _this.map,
           position: marker.getPosition(),
         });
-        let wrapDiv = document.createElement('div');
-        _this.makeCustomizedOverlay(wrapDiv, overlay, tempArticles[i]);
+        let wrapDiv = _this.makeCustomizedOverlay(overlay, tempArticles[i]);
 
         // console.log(content);
 
@@ -437,8 +436,7 @@ export default {
           position: nowMarker.getPosition(),
         });
 
-        let wrapDiv = document.createElement('div');
-        _this.makeCustomizedOverlay(wrapDiv, overlay, data);
+        let wrapDiv = _this.makeCustomizedOverlay(overlay, data);
 
         overlay.setContent(wrapDiv);
 
@@ -458,8 +456,9 @@ export default {
       // _this.clusterer.clear();
       //   });
     },
-    makeCustomizedOverlay(wrapDiv, overlay, data) {
+    makeCustomizedOverlay(overlay, data) {
       let _this = this;
+      let wrapDiv = document.createElement('div');
       wrapDiv.className = 'wrap';
       let infoDiv = document.createElement('div');
       infoDiv.className = 'infos';
@@ -492,13 +491,28 @@ export default {
       ellipsisDiv.textContent = data.address;
       descDiv.appendChild(ellipsisDiv);
       let ratingDiv = document.createElement('div');
-      let rating = document.createElement('icon');
-      rating.className = 'mdi mdi-star theme--light orange--text';
-      ratingDiv.appendChild(rating);
-      rating = document.createElement('icon');
-      rating.className = 'mdi mdi-star theme--light orange--text';
-      // descDiv.appendChild(rating);
-      ratingDiv.appendChild(rating);
+      let rating = '';
+      let starCnt = 0;
+      // data.evaluation *= 2;
+      for (starCnt; starCnt < Math.floor(data.evaluation / 2); ++starCnt) {
+        rating = document.createElement('icon');
+        rating.style.fontSize = '20px';
+        rating.className = 'mdi mdi-star theme--light orange--text';
+        ratingDiv.appendChild(rating);
+      }
+      if (data.evaluation % 2 == 1) {
+        rating = document.createElement('icon');
+        rating.style.fontSize = '20px';
+        rating.className = 'mdi mdi-star-half-full theme--light orange--text';
+        ratingDiv.appendChild(rating);
+        starCnt += 1;
+      }
+      for (starCnt; starCnt < 5; ++starCnt) {
+        rating = document.createElement('icon');
+        rating.style.fontSize = '20px';
+        rating.className = 'mdi mdi-star-outline theme--light orange--text';
+        ratingDiv.appendChild(rating);
+      }
       descDiv.appendChild(ratingDiv);
       let aTag = document.createElement('button');
       aTag.textContent = '게시물 보기';
@@ -510,6 +524,7 @@ export default {
       bodyDiv.appendChild(descDiv);
       infoDiv.appendChild(bodyDiv);
       wrapDiv.appendChild(infoDiv);
+      return wrapDiv;
       // console.log(evaluation);
     },
     closeOverlay() {
