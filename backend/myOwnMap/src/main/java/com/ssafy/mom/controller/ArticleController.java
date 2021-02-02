@@ -1,12 +1,18 @@
 package com.ssafy.mom.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,17 +22,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.mom.dao.ArticleDao;
 import com.ssafy.mom.dao.ArticleHashtagDao;
 import com.ssafy.mom.dao.HashtagDao;
+import com.ssafy.mom.dao.ImageDao;
 import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.dao.UserHashtagDao;
 import com.ssafy.mom.model.ArticleDto;
 import com.ssafy.mom.model.ArticleHashtag;
+import com.ssafy.mom.model.ArticleRequest;
 import com.ssafy.mom.model.BasicResponse;
 import com.ssafy.mom.model.HashtagDto;
+import com.ssafy.mom.model.ImageDto;
 import com.ssafy.mom.model.UserDto;
 import com.ssafy.mom.model.UserHashtag;
 
@@ -48,6 +59,12 @@ public class ArticleController {
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 
+	@Value("${file.path}")
+	private String fileRealPath;
+	
+	@Autowired
+	private ImageDao imageDao;
+	
 	@Autowired
 	ArticleDao articleDao;
 
@@ -65,12 +82,45 @@ public class ArticleController {
 
 	@PostMapping
 	@ApiOperation(value = "게시글 등록한다")
-	public Object createArticle(@RequestBody ArticleDto articleDto) {
+	public Object createArticle(@RequestParam("img") MultipartFile files, ArticleRequest articleRequest) {
+		System.out.println("Imsaddddd");
+		System.out.println(articleRequest);
+		final BasicResponse result = new BasicResponse();
+		// -------------- 이미지 저장 start
+		ArticleDto articleDto = articleRequest.getArticleDto();
+		MultipartFile multipartFile = articleRequest.getMultipartFile();
+		// 이미지 업로드 수행
+		UUID uuid = UUID.randomUUID();
+		String uuidFilename = uuid + "_" + multipartFile.getOriginalFilename();
 
+		Path filePath = Paths.get(fileRealPath + uuidFilename);
+	
+		try {
+			Files.write(filePath, multipartFile.getBytes()); // 하드디스크 기록
+		} catch (IOException e) {
+			result.message = "이미지를 저장하지 못했습니다.";
+			result.status = false;
+			e.printStackTrace();
+			return result;
+		}
+
+
+//		UserDto userDto = articleDto.getUserDto();
+
+		ImageDto imageDto = new ImageDto();
+		imageDto.setArticleDto(articleDto);
+		imageDto.setPostImage(uuidFilename);
+
+		imageDao.save(imageDto);
+		
+		result.message = "이미지 저장에 성공하였습니다.";
+		result.status = true;
+//		return result;
+		// -------------- 이미지 저장 end
+		
 		// TODO: 회원정보 연동시 uid 가져오기
 		int uid = 1;
 
-		final BasicResponse result = new BasicResponse();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 
 		if (!userOpt.isPresent()) {
@@ -119,6 +169,44 @@ public class ArticleController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	
+	@PostMapping(value="/save")
+	public Object saveSell(@RequestBody ArticleRequest articleRequest) { 
+		
+		final BasicResponse result = new BasicResponse();
+		
+		ArticleDto articleDto = articleRequest.getArticleDto();
+		MultipartFile multipartFile = articleRequest.getMultipartFile();
+		// 이미지 업로드 수행
+		UUID uuid = UUID.randomUUID();
+		String uuidFilename = uuid + "_" + multipartFile.getOriginalFilename();
+
+		Path filePath = Paths.get(fileRealPath + uuidFilename);
+	
+		try {
+			Files.write(filePath, multipartFile.getBytes()); // 하드디스크 기록
+		} catch (IOException e) {
+			result.message = "이미지를 저장하지 못했습니다.";
+			result.status = false;
+			e.printStackTrace();
+			return result;
+		}
+
+
+//		UserDto userDto = articleDto.getUserDto();
+
+		ImageDto imageDto = new ImageDto();
+		imageDto.setArticleDto(articleDto);
+		imageDto.setPostImage(uuidFilename);
+
+		imageDao.save(imageDto);
+		
+		result.message = "이미지 저장에 성공하였습니다.";
+		result.status = true;
+		return result;
+	 }
+	
+	
 	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)
 	@GetMapping
 	public ResponseEntity<BasicResponse> retrieveArticles() {
@@ -312,4 +400,5 @@ public class ArticleController {
 //		userHashtagDao.findByUserDtoAndHashtagDto(userDto, alreadyExist)
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+
 }
