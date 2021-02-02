@@ -1,23 +1,22 @@
 <template>
-  <div>
-  </div>
+  <div></div>
 </template>
 
 <script>
 export default {
   name: 'Agreement',
-  data () {
+  data() {
     return {
-      access_token: ''
+      token: '',
     };
   },
-  methods: {
-  },
-  created () {
-    this.access_token = this.$route.query.token;
-    console.log(this.access_token, this.$route.query.nickName);
+  methods: {},
+  created() {
+    this.token = this.$route.query.token;
+    // console.log(this.access_token, this.$route.query.nickName);
     console.log(this.$route.query);
+    localStorage.setItem('jwt', this.token);
     this.$router.push('/');
-  }
+  },
 };
 </script>
