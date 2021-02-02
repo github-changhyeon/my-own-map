@@ -1,7 +1,8 @@
 <template>
   <div>
     <div>
-      <span>
+      <span v-for="(user, idx) in users" :key="idx">
+        <span>{{ user.nickname }} </span>
         <v-icon>mdi-account-plus</v-icon>
       </span>
     </div>

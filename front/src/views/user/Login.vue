@@ -19,7 +19,7 @@
                         <!-- <a :href="naverLoginURL">네이버 아이디로 로그인하기 -->
                         <NaverLogin />
                         <a href="">비밀번호 찾기</a>
-                        <router-link to="/users/join"><a href="">회원가입</a></router-link>
+                        <router-link to="/join"><a href="">회원가입</a></router-link>
                       </v-layout>
                     </v-form>
                   </div>
