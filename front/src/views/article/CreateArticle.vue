@@ -6,10 +6,7 @@
     <!-- <div v-if="!isCurrentMap"><SelectPosition :propsPositionObj="positionObj" /></div> -->
     <!-- <div v-if="isCurrentMap" id="currentMap" style="width:100%; height:350px"></div> -->
     <br />
-    <div class="center">
-      <v-btn @click="moveSelectPosition">위치 선택하기</v-btn>
-    </div>
-    <br />
+
     <div class="center">
       <label for="address"></label>
       <input class="inputbox" type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다." />
