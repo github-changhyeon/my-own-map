@@ -15,7 +15,7 @@
             tile            
             >
             <div>
-            작성자: {{ article.user }}
+            <router-link :to="`users/${uid}/`">작성자: {{ article.user }}</router-link>
             </div>
             <div>
             rating: {{ article.rating}}
