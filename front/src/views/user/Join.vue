@@ -18,7 +18,7 @@
                       <v-text-field label="닉네임을 입력해 주세요." v-mdoel="joinForm.nickName"></v-text-field>
                       <v-layout justify-space-between>
                         <v-btn @click="joinUser">등록하기</v-btn>
-                        <router-link to="/users/login"><a href="">뒤로가기</a></router-link>
+                        <router-link to="/login"><a href="">뒤로가기</a></router-link>
                       </v-layout>
                     </v-form>
                   </div>
