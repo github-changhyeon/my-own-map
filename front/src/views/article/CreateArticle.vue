@@ -172,7 +172,7 @@ export default {
         let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
         this.article.hashtags.push(obj);
       }
-
+      this.article.images = this.imgs;
       createArticle(
         this.article,
         (response) => {
