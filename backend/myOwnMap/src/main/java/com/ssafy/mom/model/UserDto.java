@@ -1,13 +1,15 @@
 package com.ssafy.mom.model;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +34,8 @@ public class UserDto {
 	private String role;		
 	@Column(name = "email",unique=true ,nullable = false)
 	private String email;
-
+	@CreationTimestamp
+	private LocalDateTime joinDate;
 
 
 	
