@@ -35,5 +35,12 @@ public class UserFollow {
 	@JoinColumn(name = "uidTo")
 	private UserDto userTo;
 	
+	@Builder
+	public UserFollow(UserDto userFrom, UserDto userTo) {
+		super();
+		this.userFrom = userFrom;
+		this.userTo = userTo;
+	}
+	
 	
 }

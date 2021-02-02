@@ -18,6 +18,7 @@ import UserInfo from '@/components/user/UserInfo';
 import Vue from 'vue';
 // import axios from 'axios';
 import vueMoment from 'vue-moment';
+
 Vue.use(vueMoment);
 
 export default {
