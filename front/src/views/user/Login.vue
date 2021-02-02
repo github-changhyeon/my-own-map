@@ -63,7 +63,7 @@ export default {
         (response) => {
           console.log(response);
           console.log('111111');
-          localStorage.setItem('jwt', response.data.object);
+          localStorage.setItem('access-token', response.data.object);
           this.$router.push('/');
         },
         (error) => {

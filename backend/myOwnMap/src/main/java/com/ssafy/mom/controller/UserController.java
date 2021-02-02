@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -115,8 +117,7 @@ public class UserController {
         	return new ResponseEntity<String>("인증 시간 초과로 인해 이메일 인증에 실패하였습니다.", HttpStatus.OK);
         }
 
-    }
-	
+    }	
 
     @PostMapping("/join")
 	@ApiOperation(value="회원가입")
@@ -166,9 +167,10 @@ public class UserController {
 	
 	@PutMapping
 	@ApiOperation(value ="회원정보 수정")
-	public Object updateUser(@RequestBody UserDto userDto){
+	public Object updateUser(@RequestBody UserDto userDto, HttpServletRequest request){
 		final BasicResponse result = new BasicResponse();
-		Optional<UserDto> userOpt = userDao.findById(userDto.getUid());
+		String email = jwtService.getUserEmail();
+		Optional<UserDto> userOpt = userDao.findByEmail(email);
 //		System.out.println(userOpt.toString());
 		//회원번호로 검색한 것이 있다면 수정세팅
 		if(!userOpt.isPresent()) {	
@@ -185,11 +187,12 @@ public class UserController {
 		}
 	}
 	
-	@DeleteMapping("/{uid}")
+	@DeleteMapping
 	@ApiOperation(value ="회원탈퇴")
-	public Object deleteUser(@PathVariable int uid){
+	public Object deleteUser(HttpServletRequest request){
 		final BasicResponse result = new BasicResponse();
-		Optional<UserDto> userOpt = userDao.findById(uid);
+		String email = jwtService.getUserEmail();
+		Optional<UserDto> userOpt = userDao.findByEmail(email);
 		
 //		System.out.println(userOpt.toString());
 		if(!userOpt.isPresent()) {
@@ -207,6 +210,11 @@ public class UserController {
 		
 	}
 
-	
+//	@GetMapping("/test")
+//	@ApiOperation(value ="회원이름으로 찾기")
+//	public void test(HttpServletRequest request){
+//		System.out.println(request.getHeader("access-token"));
+//		System.out.println(jwtService.getUserEmail());
+//	}
 	
 }

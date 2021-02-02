@@ -1,5 +1,6 @@
 package com.ssafy.mom.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,8 @@ public interface UserDao extends JpaRepository<UserDto, Integer> {
 	//findBy규칙 -> Username 문법
 	//select * from user where username = ?
 	public Optional<UserDto> findByUsername(String username);
-	public UserDto findByEmail(String email);
+	public Optional<UserDto> findByEmail(String email);
+	public List<UserDto> findAllByEmail(String email);
 
 	public Optional<UserDto> findUserByEmailAndPassword(String email, String password);
 	public Optional<UserDto> findByUid(int uid);

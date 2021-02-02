@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,25 +77,17 @@ public class NaverLoginController {
             }
             br.close();
             if(responseCode==200) { // 성공적으로 토큰을 가져온다면
-                //int id;
-            	System.out.println(2);
+                //int id;            	
                 String nickName, email, tmp;
-                JsonParser parser = new JsonParser();
-                System.out.println(22);
-                JsonElement accessElement = parser.parse(res.toString());
-                System.out.println(23);
+                JsonParser parser = new JsonParser();               
+                JsonElement accessElement = parser.parse(res.toString());                
                 System.out.println(accessElement);
-                access_token = accessElement.getAsJsonObject().get("access_token").getAsString();
-                System.out.println(24);
-                tmp = getUserInfo(access_token);
-                System.out.println(25);
+                access_token = accessElement.getAsJsonObject().get("access_token").getAsString();              
+                tmp = getUserInfo(access_token);               
                 JsonElement userInfoElement = parser.parse(tmp);
-                //id = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsInt();
-                System.out.println(26);
-                nickName = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();
-                System.out.println(27);
-                email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();
-                System.out.println(28);
+                //id = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsInt();             
+                nickName = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();            
+                email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();             
                 access_token = createJWTToken(nickName, email);
             }
         } catch (Exception e) {
@@ -145,17 +138,18 @@ public class NaverLoginController {
 //            Date expiresAt = new Date(issuedAt.getTime() + EXPIRATION_TIME);
             
             //네아로가 처음이라면 회원가입!
-            UserDto user = userDao.findByEmail(email);
-            if(user== null) {
+        	Optional<UserDto>  user = userDao.findByEmail(email);
+        	UserDto userEntity = user.get();
+            if(!user.isPresent()) {
             	UserDto userSave = UserDto.builder()
             			.username(nickname)
             			.email(email)
             			.role("ROLE_USER")
             			.build();
             	
-            	user = userDao.save(userSave);
+            	userEntity = userDao.save(userSave);
             }
-            token= jwtService.create("email", user.getEmail(), "access-token");// key, data, subject
+            token= jwtService.create("email", userEntity.getEmail(), "access-token");// key, data, subject
             System.out.println(6);
             System.out.println(token);
             

@@ -1,6 +1,7 @@
 package com.ssafy.mom.model;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ public class UserDto {
 	@Column(name = "email",unique=true ,nullable = false)
 	private String email;
 	@CreationTimestamp
-	private Timestamp joinDate;
+	private LocalDateTime joinDate;
 
 
 	
