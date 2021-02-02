@@ -33,7 +33,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import { join } from '@/api/user.js';
+import constants from '@/lib/constants';
 
 export default {
   name: 'Join',
@@ -49,15 +51,16 @@ export default {
   },
   methods: {
     joinUser() {
-      axios
-        .post('url', this.joinForm)
-        .then((res) => {
-          console.log(res);
+      join(
+        this.joinForm,
+        (response) => {
+          console.log(response);
           this.$router.push({ name: constants.URL_TYPE.USER.LOGIN });
-        })
-        .catch((err) => {
+        },
+        (err) => {
           console.log(err);
-        });
+        }
+      );
     },
   },
 };

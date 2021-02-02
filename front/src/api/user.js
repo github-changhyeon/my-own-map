@@ -4,7 +4,18 @@ const instance = createInstance();
 
 function login(user, success, fail) {
   // { email: user.email, password: user.password }
-  instance.post('/users/login', user).then(success).catch(fail);
+  instance
+    .post('/users/login', user)
+    .then(success)
+    .catch(fail);
 }
 
-export { login };
+function join(user, success, fail) {
+  // { email: user.email, password: user.password }
+  instance
+    .post('/users/join', user)
+    .then(success)
+    .catch(fail);
+}
+
+export { login, join };
