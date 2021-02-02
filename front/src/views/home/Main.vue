@@ -1,78 +1,108 @@
 <template>
   <div>
-    <!-- <div> -->
-    <v-app-bar style="position:fixed; top:0; z-index:2">
-      <v-spacer></v-spacer>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-    </v-app-bar>
-    <!-- </div> -->
-    <v-navigation-drawer v-model="drawer" absolute right temporary>
-      <v-list>
-        <v-list-item @click="goToMyPage">
-          <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
-            <!-- <v-icon>mdi-chevron-right</v-icon> -->
-          </v-list-item-icon>
-          <v-list-item-title>마이페이지</v-list-item-title>
-        </v-list-item>
-        <!-- <NaverLogin/> -->
-        <v-list-item @click="logout">
-          <v-list-item-title>로그아웃</v-list-item-title>
-        </v-list-item>
-
-        <v-list-group prepend-icon="mdi-account-circle">
-          <template v-slot:activator>
-            <v-list-item-title>해시태그</v-list-item-title>
-          </template>
-
-          <v-list-item>
-            <v-switch @click="clickShowAllSwitch(selectAllSwitch)" v-model="selectAllSwitch" label="전체보기"></v-switch>
-          </v-list-item>
-          <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
-            <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-            <v-switch @click="clickHashtagSwitch(userHashtagSwitches[i])" v-model="userHashtagSwitches[i]" :label="hashtag.hashtagName"></v-switch>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
-    </v-navigation-drawer>
+    <v-row justify="end">
+      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 10px; right: 5px; z-index: 2">
+        <v-icon dark> mdi-pound </v-icon>
+      </v-btn>
+    </v-row>
 
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="switchDrawer = !switchDrawer" style="position: fixed; top: 160px; right:5px; z-index: 2;">
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 10px; right: 50px; z-index: 2">
+        <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
-      <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
-      <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
-      <!-- </v-btn> -->
+    </v-row>
+    <v-row justify="center">
+      <v-autocomplete
+        v-model="selectedArticleTitles"
+        :items="articleTitles"
+        multiple
+        dense
+        solo
+        background-color="white"
+        :search-input.sync="searchTitle"
+        @change="clickSearchTitleBar"
+        label="Title을 검색해주세요"
+        style="position: fixed; top: 10px; z-index: 2"
+      ></v-autocomplete>
     </v-row>
 
     <v-navigation-drawer v-model="switchDrawer" absolute right temporary>
       <v-list-item>
         <h3>해시태그</h3>
       </v-list-item>
-      <v-list-time>
-        <v-autocomplete v-model="selectedHashtags" :items="userHashtagNames" multiple dense filled :search-input.sync="search" @change="search = ''" label="Filled"></v-autocomplete>
-      </v-list-time>
       <v-list-item>
-        <v-switch @click="clickShowAllSwitch(selectAllSwitch)" v-model="selectAllSwitch" label="전체보기"></v-switch>
+        <v-autocomplete
+          v-model="selectedHashtagNames"
+          :items="userHashtagNames"
+          chips
+          small-chips
+          multiple
+          dense
+          filled
+          :search-input.sync="searchHashtag"
+          @change="searchHashtag = ''"
+          label="Filled"
+        ></v-autocomplete>
       </v-list-item>
-      <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
-        <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-        <v-switch
-          v-if="selectedHashtags.length == 0 || selectedHashtags.includes(hashtag.hashtagName)"
-          @click="clickHashtagSwitch(userHashtagSwitches[i])"
-          v-model="userHashtagSwitches[i]"
-          :label="hashtag.hashtagName"
-        ></v-switch>
+      <v-list-item>
+        <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
       </v-list-item>
+      <div v-if="selectedHashtagNames.length == 0">
+        <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
+          <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
+          <v-switch
+            @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)])"
+            v-model="userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]"
+            :label="hashtag.hashtagName"
+          ></v-switch>
+        </v-list-item>
+      </div>
+      <div v-if="selectedHashtagNames.length > 0">
+        <v-list-item v-for="(hashtagName, i) in selectedHashtagNames" :key="i" link>
+          <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
+          <v-switch @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtagName)])" v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]" :label="hashtagName"></v-switch>
+        </v-list-item>
+      </div>
     </v-navigation-drawer>
 
-    <div id="map" style="width: 100vw; height: 100vh; z-index: 1;"></div>
+    <v-navigation-drawer v-model="followDrawer" absolute right temporary>
+      <v-list-item>
+        <h3>팔로잉</h3>
+      </v-list-item>
+      <v-list-item>
+        <v-autocomplete
+          v-model="selectedFollowUserNames"
+          :items="followUserNames"
+          chips
+          small-chips
+          multiple
+          dense
+          filled
+          :search-input.sync="searchFollowUser"
+          @change="searchFollowUser = ''"
+          label="Filled"
+        ></v-autocomplete>
+      </v-list-item>
+
+      <div v-if="selectedFollowUserNames.length == 0">
+        <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
+          <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
+          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUser.username))" v-model="followUserSwitches[followUserMap.get(followUser.username)]" :label="followUser.username"></v-switch>
+        </v-list-item>
+      </div>
+      <div v-if="selectedFollowUserNames.length > 0">
+        <v-list-item v-for="(followUserName, i) in selectedFollowUserNames" :key="i" link>
+          <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
+          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUserName))" v-model="followUserSwitches[followUserMap.get(followUserName)]" :label="followUserName"></v-switch>
+        </v-list-item>
+      </div>
+    </v-navigation-drawer>
+
+    <div id="map" style="width: 100vw; height: 100vh; z-index: 1"></div>
     <!-- <div style="position: fixed; bottom: 0; z-index: 2"> -->
     <v-expand-x-transition>
       <v-row justify="center" v-if="expand">
-        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 0; z-index: 2; ">
+        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 0; z-index: 2">
           <v-slide-group v-model="model" class="pa-4" show-arrows>
             <v-slide-item v-for="(article, i) in recentArticles" :key="i">
               <v-card class="ma-4" height="100" width="70" @click="goToArticleDetail(article)">
@@ -85,15 +115,13 @@
       </v-row>
     </v-expand-x-transition>
     <!-- </div> -->
-    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 160px; z-index: 2;">
+    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 160px; z-index: 2">
       <v-icon v-if="!expand">mdi-chevron-right</v-icon>
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;">
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
+      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" style="position: fixed; bottom: 160px; right: 5px; z-index: 2">
+        <v-icon dark> mdi-plus </v-icon>
       </v-btn>
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
@@ -107,18 +135,38 @@
 // import { login } from '@/api/user.js';
 import { getArticles, getRecentArticles, getUserHashtags } from '@/api/article.js';
 import constants from '@/lib/constants';
+// import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
+// const fullStarHtml = '<button type="button" tabindex="-1" aria-label="Rating 1 of 5" class="v-icon notranslate v-icon--link mdi mdi-star theme--light orange--text" style="font-size: 20px"></button>';
+// const halfStarHtml =
+//   '<button type="button" tabindex="-1" aria-label="Rating 4 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-half-full theme--light orange--text" style="font-size: 20px"></button>';
+// const emptyStarHtml =
+//   '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
+const STAR_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+const SPRITE_MARKER_URL = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png';
+const SPRITE_MARKER_WIDTH = 33;
+const SPRITE_MARKER_HEIGHT = 36;
+const SPRITE_OFFSET_X = 12;
+const SPRITE_OFFSET_Y = SPRITE_MARKER_HEIGHT;
+const SPRITE_WIDTH = 126;
+const SPRITE_HEIGHT = 146;
+const SPRITE_GAP = 10;
 
 export default {
-  components: {},
+  components: {
+    // NaverLogin
+  },
   created() {
     getArticles(
       1,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
-          window.kakao && window.kakao.maps ? this.showMap(this.articles) : this.addScript();
+          for (let i = 0; i < this.articles.length; ++i) {
+            this.articleTitles.push(this.articles[i].title);
+          }
+          window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
           // alert('article list를 받았습니다.');
         } else {
           alert('article list 실패');
@@ -158,6 +206,7 @@ export default {
             // alert(this.userHashtags[i].hashtagName);
             this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
             this.userHashtagNames.push(this.userHashtags[i].hashtagName);
+            this.userHashtagSwitches.push(false);
           }
         } else {
           alert('hashtag list 실패');
@@ -169,11 +218,108 @@ export default {
       }
     );
 
-    // TODO : 해시태그 데이터들과 장소 데이터들 받아오기, 장소 데이터 가지고 axios해서 장소데이터의 hashtag받아오기
+    // TODO : follow하는 유저들의 정보 받아오기
+    let tempUser = { uid: 2, username: '팔로우1' };
+    this.followUsers.push(tempUser);
+    // tempUser = { uid: 2, username: '팔로우2' };
+    // this.followUsers.push(tempUser);
+    for (let i = 0; i < this.followUsers.length; ++i) {
+      this.followUserMap.set(this.followUsers[i].username, i);
+      this.followUserNames.push(this.followUsers[i].username);
+      this.followUserSwitches.push(false);
+    }
   },
   mounted() {},
   watch: {},
   methods: {
+    clickFollowUserSwitch(idx) {
+      let _this = this;
+      if (!this.followUserSwitches[idx]) {
+        this.clusterer.clear();
+        this.clusterer.addMarkers(this.kakaoMarkers);
+        return;
+      }
+
+      for (let i = 0; i < this.followUserSwitches.length; ++i) {
+        if (i === idx) {
+          continue;
+        }
+        this.followUserSwitches[i] = false;
+      }
+      for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
+        this.userHashtagSwitches[i] = false;
+      }
+      _this.selectAllHashtagSwitch = false;
+      // TODO : idx에 해당하는 articles 얻어오기
+      let tempArticles = [];
+      let tempArticle = { title: '더미데이터', address: '대전광역시 유성구 더미데이터', positionLat: '33', positionLng: '127' };
+      tempArticles.push(tempArticle);
+      tempArticle = { title: '더미데이터2', address: '대전광역시 유성구 더미데이터2', positionLat: '33', positionLng: '127.3' };
+      tempArticles.push(tempArticle);
+
+      let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
+      let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
+      let spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT);
+
+      let gapX = SPRITE_MARKER_WIDTH + SPRITE_GAP;
+
+      let spriteOriginY = SPRITE_MARKER_HEIGHT + SPRITE_GAP;
+      let spriteNormalOrigin = new kakao.maps.Point(gapX, spriteOriginY);
+
+      let spriteMarkerImage = new kakao.maps.MarkerImage(
+        SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
+        spriteMarkerSize, // 마커의 크기
+        {
+          offset: spriteMarkerOffset, // 마커 이미지에서의 기준 좌표
+          spriteOrigin: spriteNormalOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
+          spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
+        }
+      );
+
+      let redMarkers = [];
+
+      for (let i = 0; i < tempArticles.length; ++i) {
+        let marker = new kakao.maps.Marker({
+          // map: map, // 마커를 표시할 지도
+          position: new window.kakao.maps.LatLng(tempArticles[i].positionLat, tempArticles[i].positionLng), // 마커를 표시할 위치
+          // title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          image: spriteMarkerImage, // 마커 이미지
+        });
+        let overlay = new kakao.maps.CustomOverlay({
+          map: _this.map,
+          position: marker.getPosition(),
+        });
+        let wrapDiv = _this.makeCustomizedOverlay(overlay, tempArticles[i]);
+
+        // console.log(content);
+
+        overlay.setContent(wrapDiv);
+
+        // TODO : 커스텀 오버레이
+        // let infowindow = new kakao.maps.InfoWindow({
+        //   content: data.title, // 인포윈도우에 표시할 내용
+        // });
+        kakao.maps.event.addListener(marker, 'click', function() {
+          overlay.setMap(_this.map);
+        });
+        overlay.setMap(null);
+        redMarkers.push(marker);
+      }
+      this.clusterer.clear();
+      this.clusterer.addMarkers(this.blueMarkers);
+      this.clusterer.addMarkers(redMarkers);
+    },
+    clickSearchTitleBar() {
+      this.searchTitle = '';
+      this.clusterer.clear();
+      let markers = [];
+      for (let i = 0; i < this.articles.length; ++i) {
+        if (this.selectedArticleTitles.includes(this.articles[i].title)) {
+          markers.push(this.kakaoMarkers[i]);
+        }
+      }
+      this.clusterer.addMarkers(markers);
+    },
     goToCreateArticle() {
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
     },
@@ -188,15 +334,13 @@ export default {
     },
     clickHashtagSwitch(isOn) {
       if (isOn) {
-        this.selectAllSwitch = false;
+        this.selectAllHashtagSwitch = false;
+        for (let i = 0; i < this.followUserSwitches.length; ++i) {
+          this.followUserSwitches[i] = false;
+        }
       }
-      let showDatas = [];
-      // let dataSet = new Set();
-      // for (let i = 0; i < this.userHashtags.length; ++i) {
-      //   if (this.userHashtagSwitches[this.hashtagMap.get(this.userHashtags[i].name)]) {
-      //     dataSet.add(this.hashtags[i].name);
-      //   }
-      // }
+      let markers = [];
+
       let switchOnCnt = 0;
       for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
         if (this.userHashtagSwitches[i]) {
@@ -214,76 +358,177 @@ export default {
         }
         // alert(cnt);
         if (cnt != 0 && cnt == switchOnCnt) {
-          showDatas.push(this.articles[i]);
+          markers.push(this.kakaoMarkers[i]);
         }
       }
-      this.showMap(showDatas);
+      // this.showMap(showDatas);
+      // this.initMap();
+      this.clusterer.clear();
+      this.clusterer.addMarkers(markers);
     },
-    clickShowAllSwitch(isOn) {
+    clickShowAllHashtagSwitch(isOn) {
+      this.clusterer.clear();
       if (isOn) {
         for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
           this.userHashtagSwitches[i] = false;
         }
-        this.showMap(this.articles);
-      } else {
-        let empties = [];
-        this.showMap(empties);
+        for (let i = 0; i < this.followUserSwitches.length; ++i) {
+          this.followUserSwitches[i] = false;
+        }
+        this.clusterer.addMarkers(this.kakaoMarkers);
       }
     },
 
-    showMap(datas) {
+    initMap() {
       let _this = this;
       let element = document.getElementById('map');
       while (element.firstChild) {
         element.removeChild(element.firstChild);
       }
 
-      var map = new kakao.maps.Map(document.getElementById('map'), {
+      _this.map = new kakao.maps.Map(document.getElementById('map'), {
         // 지도를 표시할 div
         center: new kakao.maps.LatLng(36.2683, 127.6358), // 지도의 중심좌표
         level: 13, // 지도의 확대 레벨
       });
 
       // 마커 클러스터러를 생성합니다
-      var clusterer = new kakao.maps.MarkerClusterer({
-        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+      _this.clusterer = new kakao.maps.MarkerClusterer({
+        map: _this.map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
         averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
         minLevel: 10, // 클러스터 할 최소 지도 레벨
       });
 
-      // var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
-      //   imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
-      //   imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
+      let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
+      let spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT);
 
-      // // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-      // var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+      // let gapX = MARKER_WIDTH + SPRITE_GAP;
+      let spriteOriginY = 0;
+      let spriteNormalOrigin = new kakao.maps.Point(0, spriteOriginY);
 
-      let markers = datas.map((data) => {
-        let nowMarker = new window.kakao.maps.Marker({
+      let spriteMarkerImage = new kakao.maps.MarkerImage(
+        SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
+        spriteMarkerSize, // 마커의 크기
+        {
+          offset: spriteMarkerOffset, // 마커 이미지에서의 기준 좌표
+          spriteOrigin: spriteNormalOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
+          spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
+        }
+      );
+
+      for (let i = 0; i < _this.articles.length; ++i) {
+        let data = _this.articles[i];
+        let imageSize = new kakao.maps.Size(24, 35);
+        let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+        let nowMarker = new kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
-          // image: markerImage,
+          image: markerImage,
+        });
+        let blueMarker = new kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
+          image: spriteMarkerImage,
+        });
+        _this.kakaoMarkers.push(nowMarker);
+        _this.blueMarkers.push(blueMarker);
+        let overlay = new kakao.maps.CustomOverlay({
+          map: _this.map,
+          position: nowMarker.getPosition(),
         });
 
-        // TODO : 커스텀 오버레이
-        let infowindow = new kakao.maps.InfoWindow({
-          content: data.title, // 인포윈도우에 표시할 내용
-        });
-        kakao.maps.event.addListener(nowMarker, 'mouseover', function() {
-          infowindow.open(map, nowMarker);
-        });
-        kakao.maps.event.addListener(nowMarker, 'mouseout', function() {
-          infowindow.close();
-        });
+        let wrapDiv = _this.makeCustomizedOverlay(overlay, data);
+
+        overlay.setContent(wrapDiv);
+
         kakao.maps.event.addListener(nowMarker, 'click', function() {
-          // TODO : 라우터 이동
-          _this.goToArticleDetail(data);
+          overlay.setMap(_this.map);
         });
-        return nowMarker;
-      });
+        kakao.maps.event.addListener(blueMarker, 'click', function() {
+          overlay.setMap(_this.map);
+        });
 
+        overlay.setMap(null);
+      }
+
+      // console.log(markers);
       // 클러스터러에 마커들을 추가합니다
-      clusterer.addMarkers(markers);
+      _this.clusterer.addMarkers(_this.kakaoMarkers);
+      // _this.clusterer.clear();
       //   });
+    },
+    makeCustomizedOverlay(overlay, data) {
+      let _this = this;
+      let wrapDiv = document.createElement('div');
+      wrapDiv.className = 'wrap';
+      let infoDiv = document.createElement('div');
+      infoDiv.className = 'infos';
+      let titleDiv = document.createElement('div');
+      titleDiv.className = 'title';
+      titleDiv.textContent = data.title;
+      let closeDiv = document.createElement('div');
+      closeDiv.className = 'close';
+      closeDiv.title = '닫기';
+      closeDiv.onclick = function() {
+        // alert('a');
+        overlay.setMap(null);
+      };
+      titleDiv.appendChild(closeDiv);
+
+      infoDiv.appendChild(titleDiv);
+      let bodyDiv = document.createElement('div');
+      bodyDiv.className = 'body';
+      let imgDiv = document.createElement('div');
+      imgDiv.className = 'img';
+      let imgSrc = document.createElement('img');
+      imgSrc.src = 'https://cdn.vuetifyjs.com/images/cards/cooking.png';
+      imgSrc.style.width = '73';
+      imgSrc.style.height = '70';
+      imgDiv.appendChild(imgSrc);
+      let descDiv = document.createElement('div');
+      descDiv.className = 'desc';
+      let ellipsisDiv = document.createElement('div');
+      ellipsisDiv.className = 'ellipsis';
+      ellipsisDiv.textContent = data.address;
+      descDiv.appendChild(ellipsisDiv);
+      let ratingDiv = document.createElement('div');
+      let rating = '';
+      let starCnt = 0;
+      // data.evaluation *= 2;
+      for (starCnt; starCnt < Math.floor(data.evaluation / 2); ++starCnt) {
+        rating = document.createElement('icon');
+        rating.style.fontSize = '20px';
+        rating.className = 'mdi mdi-star theme--light orange--text';
+        ratingDiv.appendChild(rating);
+      }
+      if (data.evaluation % 2 == 1) {
+        rating = document.createElement('icon');
+        rating.style.fontSize = '20px';
+        rating.className = 'mdi mdi-star-half-full theme--light orange--text';
+        ratingDiv.appendChild(rating);
+        starCnt += 1;
+      }
+      for (starCnt; starCnt < 5; ++starCnt) {
+        rating = document.createElement('icon');
+        rating.style.fontSize = '20px';
+        rating.className = 'mdi mdi-star-outline theme--light orange--text';
+        ratingDiv.appendChild(rating);
+      }
+      descDiv.appendChild(ratingDiv);
+      let aTag = document.createElement('button');
+      aTag.textContent = '게시물 보기';
+      aTag.onclick = function() {
+        _this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: data.articleNo, article: data } });
+      };
+      descDiv.appendChild(aTag);
+      bodyDiv.appendChild(imgDiv);
+      bodyDiv.appendChild(descDiv);
+      infoDiv.appendChild(bodyDiv);
+      wrapDiv.appendChild(infoDiv);
+      return wrapDiv;
+      // console.log(evaluation);
+    },
+    closeOverlay() {
+      alert('close');
     },
     addScript() {
       const script = document.createElement('script');
@@ -292,7 +537,7 @@ export default {
       let _this = this;
       script.onload = () =>
         kakao.maps.load(function() {
-          _this.showMap(_this.articles);
+          _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
       document.head.appendChild(script);
@@ -300,13 +545,28 @@ export default {
   },
   data: () => {
     return {
-      selectedHashtags: [],
-      search: '',
+      map: {},
+      followUserMap: new Map(),
+      followUserSwitches: [],
+      selectedFollowUserNames: [],
+      followUserNames: [],
+      searchFollowUser: '',
+      blueMarkers: [],
+      followUsers: [],
+      clusterer: {},
+      kakaoMarkers: [],
+      starValue: 4,
+      articleTitles: [],
+      selectedHashtagNames: [],
+      selectedArticleTitles: [],
+      searchHashtag: '',
+      searchTitle: '',
+      followDrawer: false,
       switchDrawer: false,
       expand: false,
       recentArticles: [],
       model: null,
-      selectAllSwitch: true,
+      selectAllHashtagSwitch: true,
       drawer: false,
       userHashtags: [],
       userHashtagNames: [],
@@ -324,5 +584,98 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.wrap {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  width: 288px;
+  height: 132px;
+  margin-left: -144px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  line-height: 1.5;
+}
+.wrap * {
+  padding: 0;
+  margin: 0;
+}
+.wrap .infos {
+  width: 286px;
+  height: 120px;
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+}
+.wrap .infos:nth-child(1) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.infos .title {
+  padding: 5px 0 0 10px;
+  height: 30px;
+  background: #eee;
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
+  font-weight: bold;
+}
+.infos .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+.infos .close:hover {
+  cursor: pointer;
+}
+.infos .body {
+  position: relative;
+  overflow: hidden;
+}
+.infos .desc {
+  position: relative;
+  margin: 13px 0 0 90px;
+  height: 75px;
+}
+.desc .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desc .jibun {
+  font-size: 11px;
+  color: #888;
+  margin-top: -2px;
+}
+.infos .img {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 73px;
+  height: 71px;
+  border: 1px solid #ddd;
+  color: #888;
+  overflow: hidden;
+}
+.infos:after {
+  content: '';
+  position: absolute;
+  margin-left: -12px;
+  left: 50%;
+  bottom: 0;
+  width: 22px;
+  height: 12px;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+.infos .link {
+  color: #5085bb;
 }
 </style>
