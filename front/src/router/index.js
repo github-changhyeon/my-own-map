@@ -12,6 +12,8 @@ import UpdateArticle from '@/views/article/UpdateArticle';
 
 // User
 import MyPage from '@/views/user/MyPage';
+import Join from '@/views/user/Join';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -59,14 +61,21 @@ const routes = [
     props: true,
   },
   {
-    path: '/users/login',
-    name: 'login',
+    path: '/login',
+    name: constants.URL_TYPE.USER.LOGIN,
     component: Login,
+    props: true,
   },
   {
     path: '/agreement',
     name: Agreement,
-    component: Agreement
+    component: Agreement,
+  },
+  {
+    path: '/join',
+    name: constants.URL_TYPE.USER.JOIN,
+    component: Join,
+    props: true,
   },
 ];
 
