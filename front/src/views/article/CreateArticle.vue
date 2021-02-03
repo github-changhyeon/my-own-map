@@ -6,10 +6,7 @@
     <!-- <div v-if="!isCurrentMap"><SelectPosition :propsPositionObj="positionObj" /></div> -->
     <!-- <div v-if="isCurrentMap" id="currentMap" style="width:100%; height:350px"></div> -->
     <br />
-    <div class="center">
-      <v-btn @click="moveSelectPosition">위치 선택하기</v-btn>
-    </div>
-    <br />
+
     <div class="center">
       <label for="address"></label>
       <input class="inputbox" type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다." />
@@ -31,7 +28,7 @@
       <br />
       <!-- <HashModal />
       <HashList /> -->
-      <v-col cols="12">
+      <v-col md="4" offset-md="4">
         <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
           <template v-slot:selection="data">
             <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
@@ -48,7 +45,7 @@
     </div>
     <br />
     <div class="inline">
-      이 장소의 사진 (개발진행중입니다.)
+      이 장소의 사진
       <br />
       <br />
       <!-- <input type="file" @change="onFileSelected">
@@ -59,16 +56,21 @@
       <button class="lefty picture-upload"  type="button" @click="onClickImageUpload">+</button>
       <div v-for="(img, idx) in imgs" :key="idx">
         <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
+      <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
+      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
+      <v-carousel>
+        <v-carousel-item v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+      </v-carousel> -->
+      <!-- <div v-for="(img, idx) in imgs" :key="idx">
         <img :src="img" alt="" class="picture-size" />
-        <div>
-          <!-- {{ img }} -->
-        </div>
-      </div>
+      </div> -->
     </div>
     <br />
     <div>
       방문 정보 입력
       <br />
+      <DatePicker label="날짜를 입력해 주세요."></DatePicker>
+      <!-- <v-icon>mdi-calendar-range</v-icon> -->
       <!-- <v-text-field
         hint="방문 날짜를 선택해주세요."
         style="font-size:23px; width:300px;"
@@ -90,7 +92,15 @@
       </v-date-picker> -->
     </div>
     <div class="center">
-      <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" />
+    <v-rating
+      v-model="article.evaluation"
+      background-color="grey lighten-1"
+      color="blue"
+      half-increments
+      length="5"
+      size="45"
+    ></v-rating>
+      <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
     </div>
     <div>
       <button class="upload" @click="createPost()">등록</button>
@@ -99,11 +109,13 @@
 </template>
 
 <script>
+// import { mdiCalendarRange } from '@mdi/js';
 import SelectPosition from '@/components/map/SelectPosition.vue';
 import constants from '@/lib/constants';
 // import axios from 'axios';
-import StarRating from 'vue-star-rating';
+// import StarRating from 'vue-star-rating';
 import CreateArticleNav from './CreateArticleNav';
+import DatePicker from './DatePicker';
 // import HashModal from './HashModal.vue';
 // import HashList from './HashList.vue';
 import { createArticle, getUserHashtags } from '@/api/article.js';
@@ -112,8 +124,9 @@ export default {
   name: 'CreateArticle',
   components: {
     SelectPosition,
-    StarRating,
+    // StarRating,
     CreateArticleNav,
+    DatePicker,
     // HashModal,
     // HashList,
   },
@@ -161,6 +174,11 @@ export default {
         this.imgs.push(this.imageUrl);
         this.images.push(file);
       }
+      console.log('hi')
+      console.log(e.target.files)
+      console.log('hi')
+      console.log(this.imgs)
+
     },
     // addHash() {
     //   const newHash = {
