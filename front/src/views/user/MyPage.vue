@@ -33,7 +33,12 @@ export default {
     };
   },
   methods: {},
-  created() {},
+  created() {
+    // 하단 네브바로 mypage로 오면 본인의 uid로 axios요청
+    //    => const data = response.data
+    //
+    // else -> 상대방 페이지 => params에 userDto 등의 데이터가 있으니까 필요할때 axios하던지말던지
+  },
 };
 </script>
 
