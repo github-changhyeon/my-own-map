@@ -15,36 +15,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
-@Entity(name="user")
+@Entity(name = "user")
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 public class UserDto {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int uid;
 	private String username;
 	private String password;
-	private String role;		
-	@Column(name = "email",unique=true ,nullable = false)
+	private String role;
+	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 
-
-
-	
 	@Builder
-	public UserDto(String username,  String role, String email) {
+	public UserDto(String username, String role, String email) {
 		super();
-		this.username = username;		
+		this.username = username;
 		this.role = role;
 		this.email = email;
 	}
 
-	
-
 }
-

@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,12 +37,12 @@ import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.dao.UserHashtagDao;
 import com.ssafy.mom.model.ArticleDto;
 import com.ssafy.mom.model.ArticleHashtag;
-import com.ssafy.mom.model.ArticleRequest;
 import com.ssafy.mom.model.BasicResponse;
 import com.ssafy.mom.model.HashtagDto;
 import com.ssafy.mom.model.ImageDto;
 import com.ssafy.mom.model.UserDto;
 import com.ssafy.mom.model.UserHashtag;
+import com.sun.istack.Nullable;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -61,10 +64,10 @@ public class ArticleController {
 
 	@Value("${file.path}")
 	private String fileRealPath;
-	
+
 	@Autowired
-	private ImageDao imageDao;
-	
+	ImageDao imageDao;
+
 	@Autowired
 	ArticleDao articleDao;
 
@@ -82,42 +85,47 @@ public class ArticleController {
 
 	@PostMapping
 	@ApiOperation(value = "게시글 등록한다")
-	public Object createArticle(@RequestParam("img") MultipartFile files, ArticleRequest articleRequest) {
-		System.out.println("Imsaddddd");
-		System.out.println(articleRequest);
+	public Object createArticle(@RequestPart(value = "file[]", required = false) List<MultipartFile> file,
+			@RequestPart("article") ArticleDto articleDto) {
 		final BasicResponse result = new BasicResponse();
-		// -------------- 이미지 저장 start
-		ArticleDto articleDto = articleRequest.getArticleDto();
-		MultipartFile multipartFile = articleRequest.getMultipartFile();
+//		System.out.println(file);
+		System.out.println(articleDto);
 		// 이미지 업로드 수행
-		UUID uuid = UUID.randomUUID();
-		String uuidFilename = uuid + "_" + multipartFile.getOriginalFilename();
-
-		Path filePath = Paths.get(fileRealPath + uuidFilename);
-	
-		try {
-			Files.write(filePath, multipartFile.getBytes()); // 하드디스크 기록
-		} catch (IOException e) {
-			result.message = "이미지를 저장하지 못했습니다.";
-			result.status = false;
-			e.printStackTrace();
-			return result;
+		if(file != null) {
+			UUID uuid = UUID.randomUUID();
+			System.out.println(file.size());
+			int saveCnt = 0;
+			while (saveCnt < file.size()) {
+				// 현재 시스템 시간 구하기
+				long systemTime = System.currentTimeMillis();
+				// 출력 형태를 위한 formmater
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
+				// format에 맞게 출력하기 위한 문자열 변환
+				String dTime = formatter.format(systemTime);
+				
+				String uuidFilename = uuid + "_" + dTime + file.get(saveCnt).getOriginalFilename();
+				
+				Path filePath = Paths.get(fileRealPath + uuidFilename);
+				
+				try {
+					Files.write(filePath, file.get(saveCnt).getBytes()); // 하드디스크 기록
+				} catch (IOException e) {
+					result.message = "이미지를 저장하지 못했습니다.";
+					result.status = false;
+					e.printStackTrace();
+					return result;
+				}
+				
+				ImageDto imageDto = new ImageDto();
+				imageDto.setArticleDto(articleDto);
+				imageDto.setPostImage(uuidFilename);
+				
+				imageDao.save(imageDto);
+				saveCnt++;
+			}
+			// -------------- 이미지 저장 end
 		}
 
-
-//		UserDto userDto = articleDto.getUserDto();
-
-		ImageDto imageDto = new ImageDto();
-		imageDto.setArticleDto(articleDto);
-		imageDto.setPostImage(uuidFilename);
-
-		imageDao.save(imageDto);
-		
-		result.message = "이미지 저장에 성공하였습니다.";
-		result.status = true;
-//		return result;
-		// -------------- 이미지 저장 end
-		
 		// TODO: 회원정보 연동시 uid 가져오기
 		int uid = 1;
 
@@ -128,6 +136,7 @@ public class ArticleController {
 			result.message = "유저 정보가 없습니다.";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
+
 		// TODO : 게시물 작성 시간 등록
 		articleDto.setUserDto(userOpt.get());
 		articleDao.save(articleDto);
@@ -163,50 +172,12 @@ public class ArticleController {
 			articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
 		}
 
-
 		result.status = true;
 		result.message = "success";
 		return new ResponseEntity<>(result, HttpStatus.OK);
+
 	}
 
-	
-	@PostMapping(value="/save")
-	public Object saveSell(@RequestBody ArticleRequest articleRequest) { 
-		
-		final BasicResponse result = new BasicResponse();
-		
-		ArticleDto articleDto = articleRequest.getArticleDto();
-		MultipartFile multipartFile = articleRequest.getMultipartFile();
-		// 이미지 업로드 수행
-		UUID uuid = UUID.randomUUID();
-		String uuidFilename = uuid + "_" + multipartFile.getOriginalFilename();
-
-		Path filePath = Paths.get(fileRealPath + uuidFilename);
-	
-		try {
-			Files.write(filePath, multipartFile.getBytes()); // 하드디스크 기록
-		} catch (IOException e) {
-			result.message = "이미지를 저장하지 못했습니다.";
-			result.status = false;
-			e.printStackTrace();
-			return result;
-		}
-
-
-//		UserDto userDto = articleDto.getUserDto();
-
-		ImageDto imageDto = new ImageDto();
-		imageDto.setArticleDto(articleDto);
-		imageDto.setPostImage(uuidFilename);
-
-		imageDao.save(imageDto);
-		
-		result.message = "이미지 저장에 성공하였습니다.";
-		result.status = true;
-		return result;
-	 }
-	
-	
 	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)
 	@GetMapping
 	public ResponseEntity<BasicResponse> retrieveArticles() {
@@ -229,6 +200,12 @@ public class ArticleController {
 			}
 
 			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
 
 		}
 		result.object = articles;
@@ -249,9 +226,14 @@ public class ArticleController {
 		for (int j = 0; j < list.size(); ++j) {
 			tmpHashtags.add(list.get(j).getHashtagDto());
 		}
-		
 
 		articleOpt.get().setHashtags(tmpHashtags);
+		List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleOpt.get());
+		ArrayList<String> tmpImagePaths = new ArrayList<>();
+		for (int i = 0; i < tmpImages.size(); i++) {
+			tmpImagePaths.add(tmpImages.get(i).getPostImage());
+		}
+		articleOpt.get().setImagePaths(tmpImagePaths);
 		return articleOpt;
 	}
 
@@ -270,7 +252,6 @@ public class ArticleController {
 			hashtags.add(list.get(i).getHashtagDto());
 		}
 
-//		System.out.println(hashtags);
 		final BasicResponse result = new BasicResponse();
 		result.status = true;
 		result.message = "success";
@@ -288,7 +269,7 @@ public class ArticleController {
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 		// TODO: 작성 시간이 확립되면 진행
 		List<ArticleDto> articles = articleDao.findTop10ByUserDtoOrderByUpdateTimeDesc(userOpt.get());
-		for(int i = 0; i < articles.size(); ++i) {
+		for (int i = 0; i < articles.size(); ++i) {
 			List<ArticleHashtag> articleHashtags = articleHashtagDao.findAllByArticleDto(articles.get(i));
 			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
 			for (int j = 0; j < articleHashtags.size(); ++j) {
@@ -296,13 +277,18 @@ public class ArticleController {
 			}
 
 			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
 		}
-		
+
 		final BasicResponse result = new BasicResponse();
 		result.status = true;
 		result.message = "success";
 		result.object = articles;
-//		System.out.println(list);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -312,7 +298,7 @@ public class ArticleController {
 
 		// TODO: 회원정보 연동시 uid 가져오기
 		int uid = 1;
-		
+
 		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
 		if (!articleOpt.isPresent())
 			return new ResponseEntity<String>("article not found", HttpStatus.BAD_REQUEST);
@@ -320,24 +306,23 @@ public class ArticleController {
 		articleDto.setUserDto(userOpt.get());
 		articleDto.setArticleNo(articleNo);
 		articleDao.save(articleDto);
-		
+
 		// 기존 article hashtag 삭제하기
 		// 기존 user hashtag 삭제하기
-		
-//		System.out.println(articleOpt.get());
+
 		List<ArticleHashtag> alreadyArticleHashtags = articleHashtagDao.findAllByArticleDto(articleOpt.get());
 //		System.out.println("진짜해쉬태그" + alreadyArticleHashtags);
 //		System.out.println("해쉬태그는" + articleOpt.get().getHashtags());
-		if(alreadyArticleHashtags == null)
+		if (alreadyArticleHashtags == null)
 			alreadyArticleHashtags = new ArrayList<>();
-		for(int i = 0; i < alreadyArticleHashtags.size(); ++i) {
+		for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
 			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 //			System.out.println("카운트는" + cnt);
-			if(cnt == 1)
+			if (cnt == 1)
 				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 		}
 		articleHashtagDao.deleteByArticleDto(articleDto);
-	
+
 		List<HashtagDto> hashtags = hashtagDao.findAll();
 		// 현재 작성한 글의 해쉬태그 반환
 		List<HashtagDto> inputHashtags = articleDto.getHashtags();
@@ -366,8 +351,7 @@ public class ArticleController {
 			;
 			articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
 		}
-		
-		
+
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 
@@ -377,7 +361,6 @@ public class ArticleController {
 
 		// TODO: 회원정보 연동시 uid 가져오기
 //		 int uid = 1;
-		
 
 		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
 		if (!articleOpt.isPresent())
@@ -386,18 +369,17 @@ public class ArticleController {
 		List<ArticleHashtag> alreadyArticleHashtags = articleHashtagDao.findAllByArticleDto(articleOpt.get());
 //		System.out.println("진짜해쉬태그" + alreadyArticleHashtags);
 //		System.out.println("해쉬태그는" + articleOpt.get().getHashtags());
-		if(alreadyArticleHashtags == null)
+		if (alreadyArticleHashtags == null)
 			alreadyArticleHashtags = new ArrayList<>();
-		for(int i = 0; i < alreadyArticleHashtags.size(); ++i) {
+		for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
 			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 //			System.out.println("카운트는" + cnt);
-			if(cnt == 1)
+			if (cnt == 1)
 				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 		}
-		
+
 		articleHashtagDao.deleteByArticleDto(articleOpt.get());
 		articleDao.delete(articleOpt.get());
-//		userHashtagDao.findByUserDtoAndHashtagDto(userDto, alreadyExist)
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 

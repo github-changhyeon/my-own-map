@@ -56,6 +56,8 @@ public class ArticleDto {
 	private int evaluation;
 	@Transient
 	private ArrayList<HashtagDto> hashtags;
+	@Transient
+	private ArrayList<String> imagePaths;
 //	private int uid;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
