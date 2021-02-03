@@ -89,7 +89,7 @@ public class UserController {
      
         
         if (userOpt.isPresent()) {
-        	String token = jwtService.create("email", userOpt.get().getEmail(), "access-token");// key, data, subject
+        	String token = jwtService.create("uid", userOpt.get().getUid(), "access-token");// key, data, subject
 
             result.status= true;
             result.message = SUCCESS;
@@ -145,7 +145,7 @@ public class UserController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/{username}")
+	@GetMapping("/findByUsername/{username}")
 	@ApiOperation(value ="회원이름으로 찾기")
 	public Object retrieveUserByUsername(@PathVariable String username){
 		final BasicResponse result = new BasicResponse();
@@ -165,12 +165,32 @@ public class UserController {
 		}		
 	}
 	
+	@GetMapping("/findByUid/{uid}")
+	@ApiOperation(value ="회원번호로 찾기")
+	public Object retrieveUserByUid(@PathVariable int uid){
+		final BasicResponse result = new BasicResponse();
+		Optional<UserDto> findUser = userDao.findByUid(uid);
+		
+	
+		if(!findUser.isPresent()) {
+			result.status =false;
+			result.message= FAIL;
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		else {
+			result.status=true;
+			result.message=SUCCESS;
+			result.object = findUser;
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}		
+	}
+	
 	@PutMapping
 	@ApiOperation(value ="회원정보 수정")
-	public Object updateUser(@RequestBody UserDto userDto, HttpServletRequest request){
+	public Object updateUser(@RequestBody UserDto userDto,HttpServletRequest request){
 		final BasicResponse result = new BasicResponse();
-		String email = jwtService.getUserEmail();
-		Optional<UserDto> userOpt = userDao.findByEmail(email);
+		int uid = jwtService.getUserUid();
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
 //		System.out.println(userOpt.toString());
 		//회원번호로 검색한 것이 있다면 수정세팅
 		if(!userOpt.isPresent()) {	
@@ -191,8 +211,8 @@ public class UserController {
 	@ApiOperation(value ="회원탈퇴")
 	public Object deleteUser(HttpServletRequest request){
 		final BasicResponse result = new BasicResponse();
-		String email = jwtService.getUserEmail();
-		Optional<UserDto> userOpt = userDao.findByEmail(email);
+		int uid = jwtService.getUserUid();
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
 		
 //		System.out.println(userOpt.toString());
 		if(!userOpt.isPresent()) {

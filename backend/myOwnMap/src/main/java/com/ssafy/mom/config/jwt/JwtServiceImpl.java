@@ -76,7 +76,7 @@ public class JwtServiceImpl implements JwtService {
 	public Map<String, Object> get(String key) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
-		String jwt = request.getHeader("access-token");
+		String jwt = request.getHeader("jwt");
 		Jws<Claims> claims = null;
 		try {
 			claims = Jwts.parser().setSigningKey(TK.getBytes("UTF-8")).parseClaimsJws(jwt);
@@ -98,7 +98,7 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	@Override
-	public String getUserEmail() {
-		return (String) this.get("email").get("email");
+	public int getUserUid() {
+		return  (int) this.get("uid").get("uid");
 	}
 }
