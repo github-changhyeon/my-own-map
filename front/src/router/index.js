@@ -18,10 +18,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: '/main/:uid',
     // name: 'Main',
     name: constants.URL_TYPE.HOME.MAIN,
     component: Main,
+    props: true,
   },
   // {
   //   path: '/about',
@@ -61,7 +62,7 @@ const routes = [
     props: true,
   },
   {
-    path: '/login',
+    path: '/',
     name: constants.URL_TYPE.USER.LOGIN,
     component: Login,
     props: true,
