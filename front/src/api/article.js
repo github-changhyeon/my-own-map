@@ -1,6 +1,7 @@
-import { createInstance } from './index.js';
+import { createInstance, createMultipartInstance } from './index.js';
 
 const instance = createInstance();
+const multipartInstance = createMultipartInstance();
 
 function getArticles(userId, success, fail) {
   userId = 1;
@@ -56,7 +57,7 @@ function getArticle(articleNo, success, fail) {
 
 function createArticle(article, success, fail) {
   // let userId = 1;
-  instance
+  multipartInstance
     .post(`/articles`, article)
     .then(success)
     .catch(fail);

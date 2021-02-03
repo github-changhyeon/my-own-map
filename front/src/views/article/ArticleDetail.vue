@@ -110,6 +110,7 @@ export default {
         updateTime: '',
         title: '',
         userDto: {},
+        imagePaths:null,
       },
       items: [
         {
@@ -244,6 +245,10 @@ export default {
 
   created() {
     this.article = this.$route.params.article;
+    for(var i = 0; i < this.article.imagePaths.length; ++i){
+      this.items.push({"src" : "@/assets/upload/"+this.article.imagePaths[i]});
+    }
+    console.log("hey" + this.items[4].src)
   },
 };
 </script>

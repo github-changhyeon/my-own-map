@@ -48,11 +48,19 @@
       이 장소의 사진
       <br />
       <br />
-      <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
+      <!-- <input type="file" @change="onFileSelected">
+      <button @click="onUpload">+</button> -->
+      <form encType="multipart/form-data" >
+        <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
+      </form>
+      <button class="lefty picture-upload"  type="button" @click="onClickImageUpload">+</button>
+      <div v-for="(img, idx) in imgs" :key="idx">
+        <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
+      <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
       <v-carousel>
         <v-carousel-item v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
-      </v-carousel>
+      </v-carousel> -->
       <!-- <div v-for="(img, idx) in imgs" :key="idx">
         <img :src="img" alt="" class="picture-size" />
       </div> -->
@@ -68,7 +76,7 @@
         style="font-size:23px; width:300px;"
       >
       </v-text-field> -->
-      <!-- <input type="date" /> -->
+      <input type="date" v-model="article.visitDate" />
       <!-- <v-date-picker
       width="350"
       class="mt-4"
@@ -134,6 +142,7 @@ export default {
       // hash: '',
       // hashs: Array,
       imgs: [],
+      images: [],
       rate: 0,
       article: {
         positionLat: '',
@@ -143,7 +152,7 @@ export default {
         evaluation: 0,
         hashtags: [],
         contents: '',
-        images: [],
+        visitDate:'',
       },
     };
   },
@@ -163,6 +172,7 @@ export default {
         const file = e.target.files[i];
         this.imageUrl = URL.createObjectURL(file);
         this.imgs.push(this.imageUrl);
+        this.images.push(file);
       }
       console.log('hi')
       console.log(e.target.files)
@@ -179,14 +189,34 @@ export default {
     //     this.hash = '';
     //   });
     // },
-    createPost() {
+    createPost() { 
+      console.log(this.article.visitDate);
+      // console.log(this.article.images[0])
+      var params = new URLSearchParams();
+      params.append('file', this.images);
+      params.append('article', this.article)
       for (let i = 0; i < this.hashtagNames.length; ++i) {
         let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
         this.article.hashtags.push(obj);
       }
-      this.article.images = this.imgs;
+
+      // const imgs = new FormData();
+      // sonsole.log(typeof(this.article.images))
+      const formData = new FormData();
+      // console.log(this.images);
+      // console.log(typeof(this.images));
+      // console.log(this.images[0]);
+      // console.log(this.images[1]);
+
+        this.images.forEach((image) => formData.append("file[]", image));
+      // formData.append("file", this.images);
+      formData.append("article",new Blob([JSON.stringify(this.article)],{ type: "application/json" }) )
+      // console.log("file",formData.get("file"));
+      // console.log("file",formData.get("article").hashtags);
+      
+
       createArticle(
-        this.article,
+        formData,
         (response) => {
           // console.log(response.data);
           if (response.data.status) {

@@ -1,7 +1,9 @@
 package com.ssafy.mom.model;
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,10 +31,11 @@ public class ImageDto{
 	private int id;
 	private String postImage; //포스팅 사진 경로+이름
 	
-	@ManyToOne
+//	@ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="articleNo")
-//	@JsonIgnoreProperties({"password", "images"})
 	private ArticleDto articleDto;
+//	@JsonIgnoreProperties({"password", "images"})
 	
 	@CreationTimestamp
 	private Timestamp createDate;
