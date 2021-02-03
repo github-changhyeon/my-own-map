@@ -32,7 +32,7 @@ public class ImageDto{
 	private String postImage; //포스팅 사진 경로+이름
 	
 //	@ManyToOne(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="articleNo")
 	private ArticleDto articleDto;
 //	@JsonIgnoreProperties({"password", "images"})

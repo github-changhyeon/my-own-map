@@ -11,7 +11,8 @@
               <v-card>
                 <v-card-text class="pt-4">
                   <div>
-                    <v-form v-model="valid" ref="form">
+                    <!-- <v-form v-model="valid" ref="form"> -->
+                    <v-form ref="form">
                       <v-text-field name="email" type="email" label="이메일을 입력해 주세요." v-model="loginForm.email"></v-text-field>
                       <v-text-field name="password" type="password" label="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
                       <v-layout justify-space-between>
@@ -65,12 +66,13 @@ export default {
       login(
         this.loginForm,
         (response) => {
-          console.log(response);
+          console.log(response.data.object);
           console.log('111111');
           localStorage.setItem('jwt', response.data.object);
 
           this.tokenData = jwt_decode(response.data.object);
-          this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: this.tokenData.uid });
+          console.log(this.tokenData, this.tokenData.uid);
+          this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.tokenData.uid }});
         },
         (error) => {
           console.log(error);

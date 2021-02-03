@@ -133,8 +133,9 @@
 <script>
 // import constants from '../../lib/constants';
 // import { login } from '@/api/user.js';
-import { getArticles, getRecentArticles, getUserHashtags } from '@/api/article.js';
+import { getArticles, getRecentArticles, getUserHashtags } from '@/api/user.js';
 import constants from '@/lib/constants';
+import jwt_decode from 'jwt-decode';
 // import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
@@ -158,8 +159,10 @@ export default {
     // NaverLogin
   },
   created() {
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
     getArticles(
-      1,
+      uid,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
@@ -179,7 +182,7 @@ export default {
     );
 
     getRecentArticles(
-      1,
+      uid,
       (response) => {
         if (response.data.status) {
           this.recentArticles = response.data.object;
@@ -195,7 +198,7 @@ export default {
     );
 
     getUserHashtags(
-      1,
+      uid,
       (response) => {
         if (response.data.status) {
           this.userHashtags = response.data.object;
@@ -494,14 +497,15 @@ export default {
       let ratingDiv = document.createElement('div');
       let rating = '';
       let starCnt = 0;
-      // data.evaluation *= 2;
-      for (starCnt; starCnt < Math.floor(data.evaluation / 2); ++starCnt) {
+      let evaluation = data.evaluation * 2;
+      
+      for (starCnt; starCnt < Math.floor(evaluation / 2); ++starCnt) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
         rating.className = 'mdi mdi-star theme--light orange--text';
         ratingDiv.appendChild(rating);
       }
-      if (data.evaluation % 2 == 1) {
+      if (evaluation % 2 == 1) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
         rating.className = 'mdi mdi-star-half-full theme--light orange--text';

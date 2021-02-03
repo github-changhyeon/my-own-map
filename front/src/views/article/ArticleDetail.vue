@@ -19,7 +19,7 @@
           <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
         </v-carousel>
       </div>
-      <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" large></v-rating>
+      <v-rating readonly  half-increments  v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" large></v-rating>
       <!-- <div>
         <label for="title"><strong>작성자</strong> | </label>
         {{ this.$route.query.user }}
@@ -245,6 +245,7 @@ export default {
 
   created() {
     this.article = this.$route.params.article;
+    alert(this.article.evaluation);
     for(var i = 0; i < this.article.imagePaths.length; ++i){
       this.items.push({"src" : "@/assets/upload/"+this.article.imagePaths[i]});
     }

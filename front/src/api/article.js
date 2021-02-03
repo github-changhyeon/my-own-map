@@ -3,30 +3,6 @@ import { createInstance, createMultipartInstance } from './index.js';
 const instance = createInstance();
 const multipartInstance = createMultipartInstance();
 
-function getArticles(userId, success, fail) {
-  userId = 1;
-  instance
-    .get(`/articles`)
-    .then(success)
-    .catch(fail);
-}
-
-function getRecentArticles(userId, success, fail) {
-  userId = 1;
-  instance
-    .get(`/articles/recent`)
-    .then(success)
-    .catch(fail);
-}
-
-function getUserHashtags(userId, success, fail) {
-  userId = 1;
-  instance
-    .get(`/articles/hashtags`)
-    .then(success)
-    .catch(fail);
-}
-
 // function login(user, success, fail) {
 //   instance.defaults.headers['access-token'] = window.localStorage.getItem('access-token');
 //   const body = {
@@ -77,4 +53,4 @@ function updateArticle(article, success, fail) {
     .catch(fail);
 }
 
-export { getArticles, getRecentArticles, getUserHashtags, getArticle, deleteArticle, updateArticle, createArticle };
+export { getArticle, deleteArticle, updateArticle, createArticle };

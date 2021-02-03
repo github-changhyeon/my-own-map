@@ -39,6 +39,8 @@ export default {
   methods: {
     set() {
       this.$refs.dialog.save(this.date);
+      console.log(this.date[1])
+      this.$emit('setDate', this.date[1]);
     }
   }
 }

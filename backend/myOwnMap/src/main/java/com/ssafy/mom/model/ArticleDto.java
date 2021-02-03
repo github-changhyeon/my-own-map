@@ -52,13 +52,16 @@ public class ArticleDto {
 //	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	@UpdateTimestamp
 	private LocalDateTime updateTime;
-
-	private int evaluation;
+	
+	private String visitDate;
+	
+	private double evaluation;
 	@Transient
 	private ArrayList<HashtagDto> hashtags;
 	@Transient
 	private ArrayList<String> imagePaths;
-//	private int uid;
+	@Transient
+	private int uid;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "uid") // 외래키의 주인

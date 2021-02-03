@@ -127,7 +127,8 @@ public class ArticleController {
 		}
 
 		// TODO: 회원정보 연동시 uid 가져오기
-		int uid = 1;
+//		int uid = 1;
+		int uid = articleDto.getUid();
 
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 
@@ -178,41 +179,6 @@ public class ArticleController {
 
 	}
 
-	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)
-	@GetMapping
-	public ResponseEntity<BasicResponse> retrieveArticles() {
-
-		// TODO: 회원정보 연동시 uid 가져오기
-		int uid = 1;
-
-		Optional<UserDto> userOpt = userDao.findByUid(uid);
-		final BasicResponse result = new BasicResponse();
-		result.status = true;
-		result.message = "success";
-		List<ArticleDto> articles = articleDao.findAllByUserDto(userOpt.get());
-
-		for (int i = 0; i < articles.size(); ++i) {
-
-			List<ArticleHashtag> list = articleHashtagDao.findAllByArticleDto(articles.get(i));
-			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
-			for (int j = 0; j < list.size(); ++j) {
-				tmpHashtags.add(list.get(j).getHashtagDto());
-			}
-
-			articles.get(i).setHashtags(tmpHashtags);
-			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
-			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
-			}
-			articles.get(i).setImagePaths(tmpImagePaths);
-
-		}
-		result.object = articles;
-		return new ResponseEntity<>(result, HttpStatus.OK);
-
-	}
-
 	@ApiOperation(value = "게시글 번호에 해당하는 게시글을 반환한다", response = List.class)
 	@GetMapping("/{articleNo}")
 	public Optional<ArticleDto> retrieveArticleByArticleNo(@PathVariable int articleNo) {
@@ -235,61 +201,6 @@ public class ArticleController {
 		}
 		articleOpt.get().setImagePaths(tmpImagePaths);
 		return articleOpt;
-	}
-
-	@ApiOperation(value = "해당 유저의 해쉬태그를 모두 반환한다.", response = List.class)
-	@GetMapping("/hashtags")
-	public ResponseEntity<BasicResponse> retrieveHashtags() {
-
-		// TODO: 회원정보 연동시 uid 가져오기
-		int uid = 1;
-
-		Optional<UserDto> userOpt = userDao.findByUid(uid);
-		List<UserHashtag> list = userHashtagDao.findAllByUserDto(userOpt.get());
-
-		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
-		for (int i = 0; i < list.size(); i++) {
-			hashtags.add(list.get(i).getHashtagDto());
-		}
-
-		final BasicResponse result = new BasicResponse();
-		result.status = true;
-		result.message = "success";
-		result.object = hashtags;
-		return new ResponseEntity<>(result, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
-	@GetMapping("/recent")
-	public ResponseEntity<BasicResponse> retrieveNewTenArticle() {
-
-		// TODO: 회원정보 연동시 uid 가져오기
-		int uid = 1;
-
-		Optional<UserDto> userOpt = userDao.findByUid(uid);
-		// TODO: 작성 시간이 확립되면 진행
-		List<ArticleDto> articles = articleDao.findTop10ByUserDtoOrderByUpdateTimeDesc(userOpt.get());
-		for (int i = 0; i < articles.size(); ++i) {
-			List<ArticleHashtag> articleHashtags = articleHashtagDao.findAllByArticleDto(articles.get(i));
-			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
-			for (int j = 0; j < articleHashtags.size(); ++j) {
-				tmpHashtags.add(articleHashtags.get(j).getHashtagDto());
-			}
-
-			articles.get(i).setHashtags(tmpHashtags);
-			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
-			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
-			}
-			articles.get(i).setImagePaths(tmpImagePaths);
-		}
-
-		final BasicResponse result = new BasicResponse();
-		result.status = true;
-		result.message = "success";
-		result.object = articles;
-		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "게시글 수정 후 성공/실패 여부를 반환한다", response = List.class)

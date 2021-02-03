@@ -103,7 +103,11 @@ import StarRating from 'vue-star-rating';
 import CreateArticleNav from './CreateArticleNav';
 // import HashModal from './HashModal.vue';
 // import HashList from './HashList.vue';
-import { updateArticle, getUserHashtags } from '@/api/article.js';
+import { updateArticle } from '@/api/article.js';
+import { getUserHashtags } from '@/api/user.js';
+
+import jwt_decode from 'jwt-decode';
+
 
 export default {
   name: 'CreateArticle',
@@ -196,8 +200,10 @@ export default {
   },
   mounted() {},
   created() {
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
     getUserHashtags(
-      1,
+      uid,
       (response) => {
         if (response.data.status) {
           let tempHashtagObjs = response.data.object;
