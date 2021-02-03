@@ -34,8 +34,12 @@
 </template>
 
 <script>
+import jwt_decode from 'jwt-decode';
+
 import { login } from '@/api/user.js';
 import NaverLogin from '@/components/user/NaverLogin';
+
+import constants from '@/lib/constants.js';
 
 export default {
   name: 'Login',
@@ -49,7 +53,7 @@ export default {
       // //  FIXME state 값 random string 으로 변경
       // state: 123,
       // naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',
-
+      tokenData: '',
       loginForm: {
         email: '',
         password: '',
@@ -63,8 +67,10 @@ export default {
         (response) => {
           console.log(response);
           console.log('111111');
-          localStorage.setItem('access-token', response.data.object);
-          this.$router.push('/');
+          localStorage.setItem('jwt', response.data.object);
+
+          this.tokenData = jwt_decode(response.data.object);
+          this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: this.tokenData.uid });
         },
         (error) => {
           console.log(error);

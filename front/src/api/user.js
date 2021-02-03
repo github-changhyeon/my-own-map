@@ -18,4 +18,15 @@ function join(user, success, fail) {
     .catch(fail);
 }
 
-export { login, join };
+function getUserInfo(uid, success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
+  // const body = {
+  //   email: user.email,
+  //   password: user.password,
+  instance
+    .get(`/users/${uid}`)
+    .then(success)
+    .catch(fail);
+}
+
+export { login, join, getUserInfo };
