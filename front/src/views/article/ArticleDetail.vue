@@ -51,7 +51,8 @@
       </div>
     </div>
 
-    <div class="buttons">
+    <div class="buttons"  v-if="isOwnArticle">
+    <!-- <div class="buttons"  > -->
       <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
       <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
       <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
@@ -83,6 +84,8 @@
 // import axios from 'axios';
 import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
+import jwt_decode from 'jwt-decode';
+
 
 export default {
   name: 'ArticleDetail',
@@ -99,6 +102,7 @@ export default {
       content: 'sample',
       comments: 'sample',
       commentId: Number,
+      isOwnArticle : false,
       article: {
         address: '',
         articleNo: 0,
@@ -244,12 +248,22 @@ export default {
   },
 
   created() {
+
     this.article = this.$route.params.article;
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
+    if(this.article.uid === uid) this.isOwnArticle = true;
+    console.log(this.article.uid, uid, "hasioeufhaiseufhaisuehfiasue")
     alert(this.article.evaluation);
     for(var i = 0; i < this.article.imagePaths.length; ++i){
       this.items.push({"src" : "@/assets/upload/"+this.article.imagePaths[i]});
     }
     console.log("hey" + this.items[4].src)
+
+    // TODO: 새로고침 했을 때 axios요청 생각해보기
+    // if(this.$route.params.article === null){
+      
+    // }
   },
 };
 </script>

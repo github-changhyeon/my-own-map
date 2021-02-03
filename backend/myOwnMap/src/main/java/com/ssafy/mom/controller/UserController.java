@@ -105,6 +105,7 @@ public class UserController {
 				tmpImagePaths.add(tmpImages.get(j).getPostImage());
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
+			articles.get(i).setUid(userOpt.get().getUid());
 		}
 
 		final BasicResponse result = new BasicResponse();
@@ -155,11 +156,12 @@ public class UserController {
 
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
-			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			ArrayList<String> tmpImagePaths = new ArrayList<>()	;
 			for (int j = 0; j < tmpImages.size(); j++) {
 				tmpImagePaths.add(tmpImages.get(j).getPostImage());
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
+			articles.get(i).setUid(userOpt.get().getUid());
 
 		}
 		result.object = articles;

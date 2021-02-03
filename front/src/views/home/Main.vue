@@ -168,6 +168,7 @@ export default {
           this.articles = response.data.object;
           for (let i = 0; i < this.articles.length; ++i) {
             this.articleTitles.push(this.articles[i].title);
+            console.log(this.articles[i].uid);
           }
           window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
           // alert('article list를 받았습니다.');
