@@ -50,5 +50,32 @@ function getUserHashtags(uid, success, fail) {
     .catch(fail);
 }
 
+function doFollow(uid, config, success, fail) {
+  instance
+    .get(`/follow/doFollow/${uid}`, config)
+    .then(success)
+    .catch(fail);
+}
 
-export { login, join, getUserInfo, getArticles, getRecentArticles, getUserHashtags};
+function findFollowing(uid, success, fail) {
+  instance
+    .get(`/follow/findFollowing/${uid}`)
+    .then(success)
+    .catch(fail);
+}
+
+function findFollower(uid, success, fail) {
+  instance
+    .get(`/follow/findFollower/${uid}`)
+    .then(success)
+    .catch(fail);
+}
+
+function isFollow(uid, config, success, fail) {
+  instance
+    .get(`/follow/isFollow/${uid}`, config)
+    .then(success)
+    .catch(fail);
+}
+
+export { login, join, getUserInfo, getArticles, getRecentArticles, getUserHashtags, doFollow, findFollower, findFollowing, isFollow };
