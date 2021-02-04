@@ -76,6 +76,7 @@ public class FollowController {
 					userFollowDao.deleteByUserFromAndUserTo(userFrom.get(), userEntity.get(i).getUserTo());
 					result.status = true;
 					result.message = "팔로우가 취소되었습니다.";
+					result.object = retrieveUserFollower(uid);
 					return new ResponseEntity<>(result, HttpStatus.OK);
 				}
 			}
@@ -85,6 +86,7 @@ public class FollowController {
 		userFollowDao.save(userFollow);
 		result.status = true;
 		result.message = "팔로우를 성공하였습니다";
+		result.object = retrieveUserFollower(uid);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 

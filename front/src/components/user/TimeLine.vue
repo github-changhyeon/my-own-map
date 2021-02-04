@@ -9,13 +9,13 @@
           <th>아이디</th>
           <th>날짜</th>
         </tr>
-        <tr v-for="(post, idx) in posts" :key="idx">
+        <tr v-for="(post, idx) in articleList" :key="idx">
           <td>{{ post.id }}</td>
           <td class="txt_left">
             <a href="javascript:;" @click="goToDetail(post)">{{ post.title }}</a>
           </td>
           <td>{{ post.user }}</td>
-          <td>{{ post.updated_at | moment('YYYY-MM-DD') }}</td>
+          <!-- <td>{{ post.updated_at | moment('YYYY-MM-DD') }}</td> -->
         </tr>
       </table>
     </div>
@@ -25,10 +25,11 @@
 <script>
 //npm install vue-moment --save
 
-import Vue from 'vue';
 // import axios from 'axios';
-import vueMoment from 'vue-moment';
-Vue.use(vueMoment);
+
+// import Vue from 'vue';
+// import vueMoment from 'vue-moment';
+// Vue.use(vueMoment);
 
 export default {
   name: 'TimeLine',

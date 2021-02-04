@@ -15,7 +15,7 @@ import MyPage from '@/views/user/MyPage';
 import Join from '@/views/user/Join';
 
 // SNS
-import NewsFeed from '@/views/sns/NewsFeed'
+import NewsFeed from '@/views/sns/NewsFeed';
 
 Vue.use(VueRouter);
 
@@ -82,10 +82,11 @@ const routes = [
     props: true,
   },
   {
-    path: '/newsfeed/:uid',
+    path: '/newsfeed',
     name: constants.URL_TYPE.SNS.NEWSFEED,
-    component: NewsFeed
-  }
+    component: NewsFeed,
+    props: true,
+  },
 ];
 
 const router = new VueRouter({
