@@ -289,6 +289,8 @@ public class ArticleController {
 				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 		}
 
+		imageDao.deleteAllByArticleDto(articleOpt.get());
+
 		articleHashtagDao.deleteByArticleDto(articleOpt.get());
 		articleDao.delete(articleOpt.get());
 		return new ResponseEntity<String>("success", HttpStatus.OK);

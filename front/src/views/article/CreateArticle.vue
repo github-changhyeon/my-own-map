@@ -50,17 +50,26 @@
       <br />
       <!-- <input type="file" @change="onFileSelected">
       <button @click="onUpload">+</button> -->
-      <form encType="multipart/form-data" >
+      <form encType="multipart/form-data">
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
-      <button class="lefty picture-upload"  type="button" @click="onClickImageUpload">+</button>
+      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
       <!-- <div v-for="(img, idx) in imgs" :key="idx"> -->
-        <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
+      <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
       <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
       -->
       <v-carousel class="picture-size" v-if="imgs.length != 0">
-        <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+        <v-carousel-item
+          class="picture-size"
+          v-for="(img, idx) in imgs"
+          :key="idx"
+          :src="img"
+          append
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+          multiple="true"
+        ></v-carousel-item>
       </v-carousel>
     </div>
     <br />
@@ -90,14 +99,7 @@
       </v-date-picker> -->
     </div>
     <div class="center">
-    <v-rating
-      v-model="article.evaluation"
-      background-color="grey lighten-1"
-      color="blue"
-      half-increments
-      length="5"
-      size="45"
-    ></v-rating>
+      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
       <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
     </div>
     <div>
@@ -118,7 +120,6 @@ import DatePicker from './DatePicker';
 // import HashList from './HashList.vue';
 import { createArticle } from '@/api/article.js';
 import { getUserHashtags } from '@/api/user.js';
-
 
 import jwt_decode from 'jwt-decode';
 
@@ -146,7 +147,7 @@ export default {
       imgs: [],
       images: [],
       rate: 0,
-      date:"",
+      date: '',
       article: {
         positionLat: '',
         positionLng: '',
@@ -155,13 +156,13 @@ export default {
         evaluation: 0,
         hashtags: [],
         contents: '',
-        visitDate:'',
-        uid:0,
+        visitDate: '',
+        uid: 0,
       },
     };
   },
   methods: {
-    setDate(date){
+    setDate(date) {
       this.visitDate = date;
     },
     getPos(positions) {
@@ -181,11 +182,6 @@ export default {
         this.imgs.push(this.imageUrl);
         this.images.push(file);
       }
-      console.log('hi')
-      console.log(e.target.files)
-      console.log('hi')
-      console.log(this.imgs)
-
     },
     // addHash() {
     //   const newHash = {
@@ -196,12 +192,11 @@ export default {
     //     this.hash = '';
     //   });
     // },
-    createPost() { 
-      console.log(this.article.visitDate);
+    createPost() {
       // console.log(this.article.images[0])
       var params = new URLSearchParams();
       params.append('file', this.images);
-      params.append('article', this.article)
+      params.append('article', this.article);
       for (let i = 0; i < this.hashtagNames.length; ++i) {
         let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
         this.article.hashtags.push(obj);
@@ -215,13 +210,12 @@ export default {
       // console.log(this.images[0]);
       // console.log(this.images[1]);
 
-        this.images.forEach((image) => formData.append("file[]", image));
+      this.images.forEach((image) => formData.append('file[]', image));
       // formData.append("file", this.images);
-      formData.append("article",new Blob([JSON.stringify(this.article)],{ type: "application/json" }) )
+      formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
       this.article.visitDate = this.date;
-      console.log(this.date);
       const token = localStorage.getItem('jwt');
       let uid = jwt_decode(token).uid;
       this.article.uid = uid;
@@ -231,7 +225,7 @@ export default {
           // console.log(response.data);
           if (response.data.status) {
             alert('작성 성공');
-            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params:{uid:uid} });
+            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: uid } });
           } else {
             alert('작성 실패');
           }

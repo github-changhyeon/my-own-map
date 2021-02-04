@@ -168,7 +168,6 @@ export default {
           this.articles = response.data.object;
           for (let i = 0; i < this.articles.length; ++i) {
             this.articleTitles.push(this.articles[i].title);
-            console.log(this.articles[i].uid);
           }
           window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
           // alert('article list를 받았습니다.');
@@ -225,8 +224,8 @@ export default {
     // TODO : follow하는 유저들의 정보 받아오기
     let tempUser = { uid: 2, username: '팔로우1' };
     this.followUsers.push(tempUser);
-    // tempUser = { uid: 2, username: '팔로우2' };
-    // this.followUsers.push(tempUser);
+    tempUser = { uid: 3, username: '팔로우2' };
+    this.followUsers.push(tempUser);
     for (let i = 0; i < this.followUsers.length; ++i) {
       this.followUserMap.set(this.followUsers[i].username, i);
       this.followUserNames.push(this.followUsers[i].username);
@@ -256,9 +255,9 @@ export default {
       _this.selectAllHashtagSwitch = false;
       // TODO : idx에 해당하는 articles 얻어오기
       let tempArticles = [];
-      let tempArticle = { title: '더미데이터', address: '대전광역시 유성구 더미데이터', positionLat: '33', positionLng: '127' };
+      let tempArticle = { title: '더미데이터', address: '대전광역시 유성구 더미데이터', positionLat: '33.3', positionLng: '126.5' };
       tempArticles.push(tempArticle);
-      tempArticle = { title: '더미데이터2', address: '대전광역시 유성구 더미데이터2', positionLat: '33', positionLng: '127.3' };
+      tempArticle = { title: '더미데이터2', address: '대전광역시 유성구 더미데이터2', positionLat: '33.4', positionLng: '126.7' };
       tempArticles.push(tempArticle);
 
       let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
@@ -303,7 +302,7 @@ export default {
         // let infowindow = new kakao.maps.InfoWindow({
         //   content: data.title, // 인포윈도우에 표시할 내용
         // });
-        kakao.maps.event.addListener(marker, 'click', function() {
+        kakao.maps.event.addListener(marker, 'click', function () {
           overlay.setMap(_this.map);
         });
         overlay.setMap(null);
@@ -328,7 +327,7 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
     },
     goToArticleDetail(article) {
-      console.log(article)
+      console.log(article);
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: article.articleNo, article: article } });
     },
     goToMyPage() {
@@ -445,10 +444,10 @@ export default {
 
         overlay.setContent(wrapDiv);
 
-        kakao.maps.event.addListener(nowMarker, 'click', function() {
+        kakao.maps.event.addListener(nowMarker, 'click', function () {
           overlay.setMap(_this.map);
         });
-        kakao.maps.event.addListener(blueMarker, 'click', function() {
+        kakao.maps.event.addListener(blueMarker, 'click', function () {
           overlay.setMap(_this.map);
         });
 
@@ -473,7 +472,7 @@ export default {
       let closeDiv = document.createElement('div');
       closeDiv.className = 'close';
       closeDiv.title = '닫기';
-      closeDiv.onclick = function() {
+      closeDiv.onclick = function () {
         // alert('a');
         overlay.setMap(null);
       };
@@ -499,7 +498,7 @@ export default {
       let rating = '';
       let starCnt = 0;
       let evaluation = data.evaluation * 2;
-      
+
       for (starCnt; starCnt < Math.floor(evaluation / 2); ++starCnt) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
@@ -522,7 +521,7 @@ export default {
       descDiv.appendChild(ratingDiv);
       let aTag = document.createElement('button');
       aTag.textContent = '게시물 보기';
-      aTag.onclick = function() {
+      aTag.onclick = function () {
         _this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: data.articleNo, article: data } });
       };
       descDiv.appendChild(aTag);
@@ -542,7 +541,7 @@ export default {
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAOMAP_KEY}&libraries=services,clusterer`;
       let _this = this;
       script.onload = () =>
-        kakao.maps.load(function() {
+        kakao.maps.load(function () {
           _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
