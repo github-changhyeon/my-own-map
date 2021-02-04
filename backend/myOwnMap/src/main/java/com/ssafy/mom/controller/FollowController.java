@@ -54,16 +54,16 @@ public class FollowController {
 	@Autowired
 	JwtService jwtService;
 
-	@GetMapping("/doFollow/{email}")
+	@GetMapping("/doFollow/{uid}")
 	@ApiOperation(value = "팔로우하기")
-	public Object follow(@PathVariable @ApiParam(value = "팔로우 시 필요한 회원정보(상대의 이메일).", required = true) String email,
+	public Object follow(@PathVariable @ApiParam(value = "팔로우 시 필요한 회원정보(상대의 이메일).", required = true) int uid,
 			HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 
 		int myUid = jwtService.getUserUid();
 		Optional<UserDto> userFrom = userDao.findByUid(myUid);
 
-		Optional<UserDto> userTo = userDao.findByEmail(email);
+		Optional<UserDto> userTo = userDao.findByUid(uid);
 
 		// 이미 내가 팔로우하였는지 확인!
 		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());

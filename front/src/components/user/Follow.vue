@@ -20,7 +20,7 @@ export default {
     },
     remove: {
       type: Function,
-      required: true,
+      // required: true,
     },
   },
   data() {
