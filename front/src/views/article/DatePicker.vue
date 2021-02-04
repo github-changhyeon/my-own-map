@@ -12,7 +12,6 @@
       <template v-slot:activator="{ on }">
         <v-text-field
           v-model="date"
-          :label="`${label}`"
           prepend-icon="mdi-calendar-range"
           readonly
           v-on="on"
@@ -31,7 +30,7 @@
 
 export default {
   name: "DatePicker",
-  props: ['label'],
+  props: ['date'],
   data: () => ({
     date: "",
     dateModal: false,
@@ -39,6 +38,7 @@ export default {
   methods: {
     set() {
       this.$refs.dialog.save(this.date);
+      this.$emit("setDate", this.date)
     }
   }
 }

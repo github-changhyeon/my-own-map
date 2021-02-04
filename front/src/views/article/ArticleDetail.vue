@@ -19,7 +19,15 @@
           <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
         </v-carousel>
       </div>
-      <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" large></v-rating>
+      <v-rating 
+        v-model="this.article.evaluation" 
+        background-color="grey lighten-1" 
+        color="blue"
+        half-increments
+        length="5"
+        readonly 
+        large>
+      </v-rating>
       <!-- <div>
         <label for="title"><strong>작성자</strong> | </label>
         {{ this.$route.query.user }}
@@ -76,6 +84,10 @@
         </div>
       </div>
     </div> -->
+    <div>
+      댓글 목록
+      <Comment />
+    </div>
   </v-app>
 </template>
 
@@ -83,13 +95,14 @@
 // import axios from 'axios';
 import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
+import Comment from './Comment.vue'
 
 export default {
   name: 'ArticleDetail',
   props: {
     articleNo: Number,
   },
-  components: {},
+  components: { Comment },
   data() {
     const index = this.$route.query.id;
     const Articles = this.$route.query;
