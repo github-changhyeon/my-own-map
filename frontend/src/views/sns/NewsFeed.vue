@@ -7,16 +7,19 @@
       </v-tabs>
     </v-card>
     <AllNewsFeed style="padding-top: 70px" />
+      <Navigation />
   </div>
 </template>
 <script>
 import AllNewsFeed from '@/components/sns/AllNewsFeed';
+import Navigation from '@/components/Navigation.vue';
 
 export default {
   name: 'NewsFeed',
   created() {},
   components: {
     AllNewsFeed,
+    Navigation,
   },
   data() {
     return {};

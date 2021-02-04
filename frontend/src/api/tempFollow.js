@@ -7,7 +7,7 @@ function getFollowingUsers(uid, success, fail) {
   //   email: user.email,
   //   password: user.password,
   instance
-    .get(`follow/findFollower/${uid}`)
+    .get(`follow/findFollowing/${uid}`)
     .then(success)
     .catch(fail);
 }

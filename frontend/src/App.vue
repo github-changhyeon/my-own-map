@@ -3,21 +3,21 @@
     <v-main>
       <!-- <Main /> -->
       <router-view> </router-view>
-      <Navigation />
+      <!-- <Navigation /> -->
     </v-main>
   </v-app>
 </template>
 
 <script>
 // import Main from './views/home/Main.vue';
-import Navigation from '@/components/Navigation.vue';
+// import Navigation from '@/components/Navigation.vue';
 
 export default {
   name: 'App',
 
   components: {
     // Main,
-    Navigation,
+    // Navigation,
   },
   mounted() {},
   methods: {},

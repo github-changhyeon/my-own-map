@@ -70,6 +70,7 @@ export default {
 
           this.tokenData = jwt_decode(response.data.object);
           this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.tokenData.uid } });
+          console.log(this.tokenData.uid, "이걸로 로그인합니다.....");
         },
         (error) => {
           console.log(error);

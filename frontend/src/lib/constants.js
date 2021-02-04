@@ -21,7 +21,7 @@ export default {
       CREATEARTICLE: 'createArticle',
       ARTICLEDETAIL: 'articleDetail',
       UPDATEARTICLE: 'updateArticle',
-      SELECTPOSITION: 'selectPosition',
+      // SELECTPOSITION: 'selectPosition',
     },
     UTIL: {
       AFTERJOIN: 'afterJoin',
