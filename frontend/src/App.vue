@@ -10,7 +10,7 @@
 
 <script>
 // import Main from './views/home/Main.vue';
-import Navigation from '@/components/home/Navigation.vue';
+import Navigation from '@/components/Navigation.vue';
 
 export default {
   name: 'App',
