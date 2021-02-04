@@ -13,6 +13,9 @@ public interface ImageDao extends JpaRepository<ImageDto, Integer>{
 //	public ArrayList<ImageDto> findAllByArticleDto(ArticleDto articleDto);
 
 	public List<ImageDto> findAllByArticleDto(ArticleDto articleDto);
+	
+	@Transactional
+	public void deleteAllByArticleDto(ArticleDto articleDto);
 
 	@Transactional
 	public void deleteAllByArticleDto(ArticleDto articleDto);

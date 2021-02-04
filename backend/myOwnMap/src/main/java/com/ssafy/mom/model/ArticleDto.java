@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -60,12 +61,14 @@ public class ArticleDto {
 	private ArrayList<HashtagDto> hashtags;
 	@Transient
 	private ArrayList<String> imagePaths;
-	@Transient
-	private int uid;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "uid") // 외래키의 주인
 	private UserDto userDto;
+	
+	@OneToMany(orphanRemoval = true)
+	@Transient
+	private ImageDto imageDto;
 	
 	
 }

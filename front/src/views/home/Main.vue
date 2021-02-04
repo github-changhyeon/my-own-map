@@ -327,7 +327,6 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
     },
     goToArticleDetail(article) {
-      console.log(article);
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: article.articleNo, article: article } });
     },
     goToMyPage() {
