@@ -220,6 +220,7 @@ public class UserController {
 		final BasicResponse result = new BasicResponse();
 		System.out.println("user: "+user);
 		user.setRole("ROLE_USER");
+		user.setStateMsg("상태메시지를 입력해주세요");
 		userDao.save(user);
 		result.object = user;
 		result.status=true;
