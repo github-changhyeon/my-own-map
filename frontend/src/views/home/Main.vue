@@ -6,7 +6,7 @@
       </v-btn>
     </v-row>
 
-    <v-row justify="end">
+    <v-row justify="end" v-if="isSameUser">
       <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 10px; right: 50px; z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
@@ -105,8 +105,11 @@
         <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 0; z-index: 2">
           <v-slide-group v-model="model" class="pa-4" show-arrows>
             <v-slide-item v-for="(article, i) in recentArticles" :key="i">
-              <v-card class="ma-4" height="100" width="70" @click="goToArticleDetail(article)">
-                <v-img height="70" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+              <v-card class="ma-4" height="100px" width="70px" @click="goToArticleDetail(article)">
+                <v-img
+                  height="70px"
+                  :src="article.imagePaths.length === 0 ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg' : 'https://i4b107.p.ssafy.io/images/uploads/' + article.imagePaths[0]"
+                ></v-img>
                 <v-card-title class="txt_line" style="padding: 0">{{ article.title }}</v-card-title>
               </v-card>
             </v-slide-item>
@@ -120,7 +123,7 @@
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" style="position: fixed; bottom: 160px; right: 5px; z-index: 2">
+      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" v-if="isSameUser" style="position: fixed; bottom: 160px; right: 5px; z-index: 2">
         <v-icon dark> mdi-plus </v-icon>
       </v-btn>
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
@@ -134,6 +137,7 @@
 // import constants from '../../lib/constants';
 // import { login } from '@/api/user.js';
 import { getArticles, getRecentArticles, getUserHashtags } from '@/api/user.js';
+import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 // import Vue from 'vue';
@@ -161,6 +165,13 @@ export default {
   created() {
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
+    if (this.$route.params.uid !== undefined && this.$route.params.uid !== null) {
+      uid = this.$route.params.uid;
+      if (jwt_decode(token).uid === this.$route.params.uid) {
+        this.isSameUser = true;
+      }
+    }
+
     getArticles(
       uid,
       (response) => {
@@ -222,10 +233,22 @@ export default {
     );
 
     // TODO : follow하는 유저들의 정보 받아오기
-    let tempUser = { uid: 2, username: '팔로우1' };
-    this.followUsers.push(tempUser);
-    tempUser = { uid: 3, username: '팔로우2' };
-    this.followUsers.push(tempUser);
+    getFollowingUsers(
+      uid,
+      (response) => {
+        // console.log(response);
+        if (response.data.status) {
+          this.followUsers = response.data.object;
+        } else {
+          console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+        }
+      },
+      (error) => {
+        console.log(error);
+        alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+      }
+    );
+
     for (let i = 0; i < this.followUsers.length; ++i) {
       this.followUserMap.set(this.followUsers[i].username, i);
       this.followUserNames.push(this.followUsers[i].username);
@@ -254,11 +277,21 @@ export default {
       }
       _this.selectAllHashtagSwitch = false;
       // TODO : idx에 해당하는 articles 얻어오기
-      let tempArticles = [];
-      let tempArticle = { title: '더미데이터', address: '대전광역시 유성구 더미데이터', positionLat: '33.3', positionLng: '126.5' };
-      tempArticles.push(tempArticle);
-      tempArticle = { title: '더미데이터2', address: '대전광역시 유성구 더미데이터2', positionLat: '33.4', positionLng: '126.7' };
-      tempArticles.push(tempArticle);
+      let followUserArticles = [];
+      getArticles(
+        _this.followUsers[idx].uid,
+        (response) => {
+          if (response.data.status) {
+            followUserArticles = response.data.object;
+          } else {
+            console.log('해당 유저의 게시물들을 받아올 수 없습니다.');
+          }
+        },
+        (error) => {
+          console.log(error);
+          alert('해당 유저의 게시물들을 받아올 수 없습니다.');
+        }
+      );
 
       let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
       let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
@@ -281,10 +314,10 @@ export default {
 
       let redMarkers = [];
 
-      for (let i = 0; i < tempArticles.length; ++i) {
+      for (let i = 0; i < followUserArticles.length; ++i) {
         let marker = new kakao.maps.Marker({
           // map: map, // 마커를 표시할 지도
-          position: new window.kakao.maps.LatLng(tempArticles[i].positionLat, tempArticles[i].positionLng), // 마커를 표시할 위치
+          position: new window.kakao.maps.LatLng(followUserArticles[i].positionLat, followUserArticles[i].positionLng), // 마커를 표시할 위치
           // title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           image: spriteMarkerImage, // 마커 이미지
         });
@@ -292,17 +325,13 @@ export default {
           map: _this.map,
           position: marker.getPosition(),
         });
-        let wrapDiv = _this.makeCustomizedOverlay(overlay, tempArticles[i]);
+        let wrapDiv = _this.makeCustomizedOverlay(overlay, followUserArticles[i]);
 
         // console.log(content);
 
         overlay.setContent(wrapDiv);
 
-        // TODO : 커스텀 오버레이
-        // let infowindow = new kakao.maps.InfoWindow({
-        //   content: data.title, // 인포윈도우에 표시할 내용
-        // });
-        kakao.maps.event.addListener(marker, 'click', function () {
+        kakao.maps.event.addListener(marker, 'click', function() {
           overlay.setMap(_this.map);
         });
         overlay.setMap(null);
@@ -443,10 +472,10 @@ export default {
 
         overlay.setContent(wrapDiv);
 
-        kakao.maps.event.addListener(nowMarker, 'click', function () {
+        kakao.maps.event.addListener(nowMarker, 'click', function() {
           overlay.setMap(_this.map);
         });
-        kakao.maps.event.addListener(blueMarker, 'click', function () {
+        kakao.maps.event.addListener(blueMarker, 'click', function() {
           overlay.setMap(_this.map);
         });
 
@@ -471,7 +500,7 @@ export default {
       let closeDiv = document.createElement('div');
       closeDiv.className = 'close';
       closeDiv.title = '닫기';
-      closeDiv.onclick = function () {
+      closeDiv.onclick = function() {
         // alert('a');
         overlay.setMap(null);
       };
@@ -484,8 +513,8 @@ export default {
       imgDiv.className = 'img';
       let imgSrc = document.createElement('img');
       imgSrc.src = 'https://cdn.vuetifyjs.com/images/cards/cooking.png';
-      imgSrc.style.width = '73';
-      imgSrc.style.height = '70';
+      imgSrc.style.width = '73px';
+      imgSrc.style.height = '70px';
       imgDiv.appendChild(imgSrc);
       let descDiv = document.createElement('div');
       descDiv.className = 'desc';
@@ -520,7 +549,7 @@ export default {
       descDiv.appendChild(ratingDiv);
       let aTag = document.createElement('button');
       aTag.textContent = '게시물 보기';
-      aTag.onclick = function () {
+      aTag.onclick = function() {
         _this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: data.articleNo, article: data } });
       };
       descDiv.appendChild(aTag);
@@ -540,7 +569,7 @@ export default {
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAOMAP_KEY}&libraries=services,clusterer`;
       let _this = this;
       script.onload = () =>
-        kakao.maps.load(function () {
+        kakao.maps.load(function() {
           _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
@@ -549,6 +578,7 @@ export default {
   },
   data: () => {
     return {
+      isSameUser: false,
       map: {},
       followUserMap: new Map(),
       followUserSwitches: [],

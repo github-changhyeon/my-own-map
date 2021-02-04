@@ -31,6 +31,13 @@ function getArticle(articleNo, success, fail) {
     .catch(fail);
 }
 
+function getAllArticles(success, fail) {
+  instance
+    .get(`/articles`)
+    .then(success)
+    .catch(fail);
+}
+
 function createArticle(article, success, fail) {
   // let userId = 1;
   multipartInstance
@@ -53,4 +60,4 @@ function updateArticle(article, success, fail) {
     .catch(fail);
 }
 
-export { getArticle, deleteArticle, updateArticle, createArticle };
+export { getArticle, deleteArticle, getAllArticles, updateArticle, createArticle };
