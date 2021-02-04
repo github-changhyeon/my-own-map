@@ -150,7 +150,7 @@ public class FollowController {
 	//현재 팔로우되잇는지확인하기위한 상태체크
 	@GetMapping("/isFollow/{uid}")
 	@ApiOperation(value = "jwt가 uid를 팔로우중인지 체크")
-	public Object isFollow(@PathVariable int uid) {
+	public Object isFollow(@PathVariable int uid, HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		int myUid = jwtService.getUserUid();
 		Optional<UserDto> userFrom = userDao.findByUid(myUid);
