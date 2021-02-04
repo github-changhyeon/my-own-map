@@ -61,8 +61,6 @@ public class ArticleDto {
 	private ArrayList<HashtagDto> hashtags;
 	@Transient
 	private ArrayList<String> imagePaths;
-	@Transient
-	private int uid;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "uid") // 외래키의 주인

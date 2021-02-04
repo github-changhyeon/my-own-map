@@ -156,7 +156,7 @@ export default {
         hashtags: [],
         contents: '',
         visitDate:'',
-        uid:0,
+        userDto:{}
       },
     };
   },
@@ -221,10 +221,9 @@ export default {
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
       this.article.visitDate = this.date;
-      console.log(this.date);
       const token = localStorage.getItem('jwt');
       let uid = jwt_decode(token).uid;
-      this.article.uid = uid;
+      this.article.UserDto.uid = uid;
       createArticle(
         formData,
         (response) => {
@@ -252,7 +251,7 @@ export default {
   created() {
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
-    this.article.uid = uid;
+    this.article.userDto.uid = uid;
     getUserHashtags(
       uid,
       (response) => {

@@ -14,7 +14,6 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +41,6 @@ import com.ssafy.mom.model.HashtagDto;
 import com.ssafy.mom.model.ImageDto;
 import com.ssafy.mom.model.UserDto;
 import com.ssafy.mom.model.UserHashtag;
-import com.sun.istack.Nullable;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -91,7 +89,7 @@ public class ArticleController {
 //		System.out.println(file);
 		System.out.println(articleDto);
 		// 이미지 업로드 수행
-		if(file != null) {
+		if (file != null) {
 			UUID uuid = UUID.randomUUID();
 			System.out.println(file.size());
 			int saveCnt = 0;
@@ -102,11 +100,11 @@ public class ArticleController {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
 				// format에 맞게 출력하기 위한 문자열 변환
 				String dTime = formatter.format(systemTime);
-				
+
 				String uuidFilename = uuid + "_" + dTime + file.get(saveCnt).getOriginalFilename();
-				
+
 				Path filePath = Paths.get(fileRealPath + uuidFilename);
-				
+
 				try {
 					Files.write(filePath, file.get(saveCnt).getBytes()); // 하드디스크 기록
 				} catch (IOException e) {
@@ -115,11 +113,11 @@ public class ArticleController {
 					e.printStackTrace();
 					return result;
 				}
-				
+
 				ImageDto imageDto = new ImageDto();
 				imageDto.setArticleDto(articleDto);
 				imageDto.setPostImage(uuidFilename);
-				
+
 				imageDao.save(imageDto);
 				saveCnt++;
 			}
@@ -128,7 +126,7 @@ public class ArticleController {
 
 		// TODO: 회원정보 연동시 uid 가져오기
 //		int uid = 1;
-		int uid = articleDto.getUid();
+		int uid = articleDto.getUserDto().getUid();
 
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 
@@ -208,7 +206,7 @@ public class ArticleController {
 	public ResponseEntity<String> updateArticle(@RequestBody ArticleDto articleDto, @PathVariable int articleNo) {
 
 		// TODO: 회원정보 연동시 uid 가져오기
-		int uid = 1;
+		int uid = articleDto.getUserDto().getUid();
 
 		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
 		if (!articleOpt.isPresent())
@@ -273,22 +271,33 @@ public class ArticleController {
 		// TODO: 회원정보 연동시 uid 가져오기
 //		 int uid = 1;
 
+		// 게시글 번호로 게시글dto 검색
 		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
+		// 없는 게시물이라면 fail
 		if (!articleOpt.isPresent())
 			return new ResponseEntity<String>("fail", HttpStatus.OK);
-
+		// 게시물에 해당하는 게시물-해쉬태그값을 가져온다 그 묶음이
 		List<ArticleHashtag> alreadyArticleHashtags = articleHashtagDao.findAllByArticleDto(articleOpt.get());
-//		System.out.println("진짜해쉬태그" + alreadyArticleHashtags);
-//		System.out.println("해쉬태그는" + articleOpt.get().getHashtags());
+		System.out.println("진짜해쉬태그" + alreadyArticleHashtags);
+		System.out.println("해쉬태그는" + articleOpt.get().getHashtags());
+
 		if (alreadyArticleHashtags == null)
 			alreadyArticleHashtags = new ArrayList<>();
+		// 이미 가지고 있는 해쉬태그를 순회
 		for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
-			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			// 그중 하나 해쉬태그로 유저-해쉬태그를 검색
+//			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+//			UserHashtag userHashtag = userHashtagDao.findAll(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo());
+//			List<UserHashtag> tmpUserHashtags = userHashtagDao.findAllByHashtagNo(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo()); 
+			int cnt = (int) articleHashtagDao
+					.findAllByHashtagNo(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo());
+			System.out.println("I found " + cnt);
+//			System.out.println(alreadyArticleHashtags.get(i).getHashtagDto() + "카운트는" + tmpUserHashtags.size() + "찾은건");
+			// 혹시 해당 해쉬태그로 검색한 게시글이 하나다?
 			if (cnt == 1)
-				System.out.println(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagName() + "카운트는" + cnt);
 				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 		}
-		
+
 		imageDao.deleteAllByArticleDto(articleOpt.get());
 
 		articleHashtagDao.deleteByArticleDto(articleOpt.get());

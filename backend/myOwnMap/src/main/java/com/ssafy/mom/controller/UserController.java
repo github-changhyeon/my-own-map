@@ -40,7 +40,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
-
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
 		@ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
 		@ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
@@ -49,45 +48,37 @@ import lombok.RequiredArgsConstructor;
 //@CrossOrigin(origins = { "http://localhost:3000" })
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping(value="/users")
+@RequestMapping(value = "/users")
 @RequiredArgsConstructor
 public class UserController {
-	
+
 	private static final String SUCCESS = "success";
-	private static final String FAIL ="fail";
+	private static final String FAIL = "fail";
 
 	@Autowired
 	private ArticleDao articleDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
-
 	@Autowired
 	EmailService emailService;
-	
 
 	@Autowired
 	private JwtServiceImpl jwtService;
-	
+
 	@Autowired
 	private ArticleHashtagDao articleHashtagDao;
 
 	@Autowired
 	private ImageDao imageDao;
-	
+
 	@Autowired
 	private UserHashtagDao userHashtagDao;
-	
-	
-
-	
 
 	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
 	@GetMapping("/{uid}/recentArticles")
 	public ResponseEntity<BasicResponse> retrieveNewTenArticle(@PathVariable int uid) {
-
-
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 		// TODO: 작성 시간이 확립되면 진행
 		List<ArticleDto> articles = articleDao.findTop10ByUserDtoOrderByUpdateTimeDesc(userOpt.get());
@@ -105,7 +96,8 @@ public class UserController {
 				tmpImagePaths.add(tmpImages.get(j).getPostImage());
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
-			articles.get(i).setUid(userOpt.get().getUid());
+//			articles.get(i).setUid(userOpt.get().getUid());
+			articles.get(i).setUserDto(userOpt.get());
 		}
 
 		final BasicResponse result = new BasicResponse();
@@ -115,11 +107,9 @@ public class UserController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-
 	@ApiOperation(value = "해당 유저의 해쉬태그를 모두 반환한다.", response = List.class)
 	@GetMapping("/{uid}/userHashtags")
 	public ResponseEntity<BasicResponse> retrieveHashtags(@PathVariable int uid) {
-
 
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 		List<UserHashtag> list = userHashtagDao.findAllByUserDto(userOpt.get());
@@ -135,7 +125,7 @@ public class UserController {
 		result.object = hashtags;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)
 	@GetMapping("/{uid}/articles")
 	public ResponseEntity<BasicResponse> retrieveArticles(@PathVariable int uid) {
@@ -156,173 +146,163 @@ public class UserController {
 
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
-			ArrayList<String> tmpImagePaths = new ArrayList<>()	;
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
 			for (int j = 0; j < tmpImages.size(); j++) {
 				tmpImagePaths.add(tmpImages.get(j).getPostImage());
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
-			articles.get(i).setUid(userOpt.get().getUid());
+			articles.get(i).setUserDto(userOpt.get());
 
 		}
 		result.object = articles;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 
-	}	
-	
-	
-	
+	}
+
 	@PostMapping("/login")
-    @ApiOperation(value = "로그인")
-    public Object login(@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).", required = true) UserDto user) {
-    	// @RequestParam(required = true) final String email, @RequestParam(required = true) final String password
+	@ApiOperation(value = "로그인")
+	public Object login(@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).", required = true) UserDto user) {
+		// @RequestParam(required = true) final String email, @RequestParam(required =
+		// true) final String password
 		final BasicResponse result = new BasicResponse();
-		
-    	String email = user.getEmail();
-    	String password = user.getPassword();
-    	Optional<UserDto> userOpt = userDao.findUserByEmailAndPassword(email, password);
-        ResponseEntity response = null;
-     
-        
-        if (userOpt.isPresent()) {
-        	String token = jwtService.create("uid", userOpt.get().getUid(), "access-token");// key, data, subject
 
-            result.status= true;
-            result.message = SUCCESS;
-            result.object= token;
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-        	//resultMap.put("message", "존재하지 않는 사용자입니다.");
-        	 result.status= false;
-             result.message = FAIL;
-            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
+		String email = user.getEmail();
+		String password = user.getPassword();
+		Optional<UserDto> userOpt = userDao.findUserByEmailAndPassword(email, password);
+		ResponseEntity response = null;
 
-        return response;
-    }
-	
+		if (userOpt.isPresent()) {
+			String token = jwtService.create("uid", userOpt.get().getUid(), "access-token");// key, data, subject
 
-    @GetMapping("/account/verify/{key}")
-    public ResponseEntity<String> getVerify(@PathVariable String key) {
-       
-        try {
-            emailService.verifyEmail(key);
-            return new ResponseEntity<String>("이메일 인증에 성공하였습니다. 다시 로그인 해주세요.", HttpStatus.OK);
+			result.status = true;
+			result.message = SUCCESS;
+			result.object = token;
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			// resultMap.put("message", "존재하지 않는 사용자입니다.");
+			result.status = false;
+			result.message = FAIL;
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
 
-        } catch (Exception e) {
-        	return new ResponseEntity<String>("인증 시간 초과로 인해 이메일 인증에 실패하였습니다.", HttpStatus.OK);
-        }
+		return response;
+	}
 
-    }	
+	@GetMapping("/account/verify/{key}")
+	public ResponseEntity<String> getVerify(@PathVariable String key) {
 
-    @PostMapping("/join")
-	@ApiOperation(value="회원가입")
+		try {
+			emailService.verifyEmail(key);
+			return new ResponseEntity<String>("이메일 인증에 성공하였습니다. 다시 로그인 해주세요.", HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<String>("인증 시간 초과로 인해 이메일 인증에 실패하였습니다.", HttpStatus.OK);
+		}
+
+	}
+
+	@PostMapping("/join")
+	@ApiOperation(value = "회원가입")
 	public Object join(@RequestBody UserDto user) {
 		final BasicResponse result = new BasicResponse();
-		System.out.println("user: "+user);
+		System.out.println("user: " + user);
 		user.setRole("ROLE_USER");
 		userDao.save(user);
 		result.object = user;
-		result.status=true;
-		result.message =SUCCESS;
-		
-		return new ResponseEntity<>(result,HttpStatus.OK);
+		result.status = true;
+		result.message = SUCCESS;
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-
 	@GetMapping("/admin/findAllUser")
-	@ApiOperation(value="모든 회원 반환",response= List.class)
-	public Object retrieveUsers(){
+	@ApiOperation(value = "모든 회원 반환", response = List.class)
+	public Object retrieveUsers() {
 		final BasicResponse result = new BasicResponse();
 		List<UserDto> list = userDao.findAll();
-		result.status=true;
-		result.message=SUCCESS;
+		result.status = true;
+		result.message = SUCCESS;
 		result.object = list;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/findByUsername/{username}")
-	@ApiOperation(value ="회원이름으로 찾기")
-	public Object retrieveUserByUsername(@PathVariable String username){
+	@ApiOperation(value = "회원이름으로 찾기")
+	public Object retrieveUserByUsername(@PathVariable String username) {
 		final BasicResponse result = new BasicResponse();
 		Optional<UserDto> findUser = userDao.findByUsername(username);
-		
-	
-		if(!findUser.isPresent()) {
-			result.status =false;
-			result.message= FAIL;
+
+		if (!findUser.isPresent()) {
+			result.status = false;
+			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		}
-		else {
-			result.status=true;
-			result.message=SUCCESS;
+		} else {
+			result.status = true;
+			result.message = SUCCESS;
 			result.object = findUser;
 			return new ResponseEntity<>(result, HttpStatus.OK);
-		}		
+		}
 	}
-	
+
 	@GetMapping("/findByUid/{uid}")
-	@ApiOperation(value ="회원번호로 찾기")
-	public Object retrieveUserByUid(@PathVariable int uid){
+	@ApiOperation(value = "회원번호로 찾기")
+	public Object retrieveUserByUid(@PathVariable int uid) {
 		final BasicResponse result = new BasicResponse();
 		Optional<UserDto> findUser = userDao.findByUid(uid);
-		
-	
-		if(!findUser.isPresent()) {
-			result.status =false;
-			result.message= FAIL;
+
+		if (!findUser.isPresent()) {
+			result.status = false;
+			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		}
-		else {
-			result.status=true;
-			result.message=SUCCESS;
+		} else {
+			result.status = true;
+			result.message = SUCCESS;
 			result.object = findUser;
 			return new ResponseEntity<>(result, HttpStatus.OK);
-		}		
+		}
 	}
-	
+
 	@PutMapping
-	@ApiOperation(value ="회원정보 수정")
-	public Object updateUser(@RequestBody UserDto userDto,HttpServletRequest request){
+	@ApiOperation(value = "회원정보 수정")
+	public Object updateUser(@RequestBody UserDto userDto, HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		int uid = jwtService.getUserUid();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 //		System.out.println(userOpt.toString());
-		//회원번호로 검색한 것이 있다면 수정세팅
-		if(!userOpt.isPresent()) {	
-			result.status =false;
-			result.message= FAIL;		
+		// 회원번호로 검색한 것이 있다면 수정세팅
+		if (!userOpt.isPresent()) {
+			result.status = false;
+			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		}
-		else {	
-			result.status=true;
-			result.message=SUCCESS;
+		} else {
+			result.status = true;
+			result.message = SUCCESS;
 			result.object = userDto;
 			userDao.save(userDto);
-			return new ResponseEntity<>(result,HttpStatus.OK);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 	}
-	
+
 	@DeleteMapping
-	@ApiOperation(value ="회원탈퇴")
-	public Object deleteUser(HttpServletRequest request){
+	@ApiOperation(value = "회원탈퇴")
+	public Object deleteUser(HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		int uid = jwtService.getUserUid();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
-		
+
 //		System.out.println(userOpt.toString());
-		if(!userOpt.isPresent()) {
-			result.status =false;
-			result.message= FAIL;
+		if (!userOpt.isPresent()) {
+			result.status = false;
+			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		}
-		else {			
-			result.status=true;
-			result.message=SUCCESS;
+		} else {
+			result.status = true;
+			result.message = SUCCESS;
 			result.object = userOpt.get();
 			userDao.delete(userOpt.get());
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
-		
+
 	}
 
 //	@GetMapping("/test")
@@ -331,5 +311,5 @@ public class UserController {
 //		System.out.println(request.getHeader("access-token"));
 //		System.out.println(jwtService.getUserEmail());
 //	}
-	
+
 }

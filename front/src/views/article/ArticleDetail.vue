@@ -165,6 +165,7 @@ export default {
     },
 
     checkDelete() {
+
       if (confirm('정말 삭제하시겠습니까?') == true) {
         //확인
         deleteArticle(
@@ -172,7 +173,7 @@ export default {
           (response) => {
             console.log(response);
             // 메인으로
-            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN });
+            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params:{uid:this.article.userDto.uid} });
             // this.goToList();
           },
           (error) => {
@@ -252,13 +253,10 @@ export default {
     this.article = this.$route.params.article;
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
-    if(this.article.uid === uid) this.isOwnArticle = true;
-    console.log(this.article.uid, uid, "hasioeufhaiseufhaisuehfiasue")
-    alert(this.article.evaluation);
+    if(this.article.userDto.uid === uid) this.isOwnArticle = true;
     for(var i = 0; i < this.article.imagePaths.length; ++i){
       this.items.push({"src" : "@/assets/upload/"+this.article.imagePaths[i]});
     }
-    console.log("hey" + this.items[4].src)
 
     // TODO: 새로고침 했을 때 axios요청 생각해보기
     // if(this.$route.params.article === null){
