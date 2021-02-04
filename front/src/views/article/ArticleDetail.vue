@@ -95,7 +95,9 @@
 // import axios from 'axios';
 import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
-import Comment from './Comment.vue'
+import jwt_decode from 'jwt-decode';
+import Comment from './Comment.vue';
+ 
 
 export default {
   name: 'ArticleDetail',
@@ -258,10 +260,18 @@ export default {
 
   created() {
     this.article = this.$route.params.article;
-    for(var i = 0; i < this.article.imagePaths.length; ++i){
-      this.items.push({"src" : "@/assets/upload/"+this.article.imagePaths[i]});
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
+    if (this.article.uid === uid) this.isOwnArticle = true;
+    // alert(this.article.evaluation);
+    for (var i = 0; i < this.article.imagePaths.length; ++i) {
+      this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
     }
-    console.log("hey" + this.items[4].src)
+
+    // TODO: 새로고침 했을 때 axios요청 생각해보기
+    // if(this.$route.params.article === null){
+
+    // }
   },
 };
 </script>

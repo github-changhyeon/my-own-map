@@ -47,7 +47,7 @@
       </form>
       <button class="lefty picture-upload"  type="button" @click="onClickImageUpload">+</button>
       <v-carousel class="picture-size" v-if="images.length != 0">
-        <v-carousel-item v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+        <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
       </v-carousel>
     </div>
     <br />
