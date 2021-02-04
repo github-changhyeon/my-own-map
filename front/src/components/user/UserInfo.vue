@@ -100,13 +100,17 @@ export default {
       // params로 받은 userdto의 이메일과 jwt디코드로 받은 email정보와 같으면 본인
       // => isMine = true/false로 판단해서 버튼 가리기 트루면 본인이니까 axios 안하고
       // false면 다른사람페이지니까 버튼을 보여주고 axios 요청을 보내고
-      // 토큰에 내정보는 있고, 여기 email은 내가 follow할 사랆의 email
+      // 토큰에 내정보는 있고, 여기 uid 내가 follow할 사랆의 uid
       console.log('dofollow');
       console.log(this.uid);
       axios
         .get(`http://localhost:8080/follow/doFollow/${this.uid}`, config)
         .then((response) => {
           console.log(response);
+          // console.log(response.data.object.body.object);
+          // 이 uid의 팔로워 list를 넘겨받고-> response.data
+          this.followerList = response.data.object.body.object;
+          console.log(this.followerList);
         })
         .catch((error) => {
           console.log(error);
