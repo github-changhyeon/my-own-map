@@ -85,10 +85,10 @@
         </div>
       </div>
     </div> -->
-    <div>
+    <!-- <div>
       댓글 목록
       <Comment />
-    </div>
+    </div> -->
   </v-app>
 </template>
 
@@ -97,7 +97,7 @@
 import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
-import Comment from './Comment.vue';
+// import Comment from './Comment.vue';
  
 
 export default {
@@ -105,7 +105,7 @@ export default {
   props: {
     articleNo: Number,
   },
-  components: { Comment },
+//  components: { Comment },
   data() {
     const index = this.$route.query.id;
     const Articles = this.$route.query;
