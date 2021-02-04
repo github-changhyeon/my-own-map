@@ -105,6 +105,7 @@
     <div>
       <button class="upload" @click="createPost()">등록</button>
     </div>
+      <Navigation />
   </div>
 </template>
 
@@ -122,6 +123,7 @@ import { createArticle } from '@/api/article.js';
 import { getUserHashtags } from '@/api/user.js';
 
 import jwt_decode from 'jwt-decode';
+import Navigation from '@/components/Navigation.vue';
 
 export default {
   name: 'CreateArticle',
@@ -130,6 +132,7 @@ export default {
     // StarRating,
     CreateArticleNav,
     DatePicker,
+    Navigation,
     // HashModal,
     // HashList,
   },

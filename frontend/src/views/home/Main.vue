@@ -130,6 +130,8 @@
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
     </v-row>
+    
+    <Navigation />
   </div>
 </template>
 
@@ -140,6 +142,7 @@ import { getArticles, getRecentArticles, getUserHashtags } from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
+import Navigation from '@/components/Navigation.vue';
 // import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
@@ -161,13 +164,15 @@ const SPRITE_GAP = 10;
 export default {
   components: {
     // NaverLogin
+    Navigation,
   },
   created() {
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
     if (this.$route.params.uid !== undefined && this.$route.params.uid !== null) {
       uid = this.$route.params.uid;
-      if (jwt_decode(token).uid === this.$route.params.uid) {
+
+      if (Number(jwt_decode(token).uid) === Number(this.$route.params.uid)) {
         this.isSameUser = true;
       }
     }
@@ -239,6 +244,11 @@ export default {
         // console.log(response);
         if (response.data.status) {
           this.followUsers = response.data.object;
+           for (let i = 0; i < this.followUsers.length; ++i) {
+            this.followUserMap.set(this.followUsers[i].username, i);
+            this.followUserNames.push(this.followUsers[i].username);
+            this.followUserSwitches.push(false);
+           } 
         } else {
           console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
         }
@@ -249,17 +259,15 @@ export default {
       }
     );
 
-    for (let i = 0; i < this.followUsers.length; ++i) {
-      this.followUserMap.set(this.followUsers[i].username, i);
-      this.followUserNames.push(this.followUsers[i].username);
-      this.followUserSwitches.push(false);
-    }
+   
   },
   mounted() {},
   watch: {},
   methods: {
     clickFollowUserSwitch(idx) {
       let _this = this;
+      // 돌아오기!!@!@!@
+      console.log(this.followUsers, idx);
       if (!this.followUserSwitches[idx]) {
         this.clusterer.clear();
         this.clusterer.addMarkers(this.kakaoMarkers);
@@ -283,6 +291,53 @@ export default {
         (response) => {
           if (response.data.status) {
             followUserArticles = response.data.object;
+            // 팔로우한 사람 게시글 받아와서 지도에 표시
+            let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
+            let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
+            let spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT);
+
+            let gapX = SPRITE_MARKER_WIDTH + SPRITE_GAP;
+
+            let spriteOriginY = SPRITE_MARKER_HEIGHT + SPRITE_GAP;
+            let spriteNormalOrigin = new kakao.maps.Point(gapX, spriteOriginY);
+
+            let spriteMarkerImage = new kakao.maps.MarkerImage(
+              SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
+              spriteMarkerSize, // 마커의 크기
+              {
+                offset: spriteMarkerOffset, // 마커 이미지에서의 기준 좌표
+                spriteOrigin: spriteNormalOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
+                spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
+              }
+            );
+
+            let redMarkers = [];
+            for (let i = 0; i < followUserArticles.length; ++i) {
+              let marker = new kakao.maps.Marker({
+                // map: map, // 마커를 표시할 지도
+                position: new window.kakao.maps.LatLng(followUserArticles[i].positionLat, followUserArticles[i].positionLng), // 마커를 표시할 위치
+                // title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                image: spriteMarkerImage, // 마커 이미지
+              });
+              let overlay = new kakao.maps.CustomOverlay({
+                map: _this.map,
+                position: marker.getPosition(),
+              });
+              let wrapDiv = _this.makeCustomizedOverlay(overlay, followUserArticles[i]);
+
+              // console.log(content);
+
+              overlay.setContent(wrapDiv);
+
+              kakao.maps.event.addListener(marker, 'click', function() {
+                overlay.setMap(_this.map);
+              });
+              overlay.setMap(null);
+              redMarkers.push(marker);
+            }
+            this.clusterer.clear();
+            this.clusterer.addMarkers(this.blueMarkers);
+            this.clusterer.addMarkers(redMarkers);
           } else {
             console.log('해당 유저의 게시물들을 받아올 수 없습니다.');
           }
@@ -292,54 +347,6 @@ export default {
           alert('해당 유저의 게시물들을 받아올 수 없습니다.');
         }
       );
-
-      let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
-      let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
-      let spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT);
-
-      let gapX = SPRITE_MARKER_WIDTH + SPRITE_GAP;
-
-      let spriteOriginY = SPRITE_MARKER_HEIGHT + SPRITE_GAP;
-      let spriteNormalOrigin = new kakao.maps.Point(gapX, spriteOriginY);
-
-      let spriteMarkerImage = new kakao.maps.MarkerImage(
-        SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
-        spriteMarkerSize, // 마커의 크기
-        {
-          offset: spriteMarkerOffset, // 마커 이미지에서의 기준 좌표
-          spriteOrigin: spriteNormalOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
-          spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
-        }
-      );
-
-      let redMarkers = [];
-
-      for (let i = 0; i < followUserArticles.length; ++i) {
-        let marker = new kakao.maps.Marker({
-          // map: map, // 마커를 표시할 지도
-          position: new window.kakao.maps.LatLng(followUserArticles[i].positionLat, followUserArticles[i].positionLng), // 마커를 표시할 위치
-          // title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          image: spriteMarkerImage, // 마커 이미지
-        });
-        let overlay = new kakao.maps.CustomOverlay({
-          map: _this.map,
-          position: marker.getPosition(),
-        });
-        let wrapDiv = _this.makeCustomizedOverlay(overlay, followUserArticles[i]);
-
-        // console.log(content);
-
-        overlay.setContent(wrapDiv);
-
-        kakao.maps.event.addListener(marker, 'click', function() {
-          overlay.setMap(_this.map);
-        });
-        overlay.setMap(null);
-        redMarkers.push(marker);
-      }
-      this.clusterer.clear();
-      this.clusterer.addMarkers(this.blueMarkers);
-      this.clusterer.addMarkers(redMarkers);
     },
     clickSearchTitleBar() {
       this.searchTitle = '';

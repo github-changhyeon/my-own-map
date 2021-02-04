@@ -7,7 +7,7 @@ import Agreement from '../views/user/Agreement';
 // Article
 import ArticleDetail from '@/views/article/ArticleDetail';
 import CreateArticle from '@/views/article/CreateArticle';
-import SelectPosition from '@/views/article/SelectPosition';
+// import SelectPosition from '@/views/article/SelectPosition';
 import UpdateArticle from '@/views/article/UpdateArticle';
 
 // User
@@ -41,11 +41,11 @@ const routes = [
     component: CreateArticle,
   },
 
-  {
-    path: '/articles/selectPosition',
-    name: constants.URL_TYPE.ARTICLE.SELECTPOSITION,
-    component: SelectPosition,
-  },
+  // {
+  //   path: '/articles/selectPosition',
+  //   name: constants.URL_TYPE.ARTICLE.SELECTPOSITION,
+  //   component: SelectPosition,
+  // },
   {
     path: '/articles/:articleNo',
     name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
@@ -54,8 +54,8 @@ const routes = [
   },
   {
     path: '/users/:uid',
-    name: constants.URL_TYPE.USER.MYPAGE,
     component: MyPage,
+    name: constants.URL_TYPE.USER.MYPAGE,
     props: true,
   },
   {

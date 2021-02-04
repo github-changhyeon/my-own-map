@@ -15,7 +15,7 @@ import CreateComment from './CreateComment.vue'
 export default {
   name:Comment,
   components: {
-    CreateComment
+    CreateComment,
   },
   data() {
     return {
