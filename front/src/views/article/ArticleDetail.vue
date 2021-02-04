@@ -19,7 +19,15 @@
           <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
         </v-carousel>
       </div>
-      <v-rating readonly  half-increments  v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" large></v-rating>
+      <v-rating 
+        v-model="this.article.evaluation" 
+        background-color="orange lighten-3" 
+        color="orange"
+        half-increments
+        length="5"
+        readonly 
+        large>
+      </v-rating>
       <!-- <div>
         <label for="title"><strong>작성자</strong> | </label>
         {{ this.$route.query.user }}
@@ -51,8 +59,8 @@
       </div>
     </div>
 
-    <div class="buttons"  v-if="isOwnArticle">
-    <!-- <div class="buttons"  > -->
+    <div class="buttons" v-if="isOwnArticle">
+      <!-- <div class="buttons"  > -->
       <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
       <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
       <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
@@ -77,6 +85,10 @@
         </div>
       </div>
     </div> -->
+    <!-- <div>
+      댓글 목록
+      <Comment />
+    </div> -->
   </v-app>
 </template>
 
@@ -85,14 +97,15 @@
 import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
-
+// import Comment from './Comment.vue';
+ 
 
 export default {
   name: 'ArticleDetail',
   props: {
     articleNo: Number,
   },
-  components: {},
+//  components: { Comment },
   data() {
     const index = this.$route.query.id;
     const Articles = this.$route.query;
@@ -102,7 +115,7 @@ export default {
       content: 'sample',
       comments: 'sample',
       commentId: Number,
-      isOwnArticle : false,
+      isOwnArticle: false,
       article: {
         address: '',
         articleNo: 0,
@@ -114,7 +127,7 @@ export default {
         updateTime: '',
         title: '',
         userDto: {},
-        imagePaths:null,
+        imagePaths: null,
       },
       items: [
         {
@@ -171,7 +184,6 @@ export default {
         deleteArticle(
           this.article.articleNo,
           (response) => {
-            console.log(response);
             // 메인으로
             this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params:{uid:this.article.userDto.uid} });
             // this.goToList();
@@ -249,7 +261,6 @@ export default {
   },
 
   created() {
-
     this.article = this.$route.params.article;
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
@@ -260,7 +271,7 @@ export default {
 
     // TODO: 새로고침 했을 때 axios요청 생각해보기
     // if(this.$route.params.article === null){
-      
+
     // }
   },
 };

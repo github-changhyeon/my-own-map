@@ -16,7 +16,8 @@ public interface UserFollowDao extends JpaRepository<UserFollow, Integer> {
 	public List<UserFollow> findAllByUserFrom(UserDto userFrom);
 	//나를 팔로우한 사람들 찾기(팔로워)
 	public List<UserFollow> findAllByUserTo(UserDto userTo);
-	
+	//서로 팔로우 헀는지 찾기
+	public Optional<UserFollow> findByUserFromAndUserTo(UserDto userFrom, UserDto userTo);
 	
 	@Transactional
 	public void deleteByUserFromAndUserTo(UserDto userFrom, UserDto userTo);

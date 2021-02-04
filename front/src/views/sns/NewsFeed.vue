@@ -1,50 +1,40 @@
 <template>
   <v-app id="inspire">
-      <v-container>
-        <v-row no-gutters>
-          <v-col
-            v-for="(article, idx) in articles"
-            :key="idx"
-            md="6"
-            offset-md="3"
-          >
-            <v-card
-            height="200"
-            class="mt-10"
-            outlined
-            tile            
-            >
+    <v-container>
+      <v-row no-gutters>
+        <v-col @click="goToMypage(idx)" v-for="(article, idx) in articles" :key="idx" md="6" offset-md="3">
+          <v-card height="200" class="mt-10" outlined tile>
             <div>
-            <router-link :to="`users/${uid}/`">작성자: {{ article.user }}</router-link>
+              <!-- <router-link :to="`/users/${article.uid}`">작성자: {{ article.uid }}</router-link> -->
+              <div>작성자: {{ article.uid }}</div>
+            </div>
+            <div>rating: {{ article.rating }}</div>
+            <div>
+              {{ article.img }}
             </div>
             <div>
-            rating: {{ article.rating}}
+              해쉬태그
             </div>
             <div>
-            {{ article.img }}
+              작성일자
             </div>
             <div>
-            해쉬태그
+              주소
             </div>
             <div>
-            작성일자
+              title
             </div>
             <div>
-            주소
+              내용
             </div>
-            <div>
-            title
-            </div>
-            <div>
-            내용
-            </div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-app>
 </template>
 <script>
+import constants from '@/lib/constants.js';
 
 export default {
   name: 'NewsFeed',
@@ -52,25 +42,28 @@ export default {
     return {
       articles: [
         {
-          user: 1,
+          uid: 1,
           rating: 5,
-          img: 'https://cdn.vuetifyjs.com/images/cards/cooking.png
+          img: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
         },
         {
-          user: 2,
+          uid: 2,
         },
         {
-          user: 3,
-        }
+          uid: 3,
+        },
       ],
-    }
+    };
   },
   methods: {
-
-  }
-}
+    goToMypage(idx) {
+      console.log(this.$route.params);
+      // console.log(event);
+      console.log(this.articles[idx]);
+      this.$router.push({ name: constants.URL_TYPE.USER.MYPAGE, params: { uid: this.articles[idx].uid } });
+    },
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>
