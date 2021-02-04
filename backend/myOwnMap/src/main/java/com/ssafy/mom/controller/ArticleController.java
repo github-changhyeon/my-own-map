@@ -80,7 +80,28 @@ public class ArticleController {
 
 	@Autowired
 	ArticleHashtagDao articleHashtagDao;
-
+	
+	@GetMapping
+	@ApiOperation(value = "전체 게시물을 받아온다")
+	public Object retrieveAllArticles() {
+		List<ArticleDto> list = articleDao.findAll();
+		for (int i = 0; i < list.size(); i++) {
+			ArticleDto articleDto = list.get(i);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleDto);
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articleDto.setImagePaths(tmpImagePaths);
+		}
+		final BasicResponse result  = new BasicResponse();
+		result.status = true;
+		result.message = "전체 게시글 반환에 성공하였습니다.";
+		result.object = list;
+		return result;
+	}
+	
+	
 	@PostMapping
 	@ApiOperation(value = "게시글 등록한다")
 	public Object createArticle(@RequestPart(value = "file[]", required = false) List<MultipartFile> file,
