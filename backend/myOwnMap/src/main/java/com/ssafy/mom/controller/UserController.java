@@ -1,8 +1,7 @@
 package com.ssafy.mom.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,37 +9,30 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-
-import org.springframework.web.bind.annotation.PutMapping;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-
-
-import com.ssafy.mom.config.jwt.JwtService;
 import com.ssafy.mom.config.jwt.JwtServiceImpl;
+import com.ssafy.mom.dao.ArticleDao;
+import com.ssafy.mom.dao.ArticleHashtagDao;
+import com.ssafy.mom.dao.ImageDao;
 import com.ssafy.mom.dao.UserDao;
+import com.ssafy.mom.dao.UserHashtagDao;
 import com.ssafy.mom.email.EmailService;
+import com.ssafy.mom.model.ArticleDto;
+import com.ssafy.mom.model.ArticleHashtag;
 import com.ssafy.mom.model.BasicResponse;
+import com.ssafy.mom.model.HashtagDto;
+import com.ssafy.mom.model.ImageDto;
 import com.ssafy.mom.model.UserDto;
-
+import com.ssafy.mom.model.UserHashtag;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -64,6 +56,8 @@ public class UserController {
 	private static final String SUCCESS = "success";
 	private static final String FAIL ="fail";
 
+	@Autowired
+	private ArticleDao articleDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -75,6 +69,107 @@ public class UserController {
 
 	@Autowired
 	private JwtServiceImpl jwtService;
+	
+	@Autowired
+	private ArticleHashtagDao articleHashtagDao;
+
+	@Autowired
+	private ImageDao imageDao;
+	
+	@Autowired
+	private UserHashtagDao userHashtagDao;
+	
+	
+
+	
+
+	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
+	@GetMapping("/{uid}/recentArticles")
+	public ResponseEntity<BasicResponse> retrieveNewTenArticle(@PathVariable int uid) {
+
+
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
+		// TODO: 작성 시간이 확립되면 진행
+		List<ArticleDto> articles = articleDao.findTop10ByUserDtoOrderByUpdateTimeDesc(userOpt.get());
+		for (int i = 0; i < articles.size(); ++i) {
+			List<ArticleHashtag> articleHashtags = articleHashtagDao.findAllByArticleDto(articles.get(i));
+			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
+			for (int j = 0; j < articleHashtags.size(); ++j) {
+				tmpHashtags.add(articleHashtags.get(j).getHashtagDto());
+			}
+
+			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
+			articles.get(i).setUid(userOpt.get().getUid());
+		}
+
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		result.object = articles;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+
+	@ApiOperation(value = "해당 유저의 해쉬태그를 모두 반환한다.", response = List.class)
+	@GetMapping("/{uid}/userHashtags")
+	public ResponseEntity<BasicResponse> retrieveHashtags(@PathVariable int uid) {
+
+
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
+		List<UserHashtag> list = userHashtagDao.findAllByUserDto(userOpt.get());
+
+		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
+		for (int i = 0; i < list.size(); i++) {
+			hashtags.add(list.get(i).getHashtagDto());
+		}
+
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		result.object = hashtags;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)
+	@GetMapping("/{uid}/articles")
+	public ResponseEntity<BasicResponse> retrieveArticles(@PathVariable int uid) {
+
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		List<ArticleDto> articles = articleDao.findAllByUserDto(userOpt.get());
+
+		for (int i = 0; i < articles.size(); ++i) {
+
+			List<ArticleHashtag> list = articleHashtagDao.findAllByArticleDto(articles.get(i));
+			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
+			for (int j = 0; j < list.size(); ++j) {
+				tmpHashtags.add(list.get(j).getHashtagDto());
+			}
+
+			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>()	;
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
+			articles.get(i).setUid(userOpt.get().getUid());
+
+		}
+		result.object = articles;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
+	}	
+	
+	
 	
 	@PostMapping("/login")
     @ApiOperation(value = "로그인")
@@ -89,7 +184,7 @@ public class UserController {
      
         
         if (userOpt.isPresent()) {
-        	String token = jwtService.create("email", userOpt.get().getEmail(), "access-token");// key, data, subject
+        	String token = jwtService.create("uid", userOpt.get().getUid(), "access-token");// key, data, subject
 
             result.status= true;
             result.message = SUCCESS;
@@ -145,7 +240,7 @@ public class UserController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/{username}")
+	@GetMapping("/findByUsername/{username}")
 	@ApiOperation(value ="회원이름으로 찾기")
 	public Object retrieveUserByUsername(@PathVariable String username){
 		final BasicResponse result = new BasicResponse();
@@ -165,12 +260,32 @@ public class UserController {
 		}		
 	}
 	
+	@GetMapping("/findByUid/{uid}")
+	@ApiOperation(value ="회원번호로 찾기")
+	public Object retrieveUserByUid(@PathVariable int uid){
+		final BasicResponse result = new BasicResponse();
+		Optional<UserDto> findUser = userDao.findByUid(uid);
+		
+	
+		if(!findUser.isPresent()) {
+			result.status =false;
+			result.message= FAIL;
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		else {
+			result.status=true;
+			result.message=SUCCESS;
+			result.object = findUser;
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}		
+	}
+	
 	@PutMapping
 	@ApiOperation(value ="회원정보 수정")
-	public Object updateUser(@RequestBody UserDto userDto, HttpServletRequest request){
+	public Object updateUser(@RequestBody UserDto userDto,HttpServletRequest request){
 		final BasicResponse result = new BasicResponse();
-		String email = jwtService.getUserEmail();
-		Optional<UserDto> userOpt = userDao.findByEmail(email);
+		int uid = jwtService.getUserUid();
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
 //		System.out.println(userOpt.toString());
 		//회원번호로 검색한 것이 있다면 수정세팅
 		if(!userOpt.isPresent()) {	
@@ -191,8 +306,8 @@ public class UserController {
 	@ApiOperation(value ="회원탈퇴")
 	public Object deleteUser(HttpServletRequest request){
 		final BasicResponse result = new BasicResponse();
-		String email = jwtService.getUserEmail();
-		Optional<UserDto> userOpt = userDao.findByEmail(email);
+		int uid = jwtService.getUserUid();
+		Optional<UserDto> userOpt = userDao.findByUid(uid);
 		
 //		System.out.println(userOpt.toString());
 		if(!userOpt.isPresent()) {

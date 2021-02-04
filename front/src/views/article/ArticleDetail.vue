@@ -21,8 +21,8 @@
       </div>
       <v-rating 
         v-model="this.article.evaluation" 
-        background-color="grey lighten-1" 
-        color="blue"
+        background-color="orange lighten-3" 
+        color="orange"
         half-increments
         length="5"
         readonly 
@@ -59,7 +59,8 @@
       </div>
     </div>
 
-    <div class="buttons">
+    <div class="buttons" v-if="isOwnArticle">
+      <!-- <div class="buttons"  > -->
       <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
       <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
       <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
@@ -114,6 +115,7 @@ export default {
       content: 'sample',
       comments: 'sample',
       commentId: Number,
+      isOwnArticle: false,
       article: {
         address: '',
         articleNo: 0,
@@ -125,7 +127,7 @@ export default {
         updateTime: '',
         title: '',
         userDto: {},
-        imagePaths:null,
+        imagePaths: null,
       },
       items: [
         {
@@ -181,8 +183,8 @@ export default {
         deleteArticle(
           this.article.articleNo,
           (response) => {
-            console.log(response);
             // 메인으로
+            console.log(response);
             this.$router.push({ name: constants.URL_TYPE.HOME.MAIN });
             // this.goToList();
           },

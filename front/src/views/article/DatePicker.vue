@@ -1,14 +1,6 @@
 <template>
   <v-col md="4" offset-md="4">
-    <v-dialog
-      ref="dialog"
-      v-model="dateModal"
-      :return-value.sync="date"
-      persistent
-      lazy
-      full-width
-      width="290px"
-    >
+    <v-dialog ref="dialog" v-model="dateModal" :return-value.sync="date" persistent lazy full-width width="290px">
       <template v-slot:activator="{ on }">
         <v-text-field
           v-model="date"
@@ -19,20 +11,19 @@
       </template>
       <v-date-picker v-model="date" scrollable multiple>
         <v-spacer></v-spacer>
-        <v-btn flat color="primary" @click="dateModal = false">Cancel</v-btn>
-        <v-btn flat color="primary" @click="set()">OK</v-btn>
+        <v-btn text color="primary" @click="dateModal = false">Cancel</v-btn>
+        <v-btn text color="primary" @click="set()">OK</v-btn>
       </v-date-picker>
     </v-dialog>
   </v-col>
 </template>
 
 <script>
-
 export default {
   name: "DatePicker",
   props: ['date'],
   data: () => ({
-    date: "",
+    date: '',
     dateModal: false,
   }),
   methods: {

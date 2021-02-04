@@ -42,12 +42,28 @@
       이 장소의 사진
       <br />
       <br />
-      <form encType="multipart/form-data" >
+      <!-- <input type="file" @change="onFileSelected">
+      <button @click="onUpload">+</button> -->
+      <form encType="multipart/form-data">
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
-      <button class="lefty picture-upload"  type="button" @click="onClickImageUpload">+</button>
-      <v-carousel class="picture-size" v-if="images.length != 0">
-        <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
+      <!-- <div v-for="(img, idx) in imgs" :key="idx"> -->
+      <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
+      <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
+      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
+      -->
+      <v-carousel class="picture-size" v-if="imgs.length != 0">
+        <v-carousel-item
+          class="picture-size"
+          v-for="(img, idx) in imgs"
+          :key="idx"
+          :src="img"
+          append
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+          multiple="true"
+        ></v-carousel-item>
       </v-carousel>
     </div>
     <br />
@@ -82,7 +98,10 @@ import constants from '@/lib/constants';
 // import axios from 'axios';
 import CreateArticleNav from './CreateArticleNav';
 import DatePicker from './DatePicker';
-import { createArticle, getUserHashtags } from '@/api/article.js';
+import { createArticle } from '@/api/article.js';
+import { getUserHashtags } from '@/api/user.js';
+
+import jwt_decode from 'jwt-decode';
 
 export default {
   name: 'CreateArticle',
@@ -102,7 +121,8 @@ export default {
       hashtagNames: [],
       imgs: [],
       images: [],
-      date: 0,
+      rate: 0,
+      date: '',
       article: {
         positionLat: '',
         positionLng: '',
@@ -111,7 +131,8 @@ export default {
         evaluation: 0,
         hashtags: [],
         contents: '',
-        visitDate:'',
+        visitDate: '',
+        uid: 0,
       },
     };
   },
@@ -136,18 +157,21 @@ export default {
         this.imgs.push(this.imageUrl);
         this.images.push(file);
       }
-      console.log('hi')
-      console.log(e.target.files)
-      console.log('hi')
-      console.log(this.imgs)
-
     },
-    createPost() { 
-      console.log(this.article.visitDate);
+    // addHash() {
+    //   const newHash = {
+    //     content: this.hash,
+    //   };
+    //   axios.post('url', newHash).then((res) => {
+    //     this.hashs.splice(0, 0, res.data);
+    //     this.hash = '';
+    //   });
+    // },
+    createPost() {
       // console.log(this.article.images[0])
       var params = new URLSearchParams();
       params.append('file', this.images);
-      params.append('article', this.article)
+      params.append('article', this.article);
       for (let i = 0; i < this.hashtagNames.length; ++i) {
         let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
         this.article.hashtags.push(obj);
@@ -161,20 +185,22 @@ export default {
       // console.log(this.images[0]);
       // console.log(this.images[1]);
 
-        this.images.forEach((image) => formData.append("file[]", image));
+      this.images.forEach((image) => formData.append('file[]', image));
       // formData.append("file", this.images);
-      formData.append("article",new Blob([JSON.stringify(this.article)],{ type: "application/json" }) )
+      formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
-      
-
+      this.article.visitDate = this.date;
+      const token = localStorage.getItem('jwt');
+      let uid = jwt_decode(token).uid;
+      this.article.uid = uid;
       createArticle(
         formData,
         (response) => {
           // console.log(response.data);
           if (response.data.status) {
             alert('작성 성공');
-            this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN });
+            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: uid } });
           } else {
             alert('작성 실패');
           }
@@ -193,8 +219,11 @@ export default {
   },
   mounted() {},
   created() {
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
+    this.article.uid = uid;
     getUserHashtags(
-      1,
+      uid,
       (response) => {
         if (response.data.status) {
           let tempHashtagObjs = response.data.object;

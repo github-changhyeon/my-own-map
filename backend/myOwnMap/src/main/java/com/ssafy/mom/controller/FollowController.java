@@ -60,8 +60,8 @@ public class FollowController {
 			HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 
-		String myEmail = jwtService.getUserEmail();
-		Optional<UserDto> userFrom = userDao.findByEmail(myEmail);
+		int myUid = jwtService.getUserUid();
+		Optional<UserDto> userFrom = userDao.findByUid(myUid);
 
 		Optional<UserDto> userTo = userDao.findByEmail(email);
 
@@ -94,8 +94,8 @@ public class FollowController {
 	public Object retrieveUserFollowing(
 			@ApiParam(value = "jwt토큰, 내가 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
-		String myEmail = jwtService.getUserEmail();
-		Optional<UserDto> userFrom = userDao.findByEmail(myEmail);
+		int myUid = jwtService.getUserUid();
+		Optional<UserDto> userFrom = userDao.findByUid(myUid);
 		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
 		List<UserDto> userList = new ArrayList<>();
 		for (int i = 0; i < userEntity.size(); i++) {
@@ -113,8 +113,8 @@ public class FollowController {
 	@ApiOperation(value = "나를 팔로우한 사람")
 	public Object retrieveUserFollower(@ApiParam(value = "jwt토큰, 나를 팔로우한(팔로워) List<UserDto>로 반환", required = true) HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
-		String myEmail = jwtService.getUserEmail();
-		Optional<UserDto> userTo = userDao.findByEmail(myEmail);
+		int myUid = jwtService.getUserUid();
+		Optional<UserDto> userTo = userDao.findByUid(myUid);
 		List<UserFollow> userEntity = userFollowDao.findAllByUserTo(userTo.get());
 		List<UserDto> userList = new ArrayList<>();
 		for (int i = 0; i < userEntity.size(); i++) {
@@ -126,5 +126,7 @@ public class FollowController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 
 	}
+
+	
 
 }

@@ -18,4 +18,37 @@ function join(user, success, fail) {
     .catch(fail);
 }
 
-export { login, join };
+function getUserInfo(uid, success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
+  // const body = {
+  //   email: user.email,
+  //   password: user.password,
+  instance
+    .get(`/users/${uid}`)
+    .then(success)
+    .catch(fail);
+}
+
+function getArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/articles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getRecentArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/recentArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getUserHashtags(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/userHashtags`)
+    .then(success)
+    .catch(fail);
+}
+
+
+export { login, join, getUserInfo, getArticles, getRecentArticles, getUserHashtags};

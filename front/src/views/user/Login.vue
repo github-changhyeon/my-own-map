@@ -11,7 +11,8 @@
               <v-card>
                 <v-card-text class="pt-4">
                   <div>
-                    <v-form v-model="valid" ref="form">
+                    <!-- <v-form v-model="valid" ref="form"> -->
+                    <v-form ref="form">
                       <v-text-field name="email" type="email" label="이메일을 입력해 주세요." v-model="loginForm.email"></v-text-field>
                       <v-text-field name="password" type="password" label="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
                       <v-layout justify-space-between>
@@ -34,8 +35,12 @@
 </template>
 
 <script>
+import jwt_decode from 'jwt-decode';
+
 import { login } from '@/api/user.js';
 import NaverLogin from '@/components/user/NaverLogin';
+
+import constants from '@/lib/constants.js';
 
 export default {
   name: 'Login',
@@ -49,7 +54,7 @@ export default {
       // //  FIXME state 값 random string 으로 변경
       // state: 123,
       // naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',
-
+      tokenData: '',
       loginForm: {
         email: '',
         password: '',
@@ -61,10 +66,10 @@ export default {
       login(
         this.loginForm,
         (response) => {
-          console.log(response);
-          console.log('111111');
-          localStorage.setItem('access-token', response.data.object);
-          this.$router.push('/');
+          localStorage.setItem('jwt', response.data.object);
+
+          this.tokenData = jwt_decode(response.data.object);
+          this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.tokenData.uid } });
         },
         (error) => {
           console.log(error);
