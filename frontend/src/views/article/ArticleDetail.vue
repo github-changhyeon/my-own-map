@@ -183,7 +183,7 @@ export default {
         //확인
         deleteArticle(
           this.article.articleNo,
-          (response) => {
+          () => {
             // 메인으로
             this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params:{uid:this.article.userDto.uid} });
             // this.goToList();
