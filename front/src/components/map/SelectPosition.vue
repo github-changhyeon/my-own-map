@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="map_wrap">
-      <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+      <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
 
       <div id="menu_wrap" class="bg_white">
         <div class="option">
@@ -45,7 +45,7 @@ export default {
 
       let ps = new kakao.maps.services.Places();
       // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-      ps.keywordSearch(keyword, function(data, status, pagination) {
+      ps.keywordSearch(keyword, function (data, status, pagination) {
         _this.searchPlacesCB(data, status, pagination);
       });
     },
@@ -92,16 +92,16 @@ export default {
         // 마커와 검색결과 항목에 mouseover 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
-        (function(marker, title) {
-          kakao.maps.event.addListener(marker, 'mouseover', function() {
+        (function (marker, title) {
+          kakao.maps.event.addListener(marker, 'mouseover', function () {
             _this.displayInfowindow(marker, title);
           });
 
-          kakao.maps.event.addListener(marker, 'mouseout', function() {
+          kakao.maps.event.addListener(marker, 'mouseout', function () {
             _this.infowindow.close();
           });
 
-          kakao.maps.event.addListener(marker, 'click', function() {
+          kakao.maps.event.addListener(marker, 'click', function () {
             _this.starMarker.setPosition(placePosition);
             _this.positions.positionLat = places[i].y;
             _this.positions.positionLng = places[i].x;
@@ -109,14 +109,14 @@ export default {
             _this.$emit('emitSelectPosition', _this.positions);
           });
 
-          itemEl.onmouseover = function() {
+          itemEl.onmouseover = function () {
             _this.displayInfowindow(marker, title);
           };
 
-          itemEl.onmouseout = function() {
+          itemEl.onmouseout = function () {
             _this.infowindow.close();
           };
-          itemEl.onclick = function() {
+          itemEl.onclick = function () {
             _this.starMarker.setPosition(placePosition);
             _this.positions.positionLat = places[i].y;
             _this.positions.positionLng = places[i].x;
@@ -200,8 +200,8 @@ export default {
         if (i === pagination.current) {
           el.className = 'on';
         } else {
-          el.onclick = (function(i) {
-            return function() {
+          el.onclick = (function (i) {
+            return function () {
               pagination.gotoPage(i);
             };
           })(i);
@@ -216,7 +216,7 @@ export default {
       let geocoder = new kakao.maps.services.Geocoder();
       // 지도에 클릭 이벤트를 등록합니다
       // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-      kakao.maps.event.addListener(_this.map, 'click', function(mouseEvent) {
+      kakao.maps.event.addListener(_this.map, 'click', function (mouseEvent) {
         // 클릭한 위도, 경도 정보를 가져옵니다
         let latlng = mouseEvent.latLng;
 
@@ -227,7 +227,7 @@ export default {
         //  = { positionLat: latlng.getLat(), positionLng: latlng.getLng() };
         _this.infowindow.close();
 
-        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
+        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function (result, status) {
           if (status === kakao.maps.services.Status.OK) {
             let detailAddr = result[0].address.address_name;
             _this.positions.address = detailAddr;
@@ -252,7 +252,7 @@ export default {
       // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
       if (navigator.geolocation) {
         // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
           _this.positions.positionLat = position.coords.latitude;
           _this.positions.positionLng = position.coords.longitude;
 
@@ -273,9 +273,9 @@ export default {
             removable: iwRemoveable,
           });
           _this.infowindow.open(_this.map, _this.starMarker);
-          this.setMarkerListener();
+          _this.setMarkerListener();
           _this.map.setCenter(locPosition);
-          geocoder.coord2Address(_this.positions.positionLng, _this.positions.positionLat, function(result, status) {
+          geocoder.coord2Address(_this.positions.positionLng, _this.positions.positionLat, function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
               let detailAddr = result[0].address.address_name;
               _this.positions.address = detailAddr;
@@ -302,27 +302,8 @@ export default {
           removable: iwRemoveable,
         });
         _this.infowindow.open(_this.map, _this.starMarker);
-        this.setMarkerListener();
+        _this.setMarkerListener();
       }
-
-      // TODO : remove
-      let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-      let message = 'geolocation을 사용할수 없어요..';
-      let imageSize = new kakao.maps.Size(24, 35);
-      let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
-      _this.starMarker = new kakao.maps.Marker({
-        map: _this.map,
-        position: locPosition,
-        image: markerImage,
-      });
-      let iwContent = message;
-      let iwRemoveable = true;
-      _this.infowindow = new kakao.maps.InfoWindow({
-        content: iwContent,
-        removable: iwRemoveable,
-      });
-      _this.infowindow.open(_this.map, _this.starMarker);
-      this.setMarkerListener();
     },
     addScript() {
       const script = document.createElement('script');
@@ -330,14 +311,14 @@ export default {
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAOMAP_KEY}&libraries=services,clusterer`;
       let _this = this;
       script.onload = () =>
-        kakao.maps.load(function() {
+        kakao.maps.load(function () {
           _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
       document.head.appendChild(script);
     },
   },
-  data: function() {
+  data: function () {
     return {
       infowindow: {},
       map: {},

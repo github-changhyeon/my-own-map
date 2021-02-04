@@ -240,7 +240,7 @@ export default {
     if (this.article.uid === uid) this.isOwnArticle = true;
     // alert(this.article.evaluation);
     for (var i = 0; i < this.article.imagePaths.length; ++i) {
-      this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
+      this.items.push({ src: 'https://i4b107.p.ssafy.io/images/uploads/' + this.article.imagePaths[i] });
     }
     if (this.article.imagePaths.length === 0) {
       this.items.push({ src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png' });
