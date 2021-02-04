@@ -1,68 +1,27 @@
 <template>
-  <v-app id="inspire">
-    <v-container>
-      <v-row no-gutters>
-        <v-col @click="goToMypage(idx)" v-for="(article, idx) in articles" :key="idx" md="6" offset-md="3">
-          <v-card height="200" class="mt-10" outlined tile>
-            <div>
-              <!-- <router-link :to="`/users/${article.uid}`">작성자: {{ article.uid }}</router-link> -->
-              <div>작성자: {{ article.uid }}</div>
-            </div>
-            <div>rating: {{ article.rating }}</div>
-            <div>
-              {{ article.img }}
-            </div>
-            <div>
-              해쉬태그
-            </div>
-            <div>
-              작성일자
-            </div>
-            <div>
-              주소
-            </div>
-            <div>
-              title
-            </div>
-            <div>
-              내용
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-app>
+  <div>
+    <v-card>
+      <v-tabs centered style="position: fixed; top: 0px; z-index: 2">
+        <v-tab style="width: 50vw">전체</v-tab>
+        <v-tab style="width: 50vw">팔로우</v-tab>
+      </v-tabs>
+    </v-card>
+    <AllNewsFeed style="padding-top: 70px" />
+  </div>
 </template>
 <script>
-import constants from '@/lib/constants.js';
+import AllNewsFeed from '@/components/sns/AllNewsFeed';
 
 export default {
   name: 'NewsFeed',
+  created() {},
+  components: {
+    AllNewsFeed,
+  },
   data() {
-    return {
-      articles: [
-        {
-          uid: 1,
-          rating: 5,
-          img: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        },
-        {
-          uid: 2,
-        },
-        {
-          uid: 3,
-        },
-      ],
-    };
+    return {};
   },
-  methods: {
-    goToMypage(idx) {
-      console.log(this.$route.params);
-      // console.log(event);
-      console.log(this.articles[idx]);
-      this.$router.push({ name: constants.URL_TYPE.USER.MYPAGE, params: { uid: this.articles[idx].uid } });
-    },
-  },
+  methods: {},
 };
 </script>
 
