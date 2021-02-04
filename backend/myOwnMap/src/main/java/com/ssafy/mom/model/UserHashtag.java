@@ -28,10 +28,10 @@ public class UserHashtag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "uid") // 외래키의 주인
 	private UserDto userDto;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "hashtagNo")
 	private HashtagDto hashtagDto;
 	public UserHashtag(UserDto userDto, HashtagDto hashtagDto) {

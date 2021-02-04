@@ -284,10 +284,12 @@ public class ArticleController {
 			alreadyArticleHashtags = new ArrayList<>();
 		for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
 			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
-//			System.out.println("카운트는" + cnt);
 			if (cnt == 1)
+				System.out.println(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagName() + "카운트는" + cnt);
 				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 		}
+		
+		imageDao.deleteAllByArticleDto(articleOpt.get());
 
 		articleHashtagDao.deleteByArticleDto(articleOpt.get());
 		articleDao.delete(articleOpt.get());
