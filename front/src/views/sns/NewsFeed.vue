@@ -54,7 +54,7 @@ export default {
         {
           user: 1,
           rating: 5,
-          img: 'https://cdn.vuetifyjs.com/images/cards/cooking.png
+          img: 'https://cdn.vuetifyjs.com/images/cards/cooking.png'
         },
         {
           user: 2,

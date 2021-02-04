@@ -1,7 +1,6 @@
 <template>
   <div class="container" data-app>
     <CreateArticleNav />
-    <!-- vue-star-rating 추후에 삭제하기 -->
     <SelectPosition @emitSelectPosition="getPos" />
     <!-- <div v-if="!isCurrentMap"><SelectPosition :propsPositionObj="positionObj" /></div> -->
     <!-- <div v-if="isCurrentMap" id="currentMap" style="width:100%; height:350px"></div> -->
@@ -26,8 +25,6 @@
       해쉬태그
       <br />
       <br />
-      <!-- <HashModal />
-      <HashList /> -->
       <v-col md="4" offset-md="4">
         <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
           <template v-slot:selection="data">
@@ -39,9 +36,6 @@
         </v-combobox>
       </v-col>
       <br />
-      <!-- <div v-for="(hash, idx) in hashs" :key="idx" :value="hash">
-        <h1>{{ hash }}</h1>
-      </div> -->
     </div>
     <br />
     <div class="inline">
@@ -76,31 +70,21 @@
     <div>
       방문 정보 입력
       <br />
-      <DatePicker :setDate="article.visitDate" label="날짜를 입력해 주세요."></DatePicker>
-      <!-- <v-icon>mdi-calendar-range</v-icon> -->
-      <!-- <v-text-field
-        hint="방문 날짜를 선택해주세요."
-        style="font-size:23px; width:300px;"
-      >
-      </v-text-field> -->
-      <!-- <input type="date"/> -->
-      <!-- <v-date-picker
-      width="350"
-      class="mt-4"
-      :min= min
-      :max= max
-      locale="ko-KR"
-      :first-day-of-week="1"
-      color="#FDDAB4"
-      no-title
-      style="font-size:18px;"
-      elevation="15"
-      >
-      </v-date-picker> -->
+      <DatePicker 
+        label="날짜를 입력해 주세요."
+        @setDate="visitDate"
+        >
+      </DatePicker>
     </div>
     <div class="center">
-      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
-      <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
+    <v-rating
+      v-model="article.evaluation"
+      background-color="grey lighten-1"
+      color="blue"
+      half-increments
+      length="5"
+      size="45"
+    ></v-rating>
     </div>
     <div>
       <button class="upload" @click="createPost()">등록</button>
@@ -109,15 +93,11 @@
 </template>
 
 <script>
-// import { mdiCalendarRange } from '@mdi/js';
 import SelectPosition from '@/components/map/SelectPosition.vue';
 import constants from '@/lib/constants';
 // import axios from 'axios';
-// import StarRating from 'vue-star-rating';
 import CreateArticleNav from './CreateArticleNav';
 import DatePicker from './DatePicker';
-// import HashModal from './HashModal.vue';
-// import HashList from './HashList.vue';
 import { createArticle } from '@/api/article.js';
 import { getUserHashtags } from '@/api/user.js';
 
@@ -127,11 +107,8 @@ export default {
   name: 'CreateArticle',
   components: {
     SelectPosition,
-    // StarRating,
     CreateArticleNav,
     DatePicker,
-    // HashModal,
-    // HashList,
   },
   data() {
     return {
@@ -142,8 +119,6 @@ export default {
       imageUrls: Array,
       selectedFile: null,
       hashtagNames: [],
-      // hash: '',
-      // hashs: Array,
       imgs: [],
       images: [],
       rate: 0,
@@ -162,8 +137,8 @@ export default {
     };
   },
   methods: {
-    setDate(date) {
-      this.visitDate = date;
+    setDate(e) {
+      this.date = e;
     },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;

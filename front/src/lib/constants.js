@@ -30,5 +30,8 @@ export default {
     ERROR: {
       PAGENOTFOUND: 'pageNotFound',
     },
+    SNS: {
+      NEWSFEED: 'newsfeed'
+    }
   },
 };
