@@ -87,45 +87,43 @@ public class FollowController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	// List<UserDto>로 보내주기
-	// 내가 팔로우한 사람(팔로잉)
-	@GetMapping("/findFollowing")
-	@ApiOperation(value = "내가 팔로우한 사람")
-	public Object retrieveUserFollowing(
-			@ApiParam(value = "jwt토큰, 내가 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) HttpServletRequest request) {
-		final BasicResponse result = new BasicResponse();
-		int myUid = jwtService.getUserUid();
-		Optional<UserDto> userFrom = userDao.findByUid(myUid);
-		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
-		List<UserDto> userList = new ArrayList<>();
-		for (int i = 0; i < userEntity.size(); i++) {
-			userList.add(userEntity.get(i).getUserTo());
-		}
-		result.status = true;
-		result.message = "팔로잉리스트입니다.";
-		result.object = userList;
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	@GetMapping("/findFollowing/{uid}")
+    @ApiOperation(value = "{uid}가 팔로우한 사람")
+    public Object retrieveUserFollowing(
+            @ApiParam(value = "{uid}이 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) @PathVariable int uid) {
+        final BasicResponse result = new BasicResponse();
 
-	}
+        Optional<UserDto> userFrom = userDao.findByUid(uid);
+        List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
+        List<UserDto> userList = new ArrayList<>();
+        for (int i = 0; i < userEntity.size(); i++) {
+            userList.add(userEntity.get(i).getUserTo());
+        }
+        result.status = true;
+        result.message = "팔로잉리스트입니다.";
+        result.object = userList;
+        return new ResponseEntity<>(result, HttpStatus.OK);
 
-	// 나를 팔로우한 사람(팔로워)
-	@GetMapping("/findFollower")
-	@ApiOperation(value = "나를 팔로우한 사람")
-	public Object retrieveUserFollower(@ApiParam(value = "jwt토큰, 나를 팔로우한(팔로워) List<UserDto>로 반환", required = true) HttpServletRequest request) {
-		final BasicResponse result = new BasicResponse();
-		int myUid = jwtService.getUserUid();
-		Optional<UserDto> userTo = userDao.findByUid(myUid);
-		List<UserFollow> userEntity = userFollowDao.findAllByUserTo(userTo.get());
-		List<UserDto> userList = new ArrayList<>();
-		for (int i = 0; i < userEntity.size(); i++) {
-			userList.add(userEntity.get(i).getUserFrom());
-		}
-		result.status = true;
-		result.message = "팔로워리스트입니다.";
-		result.object = userList;
-		return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
-	}
+    // 나를 팔로우한 사람(팔로워)
+    @GetMapping("/findFollower/{uid}")
+    @ApiOperation(value = "{uid}를 팔로우한 사람")
+    public Object retrieveUserFollower(@ApiParam(value = "{uid}, {uid}를 팔로우한(팔로워) List<UserDto>로 반환", required = true) @PathVariable int uid) {
+        final BasicResponse result = new BasicResponse();
+    ;
+        Optional<UserDto> userTo = userDao.findByUid(uid);
+        List<UserFollow> userEntity = userFollowDao.findAllByUserTo(userTo.get());
+        List<UserDto> userList = new ArrayList<>();
+        for (int i = 0; i < userEntity.size(); i++) {
+            userList.add(userEntity.get(i).getUserFrom());
+        }
+        result.status = true;
+        result.message = "팔로워리스트입니다.";
+        result.object = userList;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
 
 	
 

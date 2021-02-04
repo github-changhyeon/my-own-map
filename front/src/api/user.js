@@ -29,4 +29,26 @@ function getUserInfo(uid, success, fail) {
     .catch(fail);
 }
 
-export { login, join, getUserInfo };
+function getArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/articles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getRecentArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/recentArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getUserHashtags(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/userHashtags`)
+    .then(success)
+    .catch(fail);
+}
+
+
+export { login, join, getUserInfo, getArticles, getRecentArticles, getUserHashtags};

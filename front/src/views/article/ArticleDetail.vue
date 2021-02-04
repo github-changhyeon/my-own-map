@@ -19,7 +19,7 @@
           <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
         </v-carousel>
       </div>
-      <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" large></v-rating>
+      <v-rating readonly half-increments v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" large></v-rating>
       <!-- <div>
         <label for="title"><strong>작성자</strong> | </label>
         {{ this.$route.query.user }}
@@ -51,7 +51,8 @@
       </div>
     </div>
 
-    <div class="buttons">
+    <div class="buttons" v-if="isOwnArticle">
+      <!-- <div class="buttons"  > -->
       <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
       <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
       <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
@@ -83,6 +84,7 @@
 // import axios from 'axios';
 import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
+import jwt_decode from 'jwt-decode';
 
 export default {
   name: 'ArticleDetail',
@@ -99,6 +101,7 @@ export default {
       content: 'sample',
       comments: 'sample',
       commentId: Number,
+      isOwnArticle: false,
       article: {
         address: '',
         articleNo: 0,
@@ -110,7 +113,7 @@ export default {
         updateTime: '',
         title: '',
         userDto: {},
-        imagePaths:null,
+        imagePaths: null,
       },
       items: [
         {
@@ -166,8 +169,8 @@ export default {
         deleteArticle(
           this.article.articleNo,
           (response) => {
-            console.log(response);
             // 메인으로
+            console.log(response);
             this.$router.push({ name: constants.URL_TYPE.HOME.MAIN });
             // this.goToList();
           },
@@ -245,10 +248,18 @@ export default {
 
   created() {
     this.article = this.$route.params.article;
-    for(var i = 0; i < this.article.imagePaths.length; ++i){
-      this.items.push({"src" : "@/assets/upload/"+this.article.imagePaths[i]});
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
+    if (this.article.uid === uid) this.isOwnArticle = true;
+    // alert(this.article.evaluation);
+    for (var i = 0; i < this.article.imagePaths.length; ++i) {
+      this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
     }
-    console.log("hey" + this.items[4].src)
+
+    // TODO: 새로고침 했을 때 axios요청 생각해보기
+    // if(this.$route.params.article === null){
+
+    // }
   },
 };
 </script>

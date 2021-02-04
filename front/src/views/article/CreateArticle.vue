@@ -54,30 +54,37 @@
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
-      <div v-for="(img, idx) in imgs" :key="idx">
-        <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
-        <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
+      <!-- <div v-for="(img, idx) in imgs" :key="idx"> -->
+      <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
+      <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
-      <v-carousel>
-        <v-carousel-item v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
-      </v-carousel> -->
-        <!-- <div v-for="(img, idx) in imgs" :key="idx">
-        <img :src="img" alt="" class="picture-size" />
-      </div> -->
-      </div>
+      -->
+      <v-carousel class="picture-size" v-if="imgs.length != 0">
+        <v-carousel-item
+          class="picture-size"
+          v-for="(img, idx) in imgs"
+          :key="idx"
+          :src="img"
+          append
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+          multiple="true"
+        ></v-carousel-item>
+      </v-carousel>
+    </div>
+    <br />
+    <div>
+      방문 정보 입력
       <br />
-      <div>
-        방문 정보 입력
-        <br />
-        <DatePicker label="날짜를 입력해 주세요."></DatePicker>
-        <!-- <v-icon>mdi-calendar-range</v-icon> -->
-        <!-- <v-text-field
+      <DatePicker :setDate="article.visitDate" label="날짜를 입력해 주세요."></DatePicker>
+      <!-- <v-icon>mdi-calendar-range</v-icon> -->
+      <!-- <v-text-field
         hint="방문 날짜를 선택해주세요."
         style="font-size:23px; width:300px;"
       >
       </v-text-field> -->
-        <input type="date" v-model="article.visitDate" />
-        <!-- <v-date-picker
+      <!-- <input type="date"/> -->
+      <!-- <v-date-picker
       width="350"
       class="mt-4"
       :min= min
@@ -90,14 +97,13 @@
       elevation="15"
       >
       </v-date-picker> -->
-      </div>
-      <div class="center">
-        <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
-        <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
-      </div>
-      <div>
-        <button class="upload" @click="createPost()">등록</button>
-      </div>
+    </div>
+    <div class="center">
+      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
+      <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
+    </div>
+    <div>
+      <button class="upload" @click="createPost()">등록</button>
     </div>
   </div>
 </template>
@@ -112,7 +118,10 @@ import CreateArticleNav from './CreateArticleNav';
 import DatePicker from './DatePicker';
 // import HashModal from './HashModal.vue';
 // import HashList from './HashList.vue';
-import { createArticle, getUserHashtags } from '@/api/article.js';
+import { createArticle } from '@/api/article.js';
+import { getUserHashtags } from '@/api/user.js';
+
+import jwt_decode from 'jwt-decode';
 
 export default {
   name: 'CreateArticle',
@@ -138,6 +147,7 @@ export default {
       imgs: [],
       images: [],
       rate: 0,
+      date: '',
       article: {
         positionLat: '',
         positionLng: '',
@@ -147,10 +157,14 @@ export default {
         hashtags: [],
         contents: '',
         visitDate: '',
+        uid: 0,
       },
     };
   },
   methods: {
+    setDate(date) {
+      this.visitDate = date;
+    },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;
       this.article.positionLng = positions.positionLng;
@@ -168,10 +182,6 @@ export default {
         this.imgs.push(this.imageUrl);
         this.images.push(file);
       }
-      console.log('hi');
-      console.log(e.target.files);
-      console.log('hi');
-      console.log(this.imgs);
     },
     // addHash() {
     //   const newHash = {
@@ -183,7 +193,6 @@ export default {
     //   });
     // },
     createPost() {
-      console.log(this.article.visitDate);
       // console.log(this.article.images[0])
       var params = new URLSearchParams();
       params.append('file', this.images);
@@ -206,14 +215,17 @@ export default {
       formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
-
+      this.article.visitDate = this.date;
+      const token = localStorage.getItem('jwt');
+      let uid = jwt_decode(token).uid;
+      this.article.uid = uid;
       createArticle(
         formData,
         (response) => {
           // console.log(response.data);
           if (response.data.status) {
             alert('작성 성공');
-            this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN });
+            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: uid } });
           } else {
             alert('작성 실패');
           }
@@ -232,8 +244,11 @@ export default {
   },
   mounted() {},
   created() {
+    const token = localStorage.getItem('jwt');
+    let uid = jwt_decode(token).uid;
+    this.article.uid = uid;
     getUserHashtags(
-      1,
+      uid,
       (response) => {
         if (response.data.status) {
           let tempHashtagObjs = response.data.object;
@@ -273,8 +288,8 @@ export default {
 }
 
 .picture-size {
-  width: 100px;
-  height: 150px;
+  width: 480px;
+  height: 480px;
   border: 1px solid black;
   float: left;
   margin-right: 10px;

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div>
-      <span v-for="(user, idx) in users" :key="idx">
-        <span>{{ user.nickname }} </span>
-      </span>
+      <div v-for="(user, idx) in users" :key="idx">
+        <span>for문으로 하나씩 : {{ user.nickname }} </span>
+      </div>
     </div>
   </div>
 </template>
