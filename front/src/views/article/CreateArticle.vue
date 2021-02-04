@@ -50,34 +50,34 @@
       <br />
       <!-- <input type="file" @change="onFileSelected">
       <button @click="onUpload">+</button> -->
-      <form encType="multipart/form-data" >
+      <form encType="multipart/form-data">
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
-      <button class="lefty picture-upload"  type="button" @click="onClickImageUpload">+</button>
+      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
       <div v-for="(img, idx) in imgs" :key="idx">
         <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
-      <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
+        <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
       <v-carousel>
         <v-carousel-item v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
       </v-carousel> -->
-      <!-- <div v-for="(img, idx) in imgs" :key="idx">
+        <!-- <div v-for="(img, idx) in imgs" :key="idx">
         <img :src="img" alt="" class="picture-size" />
       </div> -->
-    </div>
-    <br />
-    <div>
-      방문 정보 입력
+      </div>
       <br />
-      <DatePicker label="날짜를 입력해 주세요."></DatePicker>
-      <!-- <v-icon>mdi-calendar-range</v-icon> -->
-      <!-- <v-text-field
+      <div>
+        방문 정보 입력
+        <br />
+        <DatePicker label="날짜를 입력해 주세요."></DatePicker>
+        <!-- <v-icon>mdi-calendar-range</v-icon> -->
+        <!-- <v-text-field
         hint="방문 날짜를 선택해주세요."
         style="font-size:23px; width:300px;"
       >
       </v-text-field> -->
-      <input type="date" v-model="article.visitDate" />
-      <!-- <v-date-picker
+        <input type="date" v-model="article.visitDate" />
+        <!-- <v-date-picker
       width="350"
       class="mt-4"
       :min= min
@@ -90,20 +90,14 @@
       elevation="15"
       >
       </v-date-picker> -->
-    </div>
-    <div class="center">
-    <v-rating
-      v-model="article.evaluation"
-      background-color="grey lighten-1"
-      color="blue"
-      half-increments
-      length="5"
-      size="45"
-    ></v-rating>
-      <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
-    </div>
-    <div>
-      <button class="upload" @click="createPost()">등록</button>
+      </div>
+      <div class="center">
+        <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
+        <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
+      </div>
+      <div>
+        <button class="upload" @click="createPost()">등록</button>
+      </div>
     </div>
   </div>
 </template>
@@ -152,7 +146,7 @@ export default {
         evaluation: 0,
         hashtags: [],
         contents: '',
-        visitDate:'',
+        visitDate: '',
       },
     };
   },
@@ -174,11 +168,10 @@ export default {
         this.imgs.push(this.imageUrl);
         this.images.push(file);
       }
-      console.log('hi')
-      console.log(e.target.files)
-      console.log('hi')
-      console.log(this.imgs)
-
+      console.log('hi');
+      console.log(e.target.files);
+      console.log('hi');
+      console.log(this.imgs);
     },
     // addHash() {
     //   const newHash = {
@@ -189,12 +182,12 @@ export default {
     //     this.hash = '';
     //   });
     // },
-    createPost() { 
+    createPost() {
       console.log(this.article.visitDate);
       // console.log(this.article.images[0])
       var params = new URLSearchParams();
       params.append('file', this.images);
-      params.append('article', this.article)
+      params.append('article', this.article);
       for (let i = 0; i < this.hashtagNames.length; ++i) {
         let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
         this.article.hashtags.push(obj);
@@ -208,12 +201,11 @@ export default {
       // console.log(this.images[0]);
       // console.log(this.images[1]);
 
-        this.images.forEach((image) => formData.append("file[]", image));
+      this.images.forEach((image) => formData.append('file[]', image));
       // formData.append("file", this.images);
-      formData.append("article",new Blob([JSON.stringify(this.article)],{ type: "application/json" }) )
+      formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
-      
 
       createArticle(
         formData,
