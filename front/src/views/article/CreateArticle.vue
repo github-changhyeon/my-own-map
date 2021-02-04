@@ -42,17 +42,10 @@
       이 장소의 사진
       <br />
       <br />
-      <!-- <input type="file" @change="onFileSelected">
-      <button @click="onUpload">+</button> -->
       <form encType="multipart/form-data">
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
       <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
-      <!-- <div v-for="(img, idx) in imgs" :key="idx"> -->
-      <!-- <img v-for="(img, idx) in imgs" :key="idx" :imgaeUrl="imageUrl" /> -->
-      <!-- <input ref="imageInput" type="file" hidden @change="onChangeImages" multiple />
-      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
-      -->
       <v-carousel class="picture-size" v-if="imgs.length != 0">
         <v-carousel-item
           class="picture-size"
@@ -70,21 +63,10 @@
     <div>
       방문 정보 입력
       <br />
-      <DatePicker 
-        label="날짜를 입력해 주세요."
-        @setDate="visitDate"
-        >
-      </DatePicker>
+      <DatePicker label="날짜를 입력해 주세요." @setDate="selectDate"> </DatePicker>
     </div>
     <div class="center">
-    <v-rating
-      v-model="article.evaluation"
-      background-color="grey lighten-1"
-      color="blue"
-      half-increments
-      length="5"
-      size="45"
-    ></v-rating>
+      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
     </div>
     <div>
       <button class="upload" @click="createPost()">등록</button>
@@ -137,8 +119,9 @@ export default {
     };
   },
   methods: {
-    setDate(e) {
-      this.date = e;
+    selectDate(e) {
+      this.article.visitDate = e;
+      console.log(e)
     },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;
