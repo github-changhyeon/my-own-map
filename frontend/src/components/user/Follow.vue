@@ -2,7 +2,7 @@
   <div>
     <div>
       <div v-for="(user, idx) in users" :key="idx">
-        <span>for문으로 하나씩 : {{ user.nickname }} </span>
+        <span>{{ user.username }} </span>
       </div>
     </div>
   </div>
