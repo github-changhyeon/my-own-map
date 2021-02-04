@@ -48,7 +48,6 @@ export default {
     if (this.$route.params == undefined) {
       const token = localStorage.getItem('jwt');
       this.tokenData = jwt_decode(token);
-      console.log(this.tokenData);
       // 토큰 디코드해서 찍힌 uid or email로 article controller에 게시글 요청. 받아서 Userinfo components에 props,emit
     } else {
       // console.log(this.$route.params);

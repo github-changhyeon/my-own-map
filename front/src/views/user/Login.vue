@@ -66,13 +66,10 @@ export default {
       login(
         this.loginForm,
         (response) => {
-          console.log(response.data.object);
-          console.log('111111');
           localStorage.setItem('jwt', response.data.object);
 
           this.tokenData = jwt_decode(response.data.object);
-          console.log(this.tokenData, this.tokenData.uid);
-          this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.tokenData.uid }});
+          this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.tokenData.uid } });
         },
         (error) => {
           console.log(error);

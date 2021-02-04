@@ -34,10 +34,7 @@ export default {
       axios
         .get(`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${this.CLIENT_ID}&redirect_uri=${this.redirectURI}&state=${this.state}`)
         .then((response) => {
-          console.log(1);
-          console.log(response);
           // console.log(response.request);
-          console.log(response.request.responseURL);
           this.responseURL = response.request.responseURL;
           // this.$router.push(response.request.responseURL);
         })
@@ -50,7 +47,6 @@ export default {
     this.naverLoginURL += '&client_id=' + this.CLIENT_ID;
     this.naverLoginURL += '&redirect_uri=' + this.redirectURL;
     this.naverLoginURL += '&state=' + this.state;
-    console.log(this.$route.query);
   },
 };
 </script>
