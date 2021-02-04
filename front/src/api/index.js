@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function createInstance() {
   const instance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'https://i4b107.p.ssafy.io',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -12,7 +12,7 @@ function createInstance() {
 }
 function createMultipartInstance() {
   const instance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'https://i4b107.p.ssafy.io',
     headers: {
       // 'Content-Type': false,
       // 'Content-Type': 'multipart/form-data',

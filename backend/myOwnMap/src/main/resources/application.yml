@@ -1,5 +1,9 @@
 server:
   port: 8080
+  ssl:
+    key-store: classpath:cert_and_key.p12
+    key-store-type: PKCS12
+    key-store-password: ssafy107!
   servlet:
     context-path: /
     encoding:
@@ -47,6 +51,6 @@ spring:
 file:
 #  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\backend\myOwnMap\src\main\resources\static\upload\
 #  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\front\src\assets\upload\
-  path: C:\SSAFY\subpjt3\newsfeed\s04p13b107\front\src\assets\upload
+  path: /var/www/mom/dist/images/uploads/
 naverClientSecret:  tKD8DiLa56
 tokenSecret: ssafySecret

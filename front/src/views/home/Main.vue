@@ -255,9 +255,9 @@ export default {
       _this.selectAllHashtagSwitch = false;
       // TODO : idx에 해당하는 articles 얻어오기
       let tempArticles = [];
-      let tempArticle = { title: '더미데이터', address: '대전광역시 유성구 더미데이터', positionLat: '33.3', positionLng: '126.5' };
+      let tempArticle = { title: '더미데이터', address: '대전광역시 유성구 더미데이터', positionLat: '33.3', positionLng: '126.5', imagePaths: [] };
       tempArticles.push(tempArticle);
-      tempArticle = { title: '더미데이터2', address: '대전광역시 유성구 더미데이터2', positionLat: '33.4', positionLng: '126.7' };
+      tempArticle = { title: '더미데이터2', address: '대전광역시 유성구 더미데이터2', positionLat: '33.4', positionLng: '126.7', imagePaths: [] };
       tempArticles.push(tempArticle);
 
       let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
@@ -484,7 +484,11 @@ export default {
       let imgDiv = document.createElement('div');
       imgDiv.className = 'img';
       let imgSrc = document.createElement('img');
-      imgSrc.src = 'https://cdn.vuetifyjs.com/images/cards/cooking.png';
+      if (data.imagePaths.length > 0) {
+        imgSrc.src = `https://i4b107.p.ssafy.io/images/uploads/${data.imagePaths[0]}`;
+      } else {
+        imgSrc.src = 'https://cdn.vuetifyjs.com/images/cards/cooking.png';
+      }
       imgSrc.style.width = '73';
       imgSrc.style.height = '70';
       imgDiv.appendChild(imgSrc);

@@ -115,20 +115,7 @@ export default {
         userDto: {},
         imagePaths: null,
       },
-      items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-        },
-      ],
+      items: [],
     };
   },
   methods: {
@@ -254,6 +241,9 @@ export default {
     // alert(this.article.evaluation);
     for (var i = 0; i < this.article.imagePaths.length; ++i) {
       this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
+    }
+    if (this.article.imagePaths.length === 0) {
+      this.items.push({ src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png' });
     }
 
     // TODO: 새로고침 했을 때 axios요청 생각해보기
