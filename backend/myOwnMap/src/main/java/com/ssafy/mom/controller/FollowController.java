@@ -112,6 +112,7 @@ public class FollowController {
 					.build();
 			userList.add(user);
 		}
+		System.out.println(userList);
 		result.status = true;
 		result.message = "팔로잉리스트입니다.";
 		result.object = userList;
