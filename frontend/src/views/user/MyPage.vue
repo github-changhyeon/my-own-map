@@ -55,10 +55,11 @@ export default {
     }
   },
   watch:{
-    '$route.params.uid': function(uid){    
+    '$route.params.uid': function(uid){
       console.log(uid); 
       const token = localStorage.getItem('jwt');
       this.tokenData = jwt_decode(token);
+
       // 로그인된상태니까 -> 본인이 본인 페이지 올때는 토큰으로 내 정보를 찾아서 채워야되고
       // (params가 비어있으면) -> jwt로 디코드해서 email axios요청
 
