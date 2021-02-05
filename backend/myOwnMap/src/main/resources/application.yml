@@ -25,7 +25,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
 
-  mail:  
+  mail:
     host: smtp.gmail.com
     port: 587
     username: team7.in.progress@gmail.com
@@ -47,10 +47,10 @@ spring:
       location: ${java.io.tmpdir}
       max-file-size: 20MB
       max-request-size: 20MB
-    
+
 file:
-#  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\backend\myOwnMap\src\main\resources\static\upload\
-#  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\front\src\assets\upload\
+  #  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\backend\myOwnMap\src\main\resources\static\upload\
+  #  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\front\src\assets\upload\
   path: /var/www/mom/dist/images/uploads/
-naverClientSecret:  tKD8DiLa56
+naverClientSecret: tKD8DiLa56
 tokenSecret: ssafySecret

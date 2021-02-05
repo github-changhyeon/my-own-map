@@ -21,6 +21,7 @@ import com.ssafy.mom.dao.UserFollowDao;
 import com.ssafy.mom.config.jwt.JwtService;
 import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.model.BasicResponse;
+import com.ssafy.mom.model.SendUserInfo;
 import com.ssafy.mom.model.UserDto;
 import com.ssafy.mom.model.UserFollow;
 
@@ -54,16 +55,16 @@ public class FollowController {
 	@Autowired
 	JwtService jwtService;
 
-	@GetMapping("/doFollow/{email}")
+	@GetMapping("/doFollow/{uid}")
 	@ApiOperation(value = "팔로우하기")
-	public Object follow(@PathVariable @ApiParam(value = "팔로우 시 필요한 회원정보(상대의 이메일).", required = true) String email,
+	public Object follow(@PathVariable @ApiParam(value = "팔로우 시 필요한 회원정보(상대의 이메일).", required = true) int uid,
 			HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 
 		int myUid = jwtService.getUserUid();
 		Optional<UserDto> userFrom = userDao.findByUid(myUid);
 
-		Optional<UserDto> userTo = userDao.findByEmail(email);
+		Optional<UserDto> userTo = userDao.findByUid(uid);
 
 		// 이미 내가 팔로우하였는지 확인!
 		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
@@ -75,6 +76,7 @@ public class FollowController {
 					userFollowDao.deleteByUserFromAndUserTo(userFrom.get(), userEntity.get(i).getUserTo());
 					result.status = true;
 					result.message = "팔로우가 취소되었습니다.";
+					result.object = retrieveUserFollower(uid);
 					return new ResponseEntity<>(result, HttpStatus.OK);
 				}
 			}
@@ -84,23 +86,33 @@ public class FollowController {
 		userFollowDao.save(userFollow);
 		result.status = true;
 		result.message = "팔로우를 성공하였습니다";
+		result.object = retrieveUserFollower(uid);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	// List<UserDto>로 보내주기
 	// 내가 팔로우한 사람(팔로잉)
-	@GetMapping("/findFollowing")
-	@ApiOperation(value = "내가 팔로우한 사람")
+	@GetMapping("/findFollowing/{uid}")
+	@ApiOperation(value = "{uid}가 팔로우한 사람")
 	public Object retrieveUserFollowing(
-			@ApiParam(value = "jwt토큰, 내가 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) HttpServletRequest request) {
+			@ApiParam(value = "{uid}이 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) @PathVariable int uid) {
 		final BasicResponse result = new BasicResponse();
-		int myUid = jwtService.getUserUid();
-		Optional<UserDto> userFrom = userDao.findByUid(myUid);
+		
+		Optional<UserDto> userFrom = userDao.findByUid(uid);
 		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
-		List<UserDto> userList = new ArrayList<>();
+		List<SendUserInfo> userList = new ArrayList<>();
 		for (int i = 0; i < userEntity.size(); i++) {
-			userList.add(userEntity.get(i).getUserTo());
+			UserDto userBuilder = userEntity.get(i).getUserTo();
+	
+			SendUserInfo user = SendUserInfo.builder()
+					.uid(userBuilder.getUid())
+					.email(userBuilder.getEmail())
+					.username(userBuilder.getUsername())
+					.stateMsg(userBuilder.getStateMsg())
+					.build();
+			userList.add(user);
 		}
+		System.out.println(userList);
 		result.status = true;
 		result.message = "팔로잉리스트입니다.";
 		result.object = userList;
@@ -109,16 +121,23 @@ public class FollowController {
 	}
 
 	// 나를 팔로우한 사람(팔로워)
-	@GetMapping("/findFollower")
-	@ApiOperation(value = "나를 팔로우한 사람")
-	public Object retrieveUserFollower(@ApiParam(value = "jwt토큰, 나를 팔로우한(팔로워) List<UserDto>로 반환", required = true) HttpServletRequest request) {
+	@GetMapping("/findFollower/{uid}")
+	@ApiOperation(value = "{uid}를 팔로우한 사람")
+	public Object retrieveUserFollower(@ApiParam(value = "{uid}, {uid}를 팔로우한(팔로워) List<UserDto>로 반환", required = true) @PathVariable int uid) {
 		final BasicResponse result = new BasicResponse();
-		int myUid = jwtService.getUserUid();
-		Optional<UserDto> userTo = userDao.findByUid(myUid);
+	
+		Optional<UserDto> userTo = userDao.findByUid(uid);
 		List<UserFollow> userEntity = userFollowDao.findAllByUserTo(userTo.get());
-		List<UserDto> userList = new ArrayList<>();
+		List<SendUserInfo> userList = new ArrayList<>();
 		for (int i = 0; i < userEntity.size(); i++) {
-			userList.add(userEntity.get(i).getUserFrom());
+			UserDto userBuilder = userEntity.get(i).getUserFrom();		
+			SendUserInfo user = SendUserInfo.builder()
+					.uid(userBuilder.getUid())
+					.email(userBuilder.getEmail())
+					.username(userBuilder.getUsername())
+					.stateMsg(userBuilder.getStateMsg())
+					.build();
+			userList.add(user);
 		}
 		result.status = true;
 		result.message = "팔로워리스트입니다.";
@@ -127,6 +146,28 @@ public class FollowController {
 
 	}
 
+	//현재 password등 필요없는 여러개도 다같이보냄.
+	//id username,email, profileImg, 만 넘겨주기
+	//stateMsg 추가해주기!
 	
-
+	//현재 팔로우되잇는지확인하기위한 상태체크
+	@GetMapping("/isFollow/{uid}")
+	@ApiOperation(value = "jwt가 uid를 팔로우중인지 체크")
+	public Object isFollow(@PathVariable int uid, HttpServletRequest request) {
+		final BasicResponse result = new BasicResponse();
+		int myUid = jwtService.getUserUid();
+		Optional<UserDto> userFrom = userDao.findByUid(myUid);
+		Optional<UserDto> userTo = userDao.findByUid(uid);
+		Optional<UserFollow> isFollow = userFollowDao.findByUserFromAndUserTo(userFrom.get(), userTo.get());
+		if(isFollow.isPresent()) {
+			result.status= true;
+			result.message="팔로우중입니다";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		else {
+			result.status=false;
+			result.message="팔로우중이 아닙니다.";
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+	}
 }

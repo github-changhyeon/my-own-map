@@ -35,6 +35,7 @@ public class UserDto {
 	private String email;
 	@CreationTimestamp
 	private LocalDateTime joinDate;
+	private String stateMsg;
 
 
 	
