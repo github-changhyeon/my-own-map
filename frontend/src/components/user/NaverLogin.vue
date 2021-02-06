@@ -18,7 +18,7 @@ export default {
     return {
       responseURL: '',
       CLIENT_ID: 'yPZ8zfbupxQS3jRvZDvP',
-      redirectURI: 'http://localhost:8080/naver/login',
+      redirectURL: 'http://localhost:8080/naver/login',
       //  FIXME state 값 random string 으로 변경
       state: 123,
       naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',

@@ -3,11 +3,13 @@
 </template>
 
 <script>
+
 export default {
   name: 'Agreement',
   data() {
     return {
       token: '',
+      tokenData: '',
     };
   },
   methods: {},
@@ -15,7 +17,8 @@ export default {
     this.token = this.$route.query.token;
     // console.log(this.access_token, this.$route.query.nickName);
     localStorage.setItem('jwt', this.token);
-    this.$router.push('/');
+    
+    //this.$router.push('/');
   },
 };
 </script>
