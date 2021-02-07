@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.ssafy.mom.config.jwt.JwtServiceImpl;
@@ -27,7 +25,7 @@ import com.ssafy.mom.model.UserDto;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @Controller
-@RequestMapping(value = "/naver")
+@RequestMapping(value = "/naver" , method= RequestMethod.GET)
 public class NaverLoginController {
 	@Value("${naverClientSecret}")
 	String naverClientSecret;
@@ -78,17 +76,17 @@ public class NaverLoginController {
             br.close();
             if(responseCode==200) { // 성공적으로 토큰을 가져온다면
                 //int id;            	
-                String nickName, email, tmp;
+                String username, email, tmp;
                 JsonParser parser = new JsonParser();               
                 JsonElement accessElement = parser.parse(res.toString());                
                 System.out.println(accessElement);
                 access_token = accessElement.getAsJsonObject().get("access_token").getAsString();              
                 tmp = getUserInfo(access_token);               
                 JsonElement userInfoElement = parser.parse(tmp);
-                //id = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsInt();             
-                nickName = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();            
-                email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();             
-                access_token = createJWTToken(nickName, email);
+                System.out.println(userInfoElement);
+                username = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("name").getAsString(); 
+                email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();  
+                access_token = createJWTToken(username, email);
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -126,43 +124,31 @@ public class NaverLoginController {
             return "Err";
         }
     }
-	private String createJWTToken(String nickname, String email) {
+	private String createJWTToken(String username, String email) {
 		System.out.println(5);
-        String token = null;
-        //DecodedJWT jwt = null;       
-        
+        String token = null; 
         try {
-//            Long EXPIRATION_TIME = 1000L * 60L * 10L;
-//            Date issuedAt = new Date();
-//            Date notBefore = new Date(issuedAt.getTime());
-//            Date expiresAt = new Date(issuedAt.getTime() + EXPIRATION_TIME);
             
             //네아로가 처음이라면 회원가입!
         	Optional<UserDto>  user = userDao.findByEmail(email);
-        	UserDto userEntity = user.get();
+        	UserDto userEntity ;
             if(!user.isPresent()) {
             	UserDto userSave = UserDto.builder()
-            			.username(nickname)
+            			.username(username)
             			.email(email)
             			.role("ROLE_USER")
+            			.stateMsg("상태메시지를 입력해주세요")
             			.build();
             	
             	userEntity = userDao.save(userSave);
             }
-            token= jwtService.create("email", userEntity.getEmail(), "access-token");// key, data, subject
+            else {
+            	userEntity = user.get();
+            }
+            token= jwtService.create("uid", userEntity.getUid(), "access-token");// key, data, subject
             System.out.println(6);
             System.out.println(token);
             
-//            Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
-//            
-//            token = JWT.create()
-//                    .withIssuer("auth0")
-//                    .withSubject(user.getUsername())
-//                    .withClaim("id", user.getUid())
-//                    .withClaim("email", user.getEmail())
-//                    .withNotBefore(notBefore)
-//                    .withExpiresAt(expiresAt)
-//                    .sign(algorithm);
         } catch (Exception e) {
             System.err.println("err: " + e);
         }
