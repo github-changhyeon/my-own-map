@@ -3,18 +3,26 @@
     <div class="map_wrap">
       <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
-      <div id="menu_wrap" class="bg_white">
+      <div id="menu_wrap_search" class="bg_white">
         <div class="option">
           <div>
             <v-form @submit.prevent="searchPlaces">
               키워드 : <input type="text" placeholder="검색어를 입력해주세요" id="keyword" size="15" />
               <button type="submit">검색하기</button>
             </v-form>
+            <button></button>
           </div>
         </div>
-        <hr />
-        <ul id="placesList"></ul>
-        <div id="pagination"></div>
+      </div>
+      <hr />
+      <div v-show="isShowList">
+        <div id="menu_wrap_body" class="bg_white">
+          <ul id="placesList"></ul>
+          <div id="pagination"></div>
+        </div>
+        <div id="menu_wrap_bottom" class="bg_white">
+          <button @click="isShowList = false">검색 결과 숨기기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -67,8 +75,9 @@ export default {
     },
     displayPlaces(places) {
       let _this = this;
+      _this.isShowList = true;
       let listEl = document.getElementById('placesList'),
-        menuEl = document.getElementById('menu_wrap'),
+        menuEl = document.getElementById('menu_wrap_body'),
         fragment = document.createDocumentFragment(),
         bounds = new kakao.maps.LatLngBounds();
       // listStr = '';
@@ -103,6 +112,8 @@ export default {
 
           kakao.maps.event.addListener(marker, 'click', function() {
             _this.starMarker.setPosition(placePosition);
+            _this.map.setLevel(4);
+            _this.map.setCenter(placePosition);
             _this.positions.positionLat = places[i].y;
             _this.positions.positionLng = places[i].x;
             _this.positions.address = places[i].address_name;
@@ -118,6 +129,8 @@ export default {
           };
           itemEl.onclick = function() {
             _this.starMarker.setPosition(placePosition);
+            _this.map.setLevel(4);
+            _this.map.setCenter(placePosition);
             _this.positions.positionLat = places[i].y;
             _this.positions.positionLng = places[i].x;
             _this.positions.address = places[i].address_name;
@@ -269,6 +282,7 @@ export default {
           let iwContent = message;
           let iwRemoveable = true;
           _this.infowindow = new kakao.maps.InfoWindow({
+            disableAutoPan: true,
             content: iwContent,
             removable: iwRemoveable,
           });
@@ -298,6 +312,7 @@ export default {
         let iwContent = message;
         let iwRemoveable = true;
         _this.infowindow = new kakao.maps.InfoWindow({
+          disableAutoPan: true,
           content: iwContent,
           removable: iwRemoveable,
         });
@@ -318,6 +333,7 @@ export default {
       let iwContent = message;
       let iwRemoveable = true;
       _this.infowindow = new kakao.maps.InfoWindow({
+        disableAutoPan: true,
         content: iwContent,
         removable: iwRemoveable,
       });
@@ -341,6 +357,7 @@ export default {
     return {
       infowindow: {},
       map: {},
+      isShowList: true,
       starMarker: {},
       markers: [],
       positions: { positionLat: '', positionLng: '', address: '' },
@@ -381,6 +398,52 @@ export default {
   font-size: 12px;
   border-radius: 10px;
 }
+#menu_wrap_search {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  height: 36px;
+  margin: 10px 0 30px 10px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  font-size: 12px;
+  border-radius: 10px;
+}
+#menu_wrap_body {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  height: 350px;
+  margin: 10px 0 30px 10px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  font-size: 12px;
+  border-radius: 10px;
+}
+
+#menu_wrap_bottom {
+  position: absolute;
+  left: 62.5px;
+  text-align: center;
+  bottom: 30px;
+  width: 120px;
+  height: 30px;
+  margin: 10px 0 30px 10px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  font-size: 12px;
+  border-radius: 10px;
+}
 .bg_white {
   background: #fff;
 }
@@ -391,14 +454,49 @@ export default {
   border-top: 2px solid #5f5f5f;
   margin: 3px 0;
 }
+#menu_wrap_search hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
+#menu_wrap_body hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
 #menu_wrap .option {
+  text-align: center;
+}
+#menu_wrap_search .option {
+  text-align: center;
+}
+#menu_wrap_body .option {
   text-align: center;
 }
 #menu_wrap .option p {
   margin: 10px 0;
 }
+#menu_wrap_search .option p {
+  margin: 10px 0;
+}
+#menu_wrap_body .option p {
+  margin: 10px 0;
+}
 #menu_wrap .option button {
   margin-left: 5px;
+}
+#menu_wrap_search .option button {
+  margin-left: 5px;
+}
+#menu_wrap_body .option button {
+  margin-left: 5px;
+}
+#placesList {
+  padding: 0;
 }
 #placesList li {
   list-style: none;

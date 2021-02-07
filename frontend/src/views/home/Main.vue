@@ -1,13 +1,13 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 10px; right: 5px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 50px; right: 5px; z-index: 2">
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 10px; right: 50px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right: 50px; z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
@@ -102,7 +102,7 @@
     <!-- <div style="position: fixed; bottom: 0; z-index: 2"> -->
     <v-expand-x-transition>
       <v-row justify="center" v-if="expand">
-        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 0; z-index: 2">
+        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 40px; z-index: 2">
           <v-slide-group v-model="model" class="pa-4" show-arrows>
             <v-slide-item v-for="(article, i) in recentArticles" :key="i">
               <v-card class="ma-4" height="100px" width="70px" @click="goToArticleDetail(article)">
@@ -118,19 +118,19 @@
       </v-row>
     </v-expand-x-transition>
     <!-- </div> -->
-    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 160px; z-index: 2">
+    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 200px; z-index: 2">
       <v-icon v-if="!expand">mdi-chevron-right</v-icon>
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" v-if="isSameUser" style="position: fixed; bottom: 160px; right: 5px; z-index: 2">
+      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" v-if="isSameUser" style="position: fixed; bottom: 200px; right: 5px; z-index: 2">
         <v-icon dark> mdi-plus </v-icon>
       </v-btn>
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
     </v-row>
-    
+
     <Navigation />
   </div>
 </template>
@@ -244,11 +244,11 @@ export default {
         // console.log(response);
         if (response.data.status) {
           this.followUsers = response.data.object;
-           for (let i = 0; i < this.followUsers.length; ++i) {
+          for (let i = 0; i < this.followUsers.length; ++i) {
             this.followUserMap.set(this.followUsers[i].username, i);
             this.followUserNames.push(this.followUsers[i].username);
             this.followUserSwitches.push(false);
-           } 
+          }
         } else {
           console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
         }
@@ -258,8 +258,6 @@ export default {
         alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
       }
     );
-
-   
   },
   mounted() {},
   watch: {},
