@@ -56,7 +56,10 @@
           reverse-transition="fade-transition"
           transition="fade-transition"
           multiple="true"
-        ></v-carousel-item>
+        >
+        <button @click=removeImage() class="deleteButton">X
+        </button>
+        </v-carousel-item>
       </v-carousel>
     </div>
     <br />
@@ -123,6 +126,10 @@ export default {
     };
   },
   methods: {
+    removeImage(image) {
+      // this.imgs = '';
+      this.imgs.splice(this.imgs.indexOf(image), 1);
+    },
     selectDate(e) {
       this.article.visitDate = e;
       console.log(e)
@@ -284,5 +291,13 @@ export default {
 
 .upload {
   float: right;
+}
+
+.deleteButton {
+  background-color: red;
+  width: 25px;
+  height: 25px;
+  float: right;
+  border: solid black 1px;
 }
 </style>
