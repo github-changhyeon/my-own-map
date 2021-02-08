@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Seoul
+    username: root
+    password: ssafy107
+
+  jpa:
+    hibernate:
+      ddl-auto: update #create update none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+  mail:  
+    host: smtp.gmail.com
+    port: 587
+    username: team7.in.progress@gmail.com
+    password: team7pwd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+  servlet:
+    multipart:
+      enabled: true
+      location: ${java.io.tmpdir}
+      max-file-size: 20MB
+      max-request-size: 20MB
+    
+file:
+#  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\backend\myOwnMap\src\main\resources\static\upload\
+#  path: C:\Users\multicampus\Desktop\subpjt_3rd\s04p13b107\front\src\assets\upload\
+#  path: C:\Users\multicampus\Desktop\PJT1\PJT3\s04p13b107\front\src\assets\upload
+   path: C:\SSAFY\subpjt3\newsfeed\s04p13b107\frontend\src\assets\upload\
+
+naverClientSecret:  tKD8DiLa56
+tokenSecret: ssafySecret
