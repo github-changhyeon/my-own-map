@@ -130,7 +130,7 @@
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
     </v-row>
-    
+
     <Navigation />
   </div>
 </template>
@@ -238,17 +238,18 @@ export default {
     );
 
     // TODO : follow하는 유저들의 정보 받아오기
+    console.log(typeof uid);
     getFollowingUsers(
       uid,
       (response) => {
-        // console.log(response);
+        console.log(response);
         if (response.data.status) {
           this.followUsers = response.data.object;
-           for (let i = 0; i < this.followUsers.length; ++i) {
+          for (let i = 0; i < this.followUsers.length; ++i) {
             this.followUserMap.set(this.followUsers[i].username, i);
             this.followUserNames.push(this.followUsers[i].username);
             this.followUserSwitches.push(false);
-           } 
+          }
         } else {
           console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
         }
@@ -258,8 +259,6 @@ export default {
         alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
       }
     );
-
-   
   },
   mounted() {},
   watch: {},

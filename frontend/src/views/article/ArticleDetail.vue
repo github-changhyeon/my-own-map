@@ -10,6 +10,7 @@
       <v-btn icon color="black" @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
+      <KakaoSharing :article="article" />
     </div>
     <hr class="line" />
     <div class="total-contents">
@@ -81,7 +82,7 @@
       댓글 목록
       <Comment />
     </div> -->
-      <Navigation />
+    <Navigation />
   </v-app>
 </template>
 
@@ -91,15 +92,17 @@ import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
+import KakaoSharing from '@/components/sns/KakaoSharing.vue';
 // import Comment from './Comment.vue';
 
 export default {
   name: 'ArticleDetail',
   props: {
-    articleNo: Number,
+    articleNo: [Number, String],
   },
   components: {
     Navigation,
+    KakaoSharing,
   },
   //  components: { Comment },
   data() {
@@ -256,10 +259,14 @@ export default {
   },
 
   created() {
+    // console.log(this.$route.toPath());
+    console.log(window.location.href);
     this.article = this.$route.params.article;
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
-    if (this.article.userDto.uid === uid) this.isOwnArticle = true;
+    if (this.article.userDto !== null && this.article.userDto.uid === uid) {
+      this.isOwnArticle = true;
+    }
     for (var i = 0; i < this.article.imagePaths.length; ++i) {
       this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
     }

@@ -16,6 +16,7 @@ import Join from '@/views/user/Join';
 
 // SNS
 import NewsFeed from '@/views/sns/NewsFeed';
+import KakaoSharing from '@/components/sns/KakaoSharing';
 
 Vue.use(VueRouter);
 
@@ -86,6 +87,11 @@ const routes = [
     name: constants.URL_TYPE.SNS.NEWSFEED,
     component: NewsFeed,
     props: true,
+  },
+  {
+    path: '/share',
+    name: KakaoSharing,
+    component: KakaoSharing,
   },
 ];
 
