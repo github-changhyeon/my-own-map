@@ -261,13 +261,17 @@ export default {
   },
 
   created() {
-    // this.article = this.$route.params.article;
-    // console.log(this.article, '디테일페이지의 article');
     getArticle(
       this.$route.params.articleNo,
       (response) => {
-        console.log(response);
+        console.log(response, '겟아티클의 리스폰스');
         this.article = response.data;
+        if (this.article.userDto !== null && this.article.userDto.uid === uid) {
+          this.isOwnArticle = true;
+        }
+        for (var i = 0; i < this.article.imagePaths.length; ++i) {
+          this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
+        }
       },
       (error) => {
         console.log(error);
@@ -275,12 +279,6 @@ export default {
     );
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
-    if (this.article.userDto !== null && this.article.userDto.uid === uid) {
-      this.isOwnArticle = true;
-    }
-    for (var i = 0; i < this.article.imagePaths.length; ++i) {
-      this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
-    }
 
     // TODO: 새로고침 했을 때 axios요청 생각해보기
     // if(this.$route.params.article === null){
