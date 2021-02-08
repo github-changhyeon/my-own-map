@@ -8,7 +8,7 @@
     <div>
       <TimeLine />
     </div>
-      <Navigation />
+    <Navigation />
   </div>
 </template>
 
@@ -19,7 +19,6 @@ import TimeLine from '@/components/user/TimeLine';
 import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
-
 
 // import { getUserInfo } from '@/api/user.js';
 
@@ -46,17 +45,17 @@ export default {
     };
   },
   methods: {
-    logout(){
+    logout() {
       localStorage.removeItem('jwt');
       // location.reload();
       // this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
       // this.$router.go()
-      this.$router.push({ name: constants.URL_TYPE.USER.LOGIN });
-    }
+      this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
+    },
   },
-  watch:{
-    '$route.params.uid': function(uid){
-      console.log(uid); 
+  watch: {
+    '$route.params.uid': function(uid) {
+      console.log(uid);
       const token = localStorage.getItem('jwt');
       this.tokenData = jwt_decode(token);
 
@@ -66,7 +65,7 @@ export default {
       // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
       // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
 
-      console.log(this.$route.params.uid, "param <-> " , this.tokenData.uid)
+      console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
       if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
         console.log('본인입니다');
         this.isSameUser = true;
@@ -79,7 +78,7 @@ export default {
         console.log(this.$route.params);
         this.userDto = this.$route.params;
       }
-    }
+    },
   },
   created() {
     const token = localStorage.getItem('jwt');
@@ -90,7 +89,7 @@ export default {
     // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
     // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
 
-    console.log(this.$route.params.uid, "param <-> " , this.tokenData.uid)
+    console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
     if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
       console.log('본인입니다');
       this.isSameUser = true;
