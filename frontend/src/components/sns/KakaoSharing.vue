@@ -34,7 +34,9 @@ export default {
         this.baseUrl = `http://localhost:8081/main/${this.articles[0].userDto.uid}`;
       } else if (this.article !== undefined) {
         console.log(this.article, 'this.article?');
+        console.log(this.$route.params, 'route 파람스');
         this.tmpArticle = this.article;
+        console.log(this.tmpArticle);
         this.baseUrl = `http://localhost:8081/articles/${this.tmpArticle.articleNo}`;
       } else {
         alert('공유할 게시물이 없습니다.');
@@ -61,8 +63,7 @@ export default {
           {
             title: '웹으로 이동',
             link: {
-              mobileWebUrl: `http://localhost:8081/articles/${this.tmpArticle.articleNo}`,
-              // webUrl: `http://localhost:8081/articles/${this.tmpArticle.articleNo}`,
+              mobileWebUrl: this.baseUrl,
               webUrl: this.baseUrl,
             },
           },

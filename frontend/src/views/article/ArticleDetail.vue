@@ -88,7 +88,9 @@
 
 <script>
 // import axios from 'axios';
+import { getArticle } from '@/api/article.js';
 import { deleteArticle } from '@/api/article.js';
+
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
@@ -119,7 +121,7 @@ export default {
         address: '',
         articleNo: 0,
         contents: '',
-        evaluation: '',
+        evaluation: 0,
         positionLat: '',
         positionLng: '',
         regiTime: '',
@@ -259,9 +261,18 @@ export default {
   },
 
   created() {
-    // console.log(this.$route.toPath());
-    console.log(window.location.href);
-    this.article = this.$route.params.article;
+    // this.article = this.$route.params.article;
+    // console.log(this.article, '디테일페이지의 article');
+    getArticle(
+      this.$route.params.articleNo,
+      (response) => {
+        console.log(response);
+        this.article = response.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
     if (this.article.userDto !== null && this.article.userDto.uid === uid) {
