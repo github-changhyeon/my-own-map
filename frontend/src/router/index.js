@@ -90,8 +90,9 @@ const routes = [
   },
   {
     path: '/share',
-    name: KakaoSharing,
+    name: 'KakaoSharing',
     component: KakaoSharing,
+    props: true,
   },
 ];
 
