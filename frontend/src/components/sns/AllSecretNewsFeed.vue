@@ -30,26 +30,27 @@
 
 <script>
 import constants from '@/lib/constants.js';
-import { getAllArticles } from '@/api/article.js';
+import { getPrivateArticles } from '@/api/article.js';
 
 export default {
-  name: 'FollowNewsFeed',
+  name: 'AllSecretNewsFeed',
   components: {},
   props: [],
   computed: {},
   watch: {},
   created() {
-    getAllArticles(
+    getPrivateArticles(
+      uid,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
         } else {
-          console.log('모든 유저의 게시글을 받아올 수 없습니다.');
+          console.log('게시글을 받아올 수 없습니다.');
         }
       },
       (error) => {
         console.log(error);
-        alert('모든 유저의 모든 게시글 받아오기 실패');
+        alert('게시글 받아오기 실패');
       }
     );
   },

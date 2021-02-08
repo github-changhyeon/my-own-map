@@ -16,6 +16,8 @@ import Join from '@/views/user/Join';
 
 // SNS
 import NewsFeed from '@/views/sns/NewsFeed';
+// import MyNewsFeed from '@/views/sns/MyNewsFeed';
+// import SecretNewsFeed from '@/views/sns/SecretNewsFeed';
 
 Vue.use(VueRouter);
 
@@ -87,6 +89,16 @@ const routes = [
     component: NewsFeed,
     props: true,
   },
+  // {
+  //   path: '/mynewsfeed',
+  //   name: 'MyNewsFeed',
+  //   component: MyNewsFeed,
+  // },
+  // {
+  //   path: '/secretnewsfeed',
+  //   name: 'SecretNewsFeed',
+  //   component: SecretNewsFeed,
+  // }
 ];
 
 const router = new VueRouter({

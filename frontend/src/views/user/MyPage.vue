@@ -1,27 +1,38 @@
 <template>
   <div>
-    My Page
+    <div style="float:right">
+    OO 님
     <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
+    </div>
     <div>
       <UserInfo :isSameUser="isSameUser" />
     </div>
-    <div>
+    <!-- <div>
       <TimeLine />
-    </div>
-    <Navigation />
+    </div> -->
+    <v-card>
+      <v-tabs centered style="z-index: 2">
+        <v-tab @click="isOpen = true" style="width: 50vw">내 게시글 보기</v-tab>
+        <!-- <v-tab style="width: 50vw"><v-icon>mdi-pound</v-icon></v-tab> -->
+        <v-tab @click="isOpen = false" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab>
+      </v-tabs>
+    </v-card>
+    <AllMyNewsFeed v-if="isOpen"/>
+    <AllSecretNewsFeed v-if="!isOpen"/>
+    <Navigation/>
   </div>
 </template>
 
 <script>
 import jwt_decode from 'jwt-decode';
 //npm install vue-moment --save
-import TimeLine from '@/components/user/TimeLine';
+// import TimeLine from '@/components/user/TimeLine';
 import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
-
+import AllMyNewsFeed from '@/components/sns/AllMyNewsFeed.vue';
+import AllSecretNewsFeed from '@/components/sns/AllSecretNewsFeed.vue';
 // import { getUserInfo } from '@/api/user.js';
-
 // import axios from 'axios';
 
 // import Vue from 'vue';
@@ -33,8 +44,10 @@ export default {
   name: 'MyPage',
   components: {
     UserInfo,
-    TimeLine,
+    // TimeLine,
     Navigation,
+    AllMyNewsFeed,
+    AllSecretNewsFeed,
   },
   data() {
     return {
@@ -42,6 +55,7 @@ export default {
       userDto: {},
       tokenData: '',
       isSameUser: true,
+      isOpen: true,
     };
   },
   methods: {
