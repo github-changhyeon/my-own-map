@@ -2,7 +2,7 @@
   <div class="container" data-app>
     <CreateArticleNav />
     <!-- vue-star-rating 추후에 삭제하기 -->
-    <SelectPosition :positionObj="propsPositionObj" @emitSelectPosition="getPos" />
+    <SelectPosition v-if="positionObj !== null" :propsPositionObj="positionObj" @emitSelectPosition="getPos" />
     <!-- <div v-if="!isCurrentMap"><SelectPosition :propsPositionObj="positionObj" /></div> -->
     <!-- <div v-if="isCurrentMap" id="currentMap" style="width:100%; height:350px"></div> -->
     <br />
@@ -28,8 +28,8 @@
       <br />
       <!-- <HashModal />
       <HashList /> -->
-      <!-- <v-col md="4" offset-md="4">
-        <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
+      <v-col md="4" offset-md="4">
+        <v-combobox v-model="selectedHashtagNames" :items="hashtagNames" label="해쉬태그를 선택하세요." multiple chips>
           <template v-slot:selection="data">
             <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
               <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
@@ -37,9 +37,20 @@
             </v-chip>
           </template>
         </v-combobox>
-      </v-col> -->
+      </v-col>
 
-      <v-autocomplete v-model="selectedHashtagNames" :items="hashtagNames" outlined dense chips small-chips label="해쉬태그입니다" multiple></v-autocomplete>
+      <!-- <v-autocomplete
+        v-model="selectedHashtagNames"
+        :items="hashtagNames"
+        @keydown.enter="testKeydown"
+        :search-input.sync="hashtagSearchKeyword"
+        outlined
+        dense
+        chips
+        small-chips
+        label="해쉬태그입니다"
+        multiple
+      ></v-autocomplete> -->
 
       <br />
       <!-- <div v-for="(hash, idx) in hashs" :key="idx" :value="hash">
@@ -82,7 +93,7 @@
     <div>
       방문 정보 입력
       <br />
-      <DatePicker :setDate="article.visitDate" label="날짜를 입력해 주세요."></DatePicker>
+      <DatePicker v-if="article.visitDate !== ''" :setDate="article.visitDate" @setDate="selectDate" label="날짜를 입력해 주세요."></DatePicker>
       <!-- <v-icon>mdi-calendar-range</v-icon> -->
       <!-- <v-text-field
         hint="방문 날짜를 선택해주세요."
@@ -146,11 +157,13 @@ export default {
   data() {
     return {
       isCurrentMap: false,
+      // TODO: 랜더링타이밍
       positionObj: {
         positionLat: this.$route.params.article.positionLat,
         positionLng: this.$route.params.article.positionLng,
         address: this.$route.params.article.address,
       },
+      // positionObj: null,
       imageUrl: null,
       imageUrls: Array,
       selectedFile: null,
@@ -178,6 +191,7 @@ export default {
       ],
       rate: 0,
       date: '',
+      hashtagSearchKeyword: '',
       article: {
         positionLat: '',
         positionLng: '',
@@ -192,9 +206,29 @@ export default {
     };
   },
   methods: {
-    setDate(date) {
-      this.visitDate = date;
+    // TODO: 준혁아 고마워 ㅠㅠㅠ
+    // testKeydown() {
+    //   let tmpArray = [];
+    //   alert(this.hashtagSearchKeyword);
+    //   this.hashtagNames.push(this.hashtagSearchKeyword);
+    //   this.selectedHashtagNames.push(this.hashtagSearchKeyword);
+
+    //   for (let i = 0; i < this.selectedHashtagNames.length; ++i) {
+    //     tmpArray.push(this.selectedHashtagNames[i]);
+    //   }
+
+    //   this.selectedHashtagNames = tmpArray;
+
+    //   this.hashtagSearchKeyword = '';
+    //   console.log(this.selectedHashtagNames, '들어갔죠?');
+    // },
+    selectDate(e) {
+      this.article.visitDate = e;
+      console.log(e, '에밋받았어요');
     },
+    // setDate(date) {
+    //   this.visitDate = date;
+    // },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;
       this.article.positionLng = positions.positionLng;
@@ -227,16 +261,18 @@ export default {
       // var params = new URLSearchParams();
       // params.append('file', this.images);
       // params.append('article', this.article);
+      this.article.hashtags = [];
 
       for (let i = 0; i < this.selectedHashtagNames.length; ++i) {
-        if (this.articleHashtagNames.includes(this.selectedHashtagNames[i])) {
-          continue;
-        }
-        console.log(this.selectedHashtagNames[i], '와 안돼누 ㅠㅠㅠ');
+        // if (this.articleHashtagNames.includes(this.selectedHashtagNames[i])) {
+        //   continue;
+        // }
+        // console.log(this.selectedHashtagNames[i], '와 안돼누 ㅠㅠㅠ');
         let obj = { hashtagNo: 0, hashtagName: this.selectedHashtagNames[i] };
-        console.log(obj, '와 안돼누 ㅠㅠㅠ obj.ver');
+        // console.log(obj, '와 안돼누 ㅠㅠㅠ obj.ver');
         this.article.hashtags.push(obj);
       }
+
       console.log(this.article.hashtags, '넣기전 해쉬태그!@!~!@~@~!#!~#~!#');
       // const imgs = new FormData();
       // sonsole.log(typeof(this.article.images))
@@ -252,7 +288,7 @@ export default {
       // formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
-      this.article.visitDate = this.date;
+      // this.article.visitDate = this.date;
       const token = localStorage.getItem('jwt');
       let uid = jwt_decode(token).uid;
       this.article.userDto.uid = uid;
@@ -282,18 +318,20 @@ export default {
   },
   mounted() {},
   created() {
-    console.log(this.$route.params.articleNo, '이게 게시글 번호야');
     getArticle(
       this.$route.params.articleNo,
       (response) => {
         if (response.data.status) {
           this.article = response.data.object;
-          this.positionObj.positionLat = this.article.positionLat;
-          this.positionObj.positionLng = this.article.positionLng;
+          // this.article.positionObj = response.data.object.positionObj;
+          // this.positionObj.positionLat = this.article.positionLat;
+          // this.positionObj.positionLng = this.article.positionLng;
           // this.positionObj.address = this.article.address;
           // this.items = this.article.hashtags;
-          console.log(this.positionObj, 'is what i want');
-          console.log(this.article);
+          // console.log(this.positionObj, '랜더링 ㅠㅠㅠㅠㅠㅠㅠㅠ');
+          this.positionObj = this.article.positionObj;
+
+          console.log(this.article.visitDate, '프롭스해줄 비짓데이트');
           for (let i = 0; i < this.article.hashtags.length; i++) {
             this.selectedHashtagNames.push(this.article.hashtags[i].hashtagName);
             this.articleHashtagNames.push(this.article.hashtags[i].hashtagName);

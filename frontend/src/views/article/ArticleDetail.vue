@@ -174,7 +174,7 @@ export default {
     goToUpdateArticle() {
       this.$router.push({
         name: constants.URL_TYPE.ARTICLE.UPDATEARTICLE,
-        params: { articleNo: this.article.articleNo },
+        params: { articleNo: this.article.articleNo, article: this.article },
       });
     },
 
@@ -261,12 +261,17 @@ export default {
   },
 
   created() {
+    const token = localStorage.getItem('jwt');
+    let uid = '';
+    if (token !== null && token !== undefined) {
+      uid = jwt_decode(token).uid;
+    }
     getArticle(
       this.$route.params.articleNo,
       (response) => {
-        console.log(response, '겟아티클의 리스폰스');
-        this.article = response.data;
-        if (this.article.userDto !== null && this.article.userDto.uid === uid) {
+        this.article = response.data.object;
+
+        if (token !== null && token !== undefined && this.article.userDto.uid === uid) {
           this.isOwnArticle = true;
         }
         for (var i = 0; i < this.article.imagePaths.length; ++i) {
@@ -277,8 +282,6 @@ export default {
         console.log(error);
       }
     );
-    const token = localStorage.getItem('jwt');
-    let uid = jwt_decode(token).uid;
 
     // TODO: 새로고침 했을 때 axios요청 생각해보기
     // if(this.$route.params.article === null){
