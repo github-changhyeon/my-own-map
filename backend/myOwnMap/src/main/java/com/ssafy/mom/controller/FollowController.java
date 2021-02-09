@@ -57,14 +57,14 @@ public class FollowController {
 
 	@GetMapping("/doFollow/{uid}")
 	@ApiOperation(value = "팔로우하기")
-	public Object follow(@PathVariable @ApiParam(value = "팔로우 시 필요한 회원정보(상대의 이메일).", required = true) int uid,
+	public Object follow(@PathVariable @ApiParam(value = "팔로우 시 필요한 회원정보(상대의 이메일).", required = true) String uid,
 			HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 
 		int myUid = jwtService.getUserUid();
 		Optional<UserDto> userFrom = userDao.findByUid(myUid);
 
-		Optional<UserDto> userTo = userDao.findByUid(uid);
+		Optional<UserDto> userTo = userDao.findByUid(Integer.parseInt(uid));
 
 		// 이미 내가 팔로우하였는지 확인!
 		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
@@ -95,10 +95,10 @@ public class FollowController {
 	@GetMapping("/findFollowing/{uid}")
 	@ApiOperation(value = "{uid}가 팔로우한 사람")
 	public Object retrieveUserFollowing(
-			@ApiParam(value = "{uid}이 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) @PathVariable int uid) {
+			@ApiParam(value = "{uid}이 팔로우한 사람들(팔로잉) List<UserDto>로 반환", required = true) @PathVariable String uid) {
 		final BasicResponse result = new BasicResponse();
 		
-		Optional<UserDto> userFrom = userDao.findByUid(uid);
+		Optional<UserDto> userFrom = userDao.findByUid(Integer.parseInt(uid));
 		List<UserFollow> userEntity = userFollowDao.findAllByUserFrom(userFrom.get());
 		List<SendUserInfo> userList = new ArrayList<>();
 		for (int i = 0; i < userEntity.size(); i++) {
@@ -123,10 +123,10 @@ public class FollowController {
 	// 나를 팔로우한 사람(팔로워)
 	@GetMapping("/findFollower/{uid}")
 	@ApiOperation(value = "{uid}를 팔로우한 사람")
-	public Object retrieveUserFollower(@ApiParam(value = "{uid}, {uid}를 팔로우한(팔로워) List<UserDto>로 반환", required = true) @PathVariable int uid) {
+	public Object retrieveUserFollower(@ApiParam(value = "{uid}, {uid}를 팔로우한(팔로워) List<UserDto>로 반환", required = true) @PathVariable String uid) {
 		final BasicResponse result = new BasicResponse();
 	
-		Optional<UserDto> userTo = userDao.findByUid(uid);
+		Optional<UserDto> userTo = userDao.findByUid(Integer.parseInt(uid));
 		List<UserFollow> userEntity = userFollowDao.findAllByUserTo(userTo.get());
 		List<SendUserInfo> userList = new ArrayList<>();
 		for (int i = 0; i < userEntity.size(); i++) {
@@ -153,11 +153,11 @@ public class FollowController {
 	//현재 팔로우되잇는지확인하기위한 상태체크
 	@GetMapping("/isFollow/{uid}")
 	@ApiOperation(value = "jwt가 uid를 팔로우중인지 체크")
-	public Object isFollow(@PathVariable int uid, HttpServletRequest request) {
+	public Object isFollow(@PathVariable String uid, HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		int myUid = jwtService.getUserUid();
 		Optional<UserDto> userFrom = userDao.findByUid(myUid);
-		Optional<UserDto> userTo = userDao.findByUid(uid);
+		Optional<UserDto> userTo = userDao.findByUid(Integer.parseInt(uid));
 		Optional<UserFollow> isFollow = userFollowDao.findByUserFromAndUserTo(userFrom.get(), userTo.get());
 		if(isFollow.isPresent()) {
 			result.status= true;

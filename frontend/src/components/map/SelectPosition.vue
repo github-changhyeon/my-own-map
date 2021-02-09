@@ -7,7 +7,8 @@
         <div class="option">
           <div>
             <v-form @submit.prevent="searchPlaces">
-              키워드 : <input type="text" placeholder="검색어를 입력해주세요" id="keyword" size="15" />
+              키워드 :
+              <input type="text" placeholder="검색어를 입력해주세요" id="keyword" size="15" />
               <button type="submit">검색하기</button>
             </v-form>
             <button></button>
@@ -35,7 +36,7 @@ const SPRITE_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapid
 export default {
   name: 'SelectPosition',
   components: {},
-  props: [],
+  props: ['propsPositionObj'],
   computed: {},
   watch: {},
   created() {},
@@ -260,18 +261,13 @@ export default {
         };
 
       _this.map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+      if (this.propsPositionObj === undefined || this.propsPositionObj === null) {
+        let geocoder = new kakao.maps.services.Geocoder();
+        // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
 
-      let geocoder = new kakao.maps.services.Geocoder();
-      // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-      if (navigator.geolocation) {
-        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition(function(position) {
-          _this.positions.positionLat = position.coords.latitude;
-          _this.positions.positionLng = position.coords.longitude;
-
-          let locPosition = new kakao.maps.LatLng(_this.positions.positionLat, _this.positions.positionLng); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-
-          let message = '<div style="padding:5px;">여기에 계시군요!</div>';
+        if (navigator.geolocation) {
+          let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+          let message = '위치 연동을 허용해주세요..';
           let imageSize = new kakao.maps.Size(24, 35);
           let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
           _this.starMarker = new kakao.maps.Marker({
@@ -288,20 +284,55 @@ export default {
           });
           _this.infowindow.open(_this.map, _this.starMarker);
           this.setMarkerListener();
-          _this.map.setCenter(locPosition);
-          geocoder.coord2Address(_this.positions.positionLng, _this.positions.positionLat, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-              let detailAddr = result[0].address.address_name;
-              _this.positions.address = detailAddr;
-              _this.$emit('emitSelectPosition', _this.positions);
-            } else {
-              _this.$emit('emitSelectPosition', _this.positions);
-            }
+
+          // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+          navigator.geolocation.getCurrentPosition(function(position) {
+            _this.positions.positionLat = position.coords.latitude;
+            _this.positions.positionLng = position.coords.longitude;
+
+            locPosition = new kakao.maps.LatLng(_this.positions.positionLat, _this.positions.positionLng); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+
+            message = '<div style="padding:5px;">여기에 계시군요!</div>';
+            // imageSize = new kakao.maps.Size(24, 35);
+            // markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+            _this.starMarker.setPosition(locPosition);
+            iwContent = message;
+            _this.infowindow.setContent(iwContent);
+            _this.infowindow.open(_this.map, _this.starMarker);
+            _this.map.setCenter(locPosition);
+            geocoder.coord2Address(_this.positions.positionLng, _this.positions.positionLat, function(result, status) {
+              if (status === kakao.maps.services.Status.OK) {
+                let detailAddr = result[0].address.address_name;
+                _this.positions.address = detailAddr;
+                _this.$emit('emitSelectPosition', _this.positions);
+              } else {
+                _this.$emit('emitSelectPosition', _this.positions);
+              }
+            });
           });
-        });
+        } else {
+          let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+          let message = 'geolocation을 사용할수 없어요..';
+          let imageSize = new kakao.maps.Size(24, 35);
+          let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+          _this.starMarker = new kakao.maps.Marker({
+            map: _this.map,
+            position: locPosition,
+            image: markerImage,
+          });
+          let iwContent = message;
+          let iwRemoveable = true;
+          _this.infowindow = new kakao.maps.InfoWindow({
+            disableAutoPan: true,
+            content: iwContent,
+            removable: iwRemoveable,
+          });
+          _this.infowindow.open(_this.map, _this.starMarker);
+          this.setMarkerListener();
+        }
       } else {
-        let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-        let message = 'geolocation을 사용할수 없어요..';
+        let locPosition = new kakao.maps.LatLng(this.propsPositionObj.positionLat, this.propsPositionObj.positionLng);
+        let message = '이 장소군요!!';
         let imageSize = new kakao.maps.Size(24, 35);
         let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
         _this.starMarker = new kakao.maps.Marker({
@@ -317,28 +348,9 @@ export default {
           removable: iwRemoveable,
         });
         _this.infowindow.open(_this.map, _this.starMarker);
+        _this.map.setCenter(locPosition);
         this.setMarkerListener();
       }
-
-      // TODO : remove
-      let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-      let message = 'geolocation을 사용할수 없어요..';
-      let imageSize = new kakao.maps.Size(24, 35);
-      let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
-      _this.starMarker = new kakao.maps.Marker({
-        map: _this.map,
-        position: locPosition,
-        image: markerImage,
-      });
-      let iwContent = message;
-      let iwRemoveable = true;
-      _this.infowindow = new kakao.maps.InfoWindow({
-        disableAutoPan: true,
-        content: iwContent,
-        removable: iwRemoveable,
-      });
-      _this.infowindow.open(_this.map, _this.starMarker);
-      this.setMarkerListener();
     },
     addScript() {
       const script = document.createElement('script');

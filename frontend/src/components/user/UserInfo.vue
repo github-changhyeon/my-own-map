@@ -1,30 +1,34 @@
 <template>
-  <div>
-    User Info
-
+  <div class="userinfo">
+    <v-avatar>
+      <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+    </v-avatar>
+    <button v-if="!isSameUser" @click="goToMap">지도보기</button>
     <div>
-      <v-avatar>
-        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-      </v-avatar>
-      <button v-if="!isSameUser" @click="goToMap">지도보기</button>
-      <div>
-        <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
-        <v-icon v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
-        <!-- <v-icon @click="dofolldoFollow(
-          this.uid, config,
-          (response) => {
-            ow">mdi-account-minus</v-icon> -->
+      <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
+      <v-icon v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
+      <!-- <v-icon @click="dofolldoFollow(
+        this.uid, config,
+        (response) => {
+          ow">mdi-account-minus</v-icon> -->
+    </div>
+    <div @click="goToFollowingList">
+      팔로잉
+      <br>
+      <div style="margin-left:20px;">
+      {{ followingList.length }}
       </div>
-      <div @click="goToFollowingList">
-        팔로잉 : {{ followingList.length }}
-        <Follow :users="followingList" />
-      </div>
-      <br />
+      <Follow :users="followingList" />
+    </div>
+    <br />
 
-      <div @click="goToFollowerList">
-        팔로워 : {{ followerList.length }}
-        <Follow :users="followerList" />
+    <div @click="goToFollowerList">
+      팔로워
+      <br>
+      <div style="margin-left:20px;">
+      {{ followerList.length }}
       </div>
+      <Follow :users="followerList" />
     </div>
   </div>
 </template>
@@ -217,4 +221,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.userinfo {
+ display: flex; 
+ justify-content: space-around;
+ padding-top:25px;
+ padding-bottom: 25px;
+}
+
+</style>

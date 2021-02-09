@@ -2,12 +2,7 @@
   <v-col md="4" offset-md="4">
     <v-dialog ref="dialog" v-model="dateModal" :return-value.sync="selectedDate" persistent width="290px">
       <template v-slot:activator="{ on }">
-        <v-text-field
-          v-model="selectedDate"
-          prepend-icon="mdi-calendar-range"
-          readonly
-          v-on="on"
-        ></v-text-field>
+        <v-text-field v-model="selectedDate" prepend-icon="mdi-calendar-range" readonly v-on="on"></v-text-field>
       </template>
       <v-date-picker v-model="selectedDate" scrollable>
         <v-spacer></v-spacer>
@@ -20,8 +15,8 @@
 
 <script>
 export default {
-  name: "DatePicker",
-  props: ['date'],
+  name: 'DatePicker',
+  props: ['setDate'],
   data: () => ({
     selectedDate: '',
     dateModal: false,
@@ -29,8 +24,12 @@ export default {
   methods: {
     set() {
       this.$refs.dialog.save(this.selectedDate);
-      this.$emit("setDate", this.selectedDate)
-    }
-  }
-}
+      this.$emit('setDate', this.selectedDate);
+    },
+  },
+  created() {
+    this.selectedDate = this.setDate;
+    console.log(this.selectedDate, this.setDate, ' date pickerrrr');
+  },
+};
 </script>
