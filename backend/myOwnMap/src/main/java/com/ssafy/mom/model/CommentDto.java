@@ -34,7 +34,7 @@ public class CommentDto {
 	private int commentNo;
 	
 	@ApiModelProperty(value="댓글 내용")
-	private String context;
+	private String content;
 	
 	@ApiModelProperty(value="댓글 작성자")
 	@ManyToOne(cascade = CascadeType.DETACH)

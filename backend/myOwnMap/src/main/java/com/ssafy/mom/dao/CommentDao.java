@@ -9,6 +9,6 @@ import com.ssafy.mom.model.CommentDto;
 
 public interface CommentDao extends JpaRepository<CommentDto, Integer>{
 
-	List<CommentDto> findByArticleDto(ArticleDto articleDto);
+	List<CommentDto> findAllByArticleDto(ArticleDto articleDto);
 
 }

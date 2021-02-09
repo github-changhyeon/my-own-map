@@ -1,6 +1,7 @@
 package com.ssafy.mom.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.model.ArticleDto;
 import com.ssafy.mom.model.BasicResponse;
 import com.ssafy.mom.model.CommentDto;
+import com.ssafy.mom.model.UserDto;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,8 +64,16 @@ public class CommentController {
 	@PostMapping
 	@ApiOperation(value = "댓글 등록")
 	public Object createComment(
-			@RequestBody @ApiParam(value = "댓글 작성시 필요한 정보(댓글내용, 유저id, 게시글no).", required = true) CommentDto comment) {
+			@RequestBody @ApiParam(value = "댓글 작성시 필요한 정보(댓글내용, 유저id, 게시글no).", required = true) Map<String, String> dtoMap) {
 		final BasicResponse result = new BasicResponse();
+		int uid =Integer.parseInt(dtoMap.get("uid"));
+		int articleNo = Integer.parseInt(dtoMap.get("articleNo"));
+		Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
+		Optional<UserDto> user = userDao.findByUid(uid);
+		CommentDto comment = new CommentDto();
+		comment.setArticleDto(article.get());
+		comment.setUserDto(user.get());
+		comment.setContent(dtoMap.get("content"));
 		CommentDto commentEntity = commentDao.save(comment);
 		if (commentEntity != null) {
 			result.message = "댓글 등록 성공";
@@ -90,7 +100,7 @@ public class CommentController {
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		// 있다면 댓글 찾기
-		List<CommentDto> commentEntities = commentDao.findByArticleDto(articleEntity.get());
+		List<CommentDto> commentEntities = commentDao.findAllByArticleDto(articleEntity.get());
 
 		// 댓글이 한개두 없다면
 		if (commentEntities.size() == 0) {
@@ -133,7 +143,7 @@ public class CommentController {
 		}
 
 		// 댓글이 있다면 수정
-		commentEntity.get().setContext(comment.getContext());
+		commentEntity.get().setContent(comment.getContent());
 		commentDao.save(commentEntity.get());
 		result.message = "댓글 불러오기 성공";
 		result.status = true;
