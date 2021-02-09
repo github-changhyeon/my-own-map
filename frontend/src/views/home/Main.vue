@@ -218,6 +218,7 @@
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
+      <KakaoSharing :articles="articles" class="ma-2" fab small dark style="position: fixed; bottom: 200px; right: 50px; z-index: 2" />
     </v-row>
 
     <Navigation />
@@ -238,6 +239,7 @@ import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
+import KakaoSharing from '@/components/sns/KakaoSharing.vue';
 // import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
@@ -269,6 +271,7 @@ export default {
   components: {
     // NaverLogin
     Navigation,
+    KakaoSharing,
   },
   created() {
     this.initPage();
