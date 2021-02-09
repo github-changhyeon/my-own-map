@@ -30,26 +30,28 @@
 
 <script>
 import constants from '@/lib/constants.js';
-import { getAllArticles } from '@/api/article.js';
+import { getPublicArticles } from '@/api/article.js';
 
 export default {
-  name: 'FollowNewsFeed',
+  name: 'PublicNewsFeed',
   components: {},
-  props: [],
+  props: ['propsUid'],
   computed: {},
   watch: {},
   created() {
-    getAllArticles(
+    this.uid = this.props_uid
+    getPublicArticles(
+      this.uid,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
         } else {
-          console.log('모든 유저의 게시글을 받아올 수 없습니다.');
+          console.log('게시글을 받아올 수 없습니다.');
         }
       },
       (error) => {
         console.log(error);
-        alert('모든 유저의 모든 게시글 받아오기 실패');
+        alert('모든 게시글 받아오기 실패');
       }
     );
   },
@@ -64,15 +66,8 @@ export default {
   data() {
     return {
       articles: [
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
       ],
+      uid: '',
     };
   },
 };

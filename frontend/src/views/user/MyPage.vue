@@ -1,27 +1,46 @@
 <template>
   <div>
-    My Page
+    <div style="float:right">
+    OO 님
     <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
+    </div>
     <div>
       <UserInfo :isSameUser="isSameUser" />
     </div>
-    <div>
+    <!-- <div>
       <TimeLine />
-    </div>
-    <Navigation />
+    </div> -->
+    <v-card>
+      <v-tabs centered style="z-index: 2">
+        <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
+        <v-tab @click="isOpen = 2" style="width: 5vw"><v-icon>mdi-heart</v-icon></v-tab>
+        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab>
+        <v-tab @click="isOpen = 4" style="width: 5vw"><v-icon>mdi-cog</v-icon></v-tab>
+      </v-tabs>
+    </v-card>
+    <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid"/>
+    <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid"/>
+    <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid"/>
+    <ChangeInfo v-if="isOpen === 4"/>
+    <Navigation/>
   </div>
 </template>
 
 <script>
 import jwt_decode from 'jwt-decode';
 //npm install vue-moment --save
-import TimeLine from '@/components/user/TimeLine';
+// import TimeLine from '@/components/user/TimeLine';
 import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
+import ChangeInfo from '@/components/user/ChangeInfo.vue';
+
+//NewsFeed
+import PublicNewsFeed from '@/components/sns/PublicNewsFeed.vue';
+import PrivateNewsFeed from '@/components/sns/PrivateNewsFeed.vue';
+import FavoriteNewsFeed from '@/components/sns/FavoriteNewsFeed.vue';
 
 // import { getUserInfo } from '@/api/user.js';
-
 // import axios from 'axios';
 
 // import Vue from 'vue';
@@ -33,8 +52,12 @@ export default {
   name: 'MyPage',
   components: {
     UserInfo,
-    TimeLine,
+    // TimeLine,
     Navigation,
+    PublicNewsFeed,
+    PrivateNewsFeed,
+    FavoriteNewsFeed,
+    ChangeInfo,
   },
   data() {
     return {
@@ -42,6 +65,9 @@ export default {
       userDto: {},
       tokenData: '',
       isSameUser: true,
+      isOpen: '',
+
+      uid: '',
     };
   },
   methods: {
@@ -80,7 +106,8 @@ export default {
       }
     },
   },
-  created() {
+  created() {   
+    // const uid = this.$route.params.uid
     const token = localStorage.getItem('jwt');
     this.tokenData = jwt_decode(token);
     // 로그인된상태니까 -> 본인이 본인 페이지 올때는 토큰으로 내 정보를 찾아서 채워야되고
