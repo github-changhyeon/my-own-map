@@ -81,7 +81,7 @@
       댓글 목록
       <Comment />
     </div> -->
-      <Navigation />
+    <Navigation />
   </v-app>
 </template>
 

@@ -63,6 +63,7 @@
       </v-carousel>
     </div>
     <br />
+    <v-checkbox id="privateToggle" v-model="article.private"></v-checkbox><label for="privateToggle">비공개글로 합니다</label>
     <div>
       방문 정보 입력
       <br />
@@ -121,7 +122,8 @@ export default {
         hashtags: [],
         contents: '',
         visitDate:'',
-        userDto:{}
+        userDto:{},
+        private:0
       },
     };
   },
