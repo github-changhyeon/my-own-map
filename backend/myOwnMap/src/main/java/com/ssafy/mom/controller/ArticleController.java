@@ -80,9 +80,9 @@ public class ArticleController {
 
 	@Autowired
 	ArticleHashtagDao articleHashtagDao;
-	
+
 	@GetMapping
-	@ApiOperation(value = "전체 게시물을 받아온다")
+	@ApiOperation(value = "전체 게시물을 받아온다", response = List.class)
 	public Object retrieveAllArticles() {
 		List<ArticleDto> list = articleDao.findAll();
 		for (int i = 0; i < list.size(); i++) {
@@ -94,16 +94,15 @@ public class ArticleController {
 			}
 			articleDto.setImagePaths(tmpImagePaths);
 		}
-		final BasicResponse result  = new BasicResponse();
+		final BasicResponse result = new BasicResponse();
 		result.status = true;
 		result.message = "전체 게시글 반환에 성공하였습니다.";
 		result.object = list;
 		return result;
 	}
-	
-	
+
 	@PostMapping
-	@ApiOperation(value = "게시글 등록한다")
+	@ApiOperation(value = "게시글 등록한다", response = List.class)
 	public Object createArticle(@RequestPart(value = "file[]", required = false) List<MultipartFile> file,
 			@RequestPart("article") ArticleDto articleDto) {
 		final BasicResponse result = new BasicResponse();
@@ -177,7 +176,8 @@ public class ArticleController {
 			if (hashtagSet.contains(inputHashtags.get(i).getHashtagName())) {
 				// 이미 해당 해쉬태그가 존재한다면, 해당 해쉬태그의 번호를 조회한다.
 				HashtagDto alreadyExist = hashtagDao.findByHashtagName(inputHashtags.get(i).getHashtagName());
-				if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
+				if (!articleDto.isPrivate()
+						&& !userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
 					userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist));
 				}
 				;
@@ -185,7 +185,8 @@ public class ArticleController {
 				continue;
 			}
 			hashtagDao.save(inputHashtags.get(i));
-			if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), inputHashtags.get(i)).isPresent()) {
+			if (!articleDto.isPrivate()
+					&& !userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), inputHashtags.get(i)).isPresent()) {
 				userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i)));
 			}
 			;
@@ -200,12 +201,12 @@ public class ArticleController {
 
 	@ApiOperation(value = "게시글 번호에 해당하는 게시글을 반환한다", response = List.class)
 	@GetMapping("/{articleNo}")
-	public Optional<ArticleDto> retrieveArticleByArticleNo(@PathVariable int articleNo) {
+	public Object retrieveArticleByArticleNo(@PathVariable String articleNo) {
 
 		// TODO: 회원정보 연동시 uid 가져오기
 		// int uid = 1;
 
-		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
+		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(Integer.parseInt(articleNo));
 		List<ArticleHashtag> list = articleHashtagDao.findAllByArticleDto(articleOpt.get());
 		ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
 		for (int j = 0; j < list.size(); ++j) {
@@ -213,87 +214,143 @@ public class ArticleController {
 		}
 
 		articleOpt.get().setHashtags(tmpHashtags);
+		
 		List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleOpt.get());
 		ArrayList<String> tmpImagePaths = new ArrayList<>();
 		for (int i = 0; i < tmpImages.size(); i++) {
 			tmpImagePaths.add(tmpImages.get(i).getPostImage());
 		}
 		articleOpt.get().setImagePaths(tmpImagePaths);
-		return articleOpt;
+
+		final BasicResponse result = new BasicResponse();
+		
+		result.status = true;
+		result.message = "success";
+		result.object = articleOpt.get();
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "게시글 수정 후 성공/실패 여부를 반환한다", response = List.class)
 	@PostMapping("/{articleNo}")
-	public ResponseEntity<String> updateArticle(@RequestBody ArticleDto articleDto, @PathVariable int articleNo) {
-
+	public Object updateArticle(@RequestBody ArticleDto articleDto, @PathVariable String articleNo) {
+		System.out.println("해쉬태그임" + articleDto.getHashtags());
+		final BasicResponse result = new BasicResponse();
+		
 		// TODO: 회원정보 연동시 uid 가져오기
 		int uid = articleDto.getUserDto().getUid();
 
-		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
+		// 요청하는 uid가 본인인지 확인
+//		int myUid = jwtService.getUserUid();
+//		if(uid != myUid) {
+//			result.status = false;
+//			result.message = "본인이 아닙니다";
+//			return new ResponseEntity<>(result, HttpStatus.OK);
+//		}
+
+		// 게시글번호로 게시글 찾기
+		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(Integer.parseInt(articleNo));
+		// 없다면 없다고 반환
 		if (!articleOpt.isPresent())
 			return new ResponseEntity<String>("article not found", HttpStatus.BAD_REQUEST);
+		// 작성자의 유저정보 가져오기
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
-		articleDto.setUserDto(userOpt.get());
-		articleDto.setArticleNo(articleNo);
+		// 유저 정보는 이미 들어있음
+//		articleDto.setUserDto(userOpt.get());
+		// TODO: Front에서 ArticleNo 돌려줄때 지워주기
+		articleDto.setArticleNo(Integer.parseInt(articleNo));
 		articleDao.save(articleDto);
 
-		// 기존 article hashtag 삭제하기
-		// 기존 user hashtag 삭제하기
-
-		List<ArticleHashtag> alreadyArticleHashtags = articleHashtagDao.findAllByArticleDto(articleOpt.get());
+		// --- 게시물 수정 끝
+		// private이라면
+		if (articleDto.isPrivate()) {
+			// 게시글에 관련된 모든 게시글-해쉬태그 정보를 가져온다.
+			List<ArticleHashtag> alreadyArticleHashtags = articleHashtagDao.findAllByArticleDto(articleOpt.get());
 //		System.out.println("진짜해쉬태그" + alreadyArticleHashtags);
 //		System.out.println("해쉬태그는" + articleOpt.get().getHashtags());
-		if (alreadyArticleHashtags == null)
-			alreadyArticleHashtags = new ArrayList<>();
-		for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
-			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+
+			// 해당 게시글의 해쉬태그가 존재하지 않는다면
+			if (alreadyArticleHashtags == null)
+				// nullPointer방지를 위해서 일단 정의
+				alreadyArticleHashtags = new ArrayList<>();
+			// 해당 게시글의 해쉬태그를 순회하면서
+			for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
+				int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+				// 혹시 비공개 게시글의 해당 해쉬태그가 유저가 게시물에 붙였던 유일한 해쉬태그라면
+				// 지워준다
+				if (cnt == 1)
+					userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			}
+		} else {
+			// 게시글에 관련된 모든 게시글-해쉬태그 정보를 가져온다.
+			List<ArticleHashtag> alreadyArticleHashtags = articleHashtagDao.findAllByArticleDto(articleOpt.get());
+//		System.out.println("진짜해쉬태그" + alreadyArticleHashtags);
+//		System.out.println("해쉬태그는" + articleOpt.get().getHashtags());
+
+			// 해당 게시글의 해쉬태그가 존재하지 않는다면
+			if (alreadyArticleHashtags == null)
+				// nullPointer방지를 위해서 일단 정의
+				alreadyArticleHashtags = new ArrayList<>();
+			// 해당 게시글의 해쉬태그를 순회하면서
+			for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
+				int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 //			System.out.println("카운트는" + cnt);
-			if (cnt == 1)
-				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
-		}
-		articleHashtagDao.deleteByArticleDto(articleDto);
+				if (cnt == 1)
+					userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			}
+			articleHashtagDao.deleteByArticleDto(articleDto);
 
-		List<HashtagDto> hashtags = hashtagDao.findAll();
-		// 현재 작성한 글의 해쉬태그 반환
-		List<HashtagDto> inputHashtags = articleDto.getHashtags();
+			List<HashtagDto> hashtags = hashtagDao.findAll();
+			// 현재 작성한 글의 해쉬태그 반환
+			List<HashtagDto> inputHashtags = articleDto.getHashtags();
 
-		Set<String> hashtagSet = new TreeSet<String>();
+			Set<String> hashtagSet = new TreeSet<String>();
 
-		for (int i = 0; i < hashtags.size(); i++) {
-			hashtagSet.add(hashtags.get(i).getHashtagName());
-		}
+			for (int i = 0; i < hashtags.size(); i++) {
+				hashtagSet.add(hashtags.get(i).getHashtagName());
+			}
 
-		for (int i = 0; i < inputHashtags.size(); i++) {
-			if (hashtagSet.contains(inputHashtags.get(i).getHashtagName())) {
-				// 이미 해당 해쉬태그가 존재한다면, 해당 해쉬태그의 번호를 조회한다.
-				HashtagDto alreadyExist = hashtagDao.findByHashtagName(inputHashtags.get(i).getHashtagName());
-				if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
-					userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist));
+			for (int i = 0; i < inputHashtags.size(); i++) {
+				if (hashtagSet.contains(inputHashtags.get(i).getHashtagName())) {
+					// 이미 해당 해쉬태그가 존재한다면, 해당 해쉬태그의 번호를 조회한다.
+					HashtagDto alreadyExist = hashtagDao.findByHashtagName(inputHashtags.get(i).getHashtagName());
+					if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
+						userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist));
+					}
+					;
+					articleHashtagDao.save(new ArticleHashtag(articleDto, alreadyExist));
+					continue;
+				}
+				hashtagDao.save(inputHashtags.get(i));
+				if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), inputHashtags.get(i)).isPresent()) {
+					userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i)));
 				}
 				;
-				articleHashtagDao.save(new ArticleHashtag(articleDto, alreadyExist));
-				continue;
+				articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
 			}
-			hashtagDao.save(inputHashtags.get(i));
-			if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), inputHashtags.get(i)).isPresent()) {
-				userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i)));
-			}
-			;
-			articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
-		}
+			
+			result.status = true;
+			result.message = "success";
+			result.object = articleOpt.get();
+			return new ResponseEntity<>(result, HttpStatus.OK);
 
-		return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		result.status = true;
+		result.message = "success";
+		result.object = articleOpt.get();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
 	}
 
 	@ApiOperation(value = "게시글 삭제 후 성공/실패 여부를 반환한다", response = List.class)
 	@DeleteMapping("/{articleNo}")
-	public ResponseEntity<String> deleteArticle(@PathVariable int articleNo) {
+	public ResponseEntity<String> deleteArticle(@PathVariable String articleNo) {
 
 		// TODO: 회원정보 연동시 uid 가져오기
 //		 int uid = 1;
 
 		// 게시글 번호로 게시글dto 검색
-		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(articleNo);
+		Optional<ArticleDto> articleOpt = articleDao.findByArticleNo(Integer.parseInt(articleNo));
 		// 없는 게시물이라면 fail
 		if (!articleOpt.isPresent())
 			return new ResponseEntity<String>("fail", HttpStatus.OK);
