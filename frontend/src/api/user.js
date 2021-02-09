@@ -36,9 +36,32 @@ function getArticles(uid, success, fail) {
     .catch(fail);
 }
 
+function getPrivateArticles(uid, success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
+  instance
+    .get(`/users/${uid}/privateArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getPublicArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/publicArticles`)
+    .then(success)
+    .catch(fail);
+}
+
 function getRecentArticles(uid, success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
   instance
     .get(`/users/${uid}/recentArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getRecentPublicArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/recentPublicArticles`)
     .then(success)
     .catch(fail);
 }
@@ -78,4 +101,18 @@ function isFollow(uid, config, success, fail) {
     .catch(fail);
 }
 
-export { login, join, getUserInfo, getArticles, getRecentArticles, getUserHashtags, doFollow, findFollower, findFollowing, isFollow };
+export {
+  login,
+  join,
+  getUserInfo,
+  getArticles,
+  getRecentArticles,
+  getUserHashtags,
+  doFollow,
+  findFollower,
+  findFollowing,
+  isFollow,
+  getPrivateArticles,
+  getPublicArticles,
+  getRecentPublicArticles,
+};
