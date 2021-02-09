@@ -30,17 +30,17 @@
 
 <script>
 import constants from '@/lib/constants.js';
-import { getPrivateArticles } from '@/api/article.js';
+import { getFavoriteArticles } from '@/api/article.js';
 
 export default {
-  name: 'AllSecretNewsFeed',
+  name: 'FavoriteNewsFeed',
   components: {},
-  props: [],
+  props: ['propsUid'],
   computed: {},
   watch: {},
   created() {
-    getPrivateArticles(
-      uid,
+    getFavoriteArticles(
+      this.uid,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
@@ -65,15 +65,8 @@ export default {
   data() {
     return {
       articles: [
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
       ],
+      uid: '',
     };
   },
 };

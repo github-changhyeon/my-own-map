@@ -33,13 +33,15 @@ import constants from '@/lib/constants.js';
 import { getPublicArticles } from '@/api/article.js';
 
 export default {
-  name: 'AllMyNewsFeed',
+  name: 'PublicNewsFeed',
   components: {},
-  props: [],
+  props: ['propsUid'],
   computed: {},
   watch: {},
   created() {
+    this.uid = this.props_uid
     getPublicArticles(
+      this.uid,
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
@@ -64,15 +66,8 @@ export default {
   data() {
     return {
       articles: [
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
-        // { title: 's', articleNo: 1, contents: 's', evaluation: 3.5, imagePaths: [], userDto: {} },
       ],
+      uid: '',
     };
   },
 };

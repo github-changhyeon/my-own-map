@@ -52,6 +52,14 @@ function getPrivateArticles(uid, success, fail) {
     .catch(fail);
 }
 
+function getFavoriteArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/favoriteArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+
 function createArticle(article, success, fail) {
   // let userId = 1;
   multipartInstance
@@ -74,4 +82,4 @@ function updateArticle(article, success, fail) {
     .catch(fail);
 }
 
-export { getArticle, deleteArticle, getAllArticles, getPublicArticles, getPrivateArticles, updateArticle, createArticle };
+export { getArticle, deleteArticle, getAllArticles, getPublicArticles, getPrivateArticles, getFavoriteArticles, updateArticle, createArticle };
