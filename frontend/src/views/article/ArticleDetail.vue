@@ -11,7 +11,9 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <KakaoSharing :article="article" />
+      <Favorite />
     </div>
+
     <hr class="line" />
     <div class="total-contents">
       <div>
@@ -95,6 +97,7 @@ import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
 import KakaoSharing from '@/components/sns/KakaoSharing.vue';
+import Favorite from '@/components/user/Favorite.vue';
 // import Comment from './Comment.vue';
 
 export default {
@@ -105,6 +108,7 @@ export default {
   components: {
     Navigation,
     KakaoSharing,
+    Favorite,
   },
   //  components: { Comment },
   data() {
