@@ -1,31 +1,64 @@
 <template>
   <div>
-    <v-icon v-if="!isLiked" @click="checkLiked">mdi-favorite</v-icon>
-    <v-icon v-if="isLiked" @click="checkLiked">mdi-favorite-border</v-icon>
+    <v-icon v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
+    <v-icon v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
   </div>
 </template>
 
 <script>
+import { doFavorite, isFavorite } from '@/api/user.js';
 export default {
   name: 'Favorite',
+  props: {
+    article: {
+      type: Object,
+    },
+  },
   data() {
     return {
-      isLiked: false,
+      isFavorited: false,
     };
   },
   methods: {
-    checkLiked() {
-      // doLike(
-      //   this.uid,
-      //   config,
-      //   (response) => {
-      //     console.log(response);
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //   }
-      // );
+    setToken: function() {
+      const token = localStorage.getItem('jwt');
+      const config = {
+        headers: {
+          jwt: `${token}`,
+        },
+      };
+      return config;
     },
+    checkFavorited() {
+      const config = this.setToken();
+      console.log(this.article.articleNo, '클릭하고 articleNO');
+      doFavorite(
+        this.article.articleNo,
+        config,
+        (response) => {
+          console.log(response, '좋아요');
+          this.isFavorited = !this.isFavorited;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+  },
+  created() {
+    const config = this.setToken();
+
+    isFavorite(
+      this.$route.params.articleNo,
+      config,
+      (response) => {
+        // console.log(response.data.status, 'is favorite?');
+        this.isFavorited = response.data.status;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   },
 };
 </script>

@@ -101,6 +101,27 @@ function isFollow(uid, config, success, fail) {
     .catch(fail);
 }
 
+function doFavorite(articleNo, config, success, fail) {
+  instance
+    .get(`/favorite/doFavorite/${articleNo}`, config)
+    .then(success)
+    .catch(fail);
+}
+
+function isFavorite(articleNo, config, success, fail) {
+  instance
+    .get(`/favorite/isFavorite/${articleNo}`, config)
+    .then(success)
+    .catch(fail);
+}
+
+function myFavorite(uid, success, fail) {
+  instance
+    .get(`/favorite/myFavorite`, uid)
+    .then(success)
+    .catch(fail);
+}
+
 export {
   login,
   join,
@@ -115,4 +136,7 @@ export {
   getPrivateArticles,
   getPublicArticles,
   getRecentPublicArticles,
+  doFavorite,
+  isFavorite,
+  myFavorite,
 };

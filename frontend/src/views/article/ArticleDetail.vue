@@ -11,7 +11,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <KakaoSharing :article="article" />
-      <Favorite />
+      <Favorite :article="article" />
     </div>
 
     <hr class="line" />
