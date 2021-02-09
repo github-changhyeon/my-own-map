@@ -8,17 +8,36 @@
 
     <div class="center">
       <label for="address"></label>
-      <input class="inputbox" type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다." />
+      <input
+        class="inputbox"
+        type="text"
+        id="address"
+        disabled
+        v-model="article.address"
+        placeholder="주소는 자동입력됩니다."
+      />
     </div>
     <br />
     <div class="center">
       <label for="title"></label>
-      <input class="inputbox" type="text" id="title" v-model="article.title" placeholder="제목" />
+      <input
+        class="inputbox"
+        type="text"
+        id="title"
+        v-model="article.title"
+        placeholder="제목"
+      />
     </div>
     <br />
     <div class="center">
       <label for="contents"></label>
-      <input class="inputbox" type="text" id="contents" v-model="article.contents" placeholder="설명" />
+      <input
+        class="inputbox"
+        type="text"
+        id="contents"
+        v-model="article.contents"
+        placeholder="설명"
+      />
     </div>
     <br />
     <div>
@@ -26,10 +45,26 @@
       <br />
       <br />
       <v-col md="4" offset-md="4">
-        <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
+        <v-combobox
+          v-model="hashtagNames"
+          :items="items"
+          label="해쉬태그를 선택하세요."
+          multiple
+          chips
+        >
           <template v-slot:selection="data">
-            <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-              <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+            <v-chip
+              :key="JSON.stringify(data.item)"
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              :disabled="data.disabled"
+              @click:close="data.parent.selectItem(data.item)"
+            >
+              <v-avatar
+                class="accent white--text"
+                left
+                v-text="data.item.slice(0, 1).toUpperCase()"
+              ></v-avatar>
               {{ data.item }}
             </v-chip>
           </template>
@@ -43,9 +78,22 @@
       <br />
       <br />
       <form encType="multipart/form-data">
-        <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
+        <input
+          ref="imageInput"
+          type="file"
+          accept="image/*"
+          hidden
+          @change="onChangeImages"
+          multiple
+        />
       </form>
-      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
+      <button
+        class="lefty picture-upload"
+        type="button"
+        @click="onClickImageUpload"
+      >
+        +
+      </button>
       <v-carousel class="picture-size" v-if="imgs.length != 0">
         <v-carousel-item
           class="picture-size"
@@ -57,8 +105,7 @@
           transition="fade-transition"
           multiple="true"
         >
-        <button @click=removeImage() class="deleteButton">X
-        </button>
+          <button @click="removeImage()" class="deleteButton">X</button>
         </v-carousel-item>
       </v-carousel>
     </div>
@@ -66,16 +113,24 @@
     <div>
       방문 정보 입력
       <br />
-      <DatePicker label="날짜를 입력해 주세요." @setDate="selectDate"> </DatePicker>
+      <DatePicker label="날짜를 입력해 주세요." @setDate="selectDate">
+      </DatePicker>
     </div>
     <div class="center">
-      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
+      <v-rating
+        v-model="article.evaluation"
+        background-color="grey lighten-1"
+        color="blue"
+        half-increments
+        length="5"
+        size="45"
+      ></v-rating>
     </div>
     <div>
       <button class="upload" @click="createPost()">등록</button>
     </div>
     <div style="height:100px"></div>
-      <Navigation />
+    <Navigation />
   </div>
 </template>
 
@@ -103,7 +158,11 @@ export default {
     return {
       isCurrentMap: false,
       items: [],
-      positionObj: { positionLat: 33.450701, positionLng: 126.570667, address: '' },
+      positionObj: {
+        positionLat: 33.450701,
+        positionLng: 126.570667,
+        address: '',
+      },
       imageUrl: null,
       imageUrls: Array,
       selectedFile: null,
@@ -120,8 +179,8 @@ export default {
         evaluation: 0,
         hashtags: [],
         contents: '',
-        visitDate:'',
-        userDto:{}
+        visitDate: '',
+        userDto: {},
       },
     };
   },
@@ -132,7 +191,7 @@ export default {
     },
     selectDate(e) {
       this.article.visitDate = e;
-      console.log(e)
+      console.log(e);
     },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;
@@ -181,7 +240,10 @@ export default {
 
       this.images.forEach((image) => formData.append('file[]', image));
       // formData.append("file", this.images);
-      formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
+      formData.append(
+        'article',
+        new Blob([JSON.stringify(this.article)], { type: 'application/json' })
+      );
       // console.log("file",formData.get("file"));
       // console.log("file",formData.get("article").hashtags);
       this.article.visitDate = this.date;
@@ -194,7 +256,10 @@ export default {
           // console.log(response.data);
           if (response.data.status) {
             alert('작성 성공');
-            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: uid } });
+            this.$router.push({
+              name: constants.URL_TYPE.HOME.MAIN,
+              params: { uid: uid },
+            });
           } else {
             alert('작성 실패');
           }

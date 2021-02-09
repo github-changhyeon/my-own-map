@@ -1,13 +1,22 @@
 <template>
   <div>
     <div class="map_wrap">
-      <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+      <div
+        id="map"
+        style="width:100%;height:100%;position:relative;overflow:hidden;"
+      ></div>
 
       <div id="menu_wrap_search" class="bg_white">
         <div class="option">
           <div>
             <v-form @submit.prevent="searchPlaces">
-              키워드 : <input type="text" placeholder="검색어를 입력해주세요" id="keyword" size="15" />
+              키워드 :
+              <input
+                type="text"
+                placeholder="검색어를 입력해주세요"
+                id="keyword"
+                size="15"
+              />
               <button type="submit">검색하기</button>
             </v-form>
             <button></button>
@@ -30,12 +39,14 @@
 
 <script>
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
-const STAR_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-const SPRITE_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
+const STAR_IMAGE_SRC =
+  'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+const SPRITE_IMAGE_SRC =
+  'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
 export default {
   name: 'SelectPosition',
   components: {},
-  props: [],
+  props: ['propsPositionObj'],
   computed: {},
   watch: {},
   created() {},
@@ -162,7 +173,11 @@ export default {
         spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
         offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
       };
-      let markerImage = new kakao.maps.MarkerImage(SPRITE_IMAGE_SRC, imageSize, imgOptions);
+      let markerImage = new kakao.maps.MarkerImage(
+        SPRITE_IMAGE_SRC,
+        imageSize,
+        imgOptions
+      );
       let marker = new kakao.maps.Marker({
         position: position, // 마커의 위치
         image: markerImage,
@@ -175,7 +190,14 @@ export default {
     },
     getListItem(index, places) {
       let el = document.createElement('li'),
-        itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' + '<div class="infos">' + '   <h5>' + places.place_name + '</h5>';
+        itemStr =
+          '<span class="markerbg marker_' +
+          (index + 1) +
+          '"></span>' +
+          '<div class="infos">' +
+          '   <h5>' +
+          places.place_name +
+          '</h5>';
 
       itemStr += '    <span>' + places.address_name + '</span>';
 
@@ -240,7 +262,10 @@ export default {
         //  = { positionLat: latlng.getLat(), positionLng: latlng.getLng() };
         _this.infowindow.close();
 
-        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
+        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(
+          result,
+          status
+        ) {
           if (status === kakao.maps.services.Status.OK) {
             let detailAddr = result[0].address.address_name;
             _this.positions.address = detailAddr;
@@ -260,20 +285,21 @@ export default {
         };
 
       _this.map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+      if (
+        this.propsPositionObj === undefined ||
+        this.propsPositionObj === null
+      ) {
+        let geocoder = new kakao.maps.services.Geocoder();
+        // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
 
-      let geocoder = new kakao.maps.services.Geocoder();
-      // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-      if (navigator.geolocation) {
-        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition(function(position) {
-          _this.positions.positionLat = position.coords.latitude;
-          _this.positions.positionLng = position.coords.longitude;
-
-          let locPosition = new kakao.maps.LatLng(_this.positions.positionLat, _this.positions.positionLng); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-
-          let message = '<div style="padding:5px;">여기에 계시군요!</div>';
+        if (navigator.geolocation) {
+          let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+          let message = '위치 연동을 허용해주세요..';
           let imageSize = new kakao.maps.Size(24, 35);
-          let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+          let markerImage = new kakao.maps.MarkerImage(
+            STAR_IMAGE_SRC,
+            imageSize
+          );
           _this.starMarker = new kakao.maps.Marker({
             map: _this.map,
             position: locPosition,
@@ -288,20 +314,68 @@ export default {
           });
           _this.infowindow.open(_this.map, _this.starMarker);
           this.setMarkerListener();
-          _this.map.setCenter(locPosition);
-          geocoder.coord2Address(_this.positions.positionLng, _this.positions.positionLat, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-              let detailAddr = result[0].address.address_name;
-              _this.positions.address = detailAddr;
-              _this.$emit('emitSelectPosition', _this.positions);
-            } else {
-              _this.$emit('emitSelectPosition', _this.positions);
-            }
+
+          // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+          navigator.geolocation.getCurrentPosition(function(position) {
+            _this.positions.positionLat = position.coords.latitude;
+            _this.positions.positionLng = position.coords.longitude;
+
+            locPosition = new kakao.maps.LatLng(
+              _this.positions.positionLat,
+              _this.positions.positionLng
+            ); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+
+            message = '<div style="padding:5px;">여기에 계시군요!</div>';
+            // imageSize = new kakao.maps.Size(24, 35);
+            // markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+            _this.starMarker.setPosition(locPosition);
+            iwContent = message;
+            _this.infowindow.setContent(iwContent);
+            _this.infowindow.open(_this.map, _this.starMarker);
+            _this.map.setCenter(locPosition);
+            geocoder.coord2Address(
+              _this.positions.positionLng,
+              _this.positions.positionLat,
+              function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                  let detailAddr = result[0].address.address_name;
+                  _this.positions.address = detailAddr;
+                  _this.$emit('emitSelectPosition', _this.positions);
+                } else {
+                  _this.$emit('emitSelectPosition', _this.positions);
+                }
+              }
+            );
           });
-        });
+        } else {
+          let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+          let message = 'geolocation을 사용할수 없어요..';
+          let imageSize = new kakao.maps.Size(24, 35);
+          let markerImage = new kakao.maps.MarkerImage(
+            STAR_IMAGE_SRC,
+            imageSize
+          );
+          _this.starMarker = new kakao.maps.Marker({
+            map: _this.map,
+            position: locPosition,
+            image: markerImage,
+          });
+          let iwContent = message;
+          let iwRemoveable = true;
+          _this.infowindow = new kakao.maps.InfoWindow({
+            disableAutoPan: true,
+            content: iwContent,
+            removable: iwRemoveable,
+          });
+          _this.infowindow.open(_this.map, _this.starMarker);
+          this.setMarkerListener();
+        }
       } else {
-        let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-        let message = 'geolocation을 사용할수 없어요..';
+        let locPosition = new kakao.maps.LatLng(
+          this.propsPositionObj.positionLat,
+          this.propsPositionObj.positionLng
+        );
+        let message = '이 장소군요!!';
         let imageSize = new kakao.maps.Size(24, 35);
         let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
         _this.starMarker = new kakao.maps.Marker({
@@ -319,26 +393,6 @@ export default {
         _this.infowindow.open(_this.map, _this.starMarker);
         this.setMarkerListener();
       }
-
-      // TODO : remove
-      let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-      let message = 'geolocation을 사용할수 없어요..';
-      let imageSize = new kakao.maps.Size(24, 35);
-      let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
-      _this.starMarker = new kakao.maps.Marker({
-        map: _this.map,
-        position: locPosition,
-        image: markerImage,
-      });
-      let iwContent = message;
-      let iwRemoveable = true;
-      _this.infowindow = new kakao.maps.InfoWindow({
-        disableAutoPan: true,
-        content: iwContent,
-        removable: iwRemoveable,
-      });
-      _this.infowindow.open(_this.map, _this.starMarker);
-      this.setMarkerListener();
     },
     addScript() {
       const script = document.createElement('script');
@@ -526,7 +580,8 @@ export default {
 }
 #placesList .infos .jibun {
   padding-left: 26px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
 }
 #placesList .infos .tel {
   color: #009900;
@@ -537,7 +592,8 @@ export default {
   width: 36px;
   height: 37px;
   margin: 10px 0 0 10px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat;
 }
 #placesList .item .marker_1 {
   background-position: 0 -10px;
