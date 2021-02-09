@@ -1,13 +1,27 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 50px; right: 5px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        small
+        light
+        @click="switchDrawer = !switchDrawer"
+        style="position: fixed; top: 50px; right: 5px; z-index: 2"
+      >
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right: 50px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        small
+        light
+        @click="followDrawer = !followDrawer"
+        style="position: fixed; top: 50px; right: 50px; z-index: 2"
+      >
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
@@ -45,22 +59,51 @@
         ></v-autocomplete>
       </v-list-item>
       <v-list-item>
-        <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
+        <v-switch
+          @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)"
+          v-model="selectAllHashtagSwitch"
+          label="전체보기"
+        ></v-switch>
+      </v-list-item>
+      <v-list-item v-if="isSameUser">
+        <v-switch
+          @click="clickShowPrivateArticles(isShowPrivate)"
+          v-model="isShowPrivate"
+          label="Private"
+        ></v-switch>
       </v-list-item>
       <div v-if="selectedHashtagNames.length == 0">
         <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch
-            @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)])"
-            v-model="userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]"
+            @click="
+              clickHashtagSwitch(
+                userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
+              )
+            "
+            v-model="
+              userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
+            "
             :label="hashtag.hashtagName"
           ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedHashtagNames.length > 0">
-        <v-list-item v-for="(hashtagName, i) in selectedHashtagNames" :key="i" link>
+        <v-list-item
+          v-for="(hashtagName, i) in selectedHashtagNames"
+          :key="i"
+          link
+        >
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtagName)])" v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]" :label="hashtagName"></v-switch>
+          <v-switch
+            @click="
+              clickHashtagSwitch(
+                userHashtagSwitches[userHashtagMap.get(hashtagName)]
+              )
+            "
+            v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]"
+            :label="hashtagName"
+          ></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -87,13 +130,27 @@
       <div v-if="selectedFollowUserNames.length == 0">
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUser.username))" v-model="followUserSwitches[followUserMap.get(followUser.username)]" :label="followUser.username"></v-switch>
+          <v-switch
+            @click="
+              clickFollowUserSwitch(followUserMap.get(followUser.username))
+            "
+            v-model="followUserSwitches[followUserMap.get(followUser.username)]"
+            :label="followUser.username"
+          ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedFollowUserNames.length > 0">
-        <v-list-item v-for="(followUserName, i) in selectedFollowUserNames" :key="i" link>
+        <v-list-item
+          v-for="(followUserName, i) in selectedFollowUserNames"
+          :key="i"
+          link
+        >
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUserName))" v-model="followUserSwitches[followUserMap.get(followUserName)]" :label="followUserName"></v-switch>
+          <v-switch
+            @click="clickFollowUserSwitch(followUserMap.get(followUserName))"
+            v-model="followUserSwitches[followUserMap.get(followUserName)]"
+            :label="followUserName"
+          ></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -102,15 +159,32 @@
     <!-- <div style="position: fixed; bottom: 0; z-index: 2"> -->
     <v-expand-x-transition>
       <v-row justify="center" v-if="expand">
-        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 40px; z-index: 2">
+        <v-sheet
+          class="mx-auto"
+          elevation="8"
+          max-width="100vw"
+          style="position: fixed; bottom: 40px; z-index: 2"
+        >
           <v-slide-group v-model="model" class="pa-4" show-arrows>
             <v-slide-item v-for="(article, i) in recentArticles" :key="i">
-              <v-card class="ma-4" height="100px" width="70px" @click="goToArticleDetail(article)">
+              <v-card
+                class="ma-4"
+                height="100px"
+                width="70px"
+                @click="goToArticleDetail(article)"
+              >
                 <v-img
                   height="70px"
-                  :src="article.imagePaths.length === 0 ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg' : 'https://i4b107.p.ssafy.io/images/uploads/' + article.imagePaths[0]"
+                  :src="
+                    article.imagePaths.length === 0
+                      ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'
+                      : 'https://i4b107.p.ssafy.io/images/uploads/' +
+                        article.imagePaths[0]
+                  "
                 ></v-img>
-                <v-card-title class="txt_line" style="padding: 0">{{ article.title }}</v-card-title>
+                <v-card-title class="txt_line" style="padding: 0">{{
+                  article.title
+                }}</v-card-title>
               </v-card>
             </v-slide-item>
           </v-slide-group>
@@ -118,17 +192,33 @@
       </v-row>
     </v-expand-x-transition>
     <!-- </div> -->
-    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 200px; z-index: 2">
+    <v-btn
+      class="ma-2"
+      light
+      fab
+      small
+      @click="expand = !expand"
+      style="position: fixed; bottom: 200px; z-index: 2"
+    >
       <v-icon v-if="!expand">mdi-chevron-right</v-icon>
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" v-if="isSameUser" style="position: fixed; bottom: 200px; right: 5px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        small
+        dark
+        @click="goToCreateArticle"
+        v-if="isSameUser"
+        style="position: fixed; bottom: 200px; right: 5px; z-index: 2"
+      >
         <v-icon dark> mdi-plus </v-icon>
       </v-btn>
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
+      <KakaoSharing :articles="articles" class="ma-2" fab small dark style="position: fixed; bottom: 200px; right: 50px; z-index: 2" />
     </v-row>
 
     <Navigation />
@@ -138,11 +228,18 @@
 <script>
 // import constants from '../../lib/constants';
 // import { login } from '@/api/user.js';
-import { getArticles, getRecentArticles, getUserHashtags } from '@/api/user.js';
+import {
+  getArticles,
+  getRecentArticles,
+  getUserHashtags,
+  getPublicArticles,
+  getRecentPublicArticles,
+} from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
+import KakaoSharing from '@/components/sns/KakaoSharing.vue';
 // import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
@@ -151,121 +248,222 @@ const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 //   '<button type="button" tabindex="-1" aria-label="Rating 4 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-half-full theme--light orange--text" style="font-size: 20px"></button>';
 // const emptyStarHtml =
 //   '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
-const STAR_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-const SPRITE_MARKER_URL = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png';
-const SPRITE_MARKER_WIDTH = 33;
-const SPRITE_MARKER_HEIGHT = 36;
-const SPRITE_OFFSET_X = 12;
-const SPRITE_OFFSET_Y = SPRITE_MARKER_HEIGHT;
-const SPRITE_WIDTH = 126;
-const SPRITE_HEIGHT = 146;
-const SPRITE_GAP = 10;
+const PUBLIC_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
+const PRIVATE_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
+const FOLLOW_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
+// const FAVORITE_IMAGE_SRC =
+//   'https://user-images.githubusercontent.com/20719987/107175880-46d0a800-6a11-11eb-9c74-e61c393ba2f6.png';
+//   const PUBLIC_IMAGE_SRC =
+//   'https://i4b107.p.ssafy.io/images/markers/publicMarker.jpg';
+// const PRIVATE_IMAGE_SRC =
+//   'https://i4b107.p.ssafy.io/images/markers/privateMarker.jpg';
+// const FOLLOW_IMAGE_SRC =
+//   'https://i4b107.p.ssafy.io/images/markers/followMarker.jpg';
+// const FAVORITE_IMAGE_SRC =
+//   'https://i4b107.p.ssafy.io/images/markers/favoriteMarker.jpg';
+const MARKER_WIDTH = 35;
+const MARKER_HEIGHT = 35;
 
 export default {
   components: {
     // NaverLogin
     Navigation,
+    KakaoSharing,
   },
   created() {
-    const token = localStorage.getItem('jwt');
-    let uid = jwt_decode(token).uid;
-    if (this.$route.params.uid !== undefined && this.$route.params.uid !== null) {
-      uid = this.$route.params.uid;
-
-      if (Number(jwt_decode(token).uid) === Number(this.$route.params.uid)) {
-        this.isSameUser = true;
-      }
-    }
-
-    getArticles(
-      uid,
-      (response) => {
-        if (response.data.status) {
-          this.articles = response.data.object;
-          for (let i = 0; i < this.articles.length; ++i) {
-            this.articleTitles.push(this.articles[i].title);
-          }
-          window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
-          // alert('article list를 받았습니다.');
-        } else {
-          alert('article list 실패');
-        }
-      },
-      (error) => {
-        console.log(error);
-        alert('article list 받기에 실패했습니다.');
-      }
-    );
-
-    getRecentArticles(
-      uid,
-      (response) => {
-        if (response.data.status) {
-          this.recentArticles = response.data.object;
-          // alert('recent list를 받았습니다.');
-        } else {
-          alert('recent list 실패');
-        }
-      },
-      (error) => {
-        console.log(error);
-        alert('recent list 받기에 실패했습니다.');
-      }
-    );
-
-    getUserHashtags(
-      uid,
-      (response) => {
-        if (response.data.status) {
-          this.userHashtags = response.data.object;
-          // alert('hashtag list를 받았습니다.');
-
-          // alert(this.userHashtags.length);
-          for (let i = 0; i < this.userHashtags.length; ++i) {
-            // alert(this.userHashtags[i].hashtagName);
-            this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
-            this.userHashtagNames.push(this.userHashtags[i].hashtagName);
-            this.userHashtagSwitches.push(false);
-          }
-        } else {
-          alert('hashtag list 실패');
-        }
-      },
-      (error) => {
-        console.log(error);
-        alert('hashtag list 받기에 실패했습니다.');
-      }
-    );
-
-    // TODO : follow하는 유저들의 정보 받아오기
-    getFollowingUsers(
-      uid,
-      (response) => {
-        // console.log(response);
-        if (response.data.status) {
-          this.followUsers = response.data.object;
-          for (let i = 0; i < this.followUsers.length; ++i) {
-            this.followUserMap.set(this.followUsers[i].username, i);
-            this.followUserNames.push(this.followUsers[i].username);
-            this.followUserSwitches.push(false);
-          }
-        } else {
-          console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
-        }
-      },
-      (error) => {
-        console.log(error);
-        alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
-      }
-    );
+    this.initPage();
   },
   mounted() {},
-  watch: {},
+  watch: {
+    '$route.params.uid': function(uid) {
+      console.log(uid);
+      this.initPage();
+    },
+  },
   methods: {
+    clickShowPrivateArticles(isShow) {
+      if (!isShow) {
+        for (let i = 0; i < this.privateMarkers.length; ++i) {
+          this.clusterer.removeMarker(this.privateMarkers[i]);
+        }
+      } else {
+        for (let i = 0; i < this.privateMarkers.length; ++i) {
+          this.clusterer.addMarker(this.privateMarkers[i]);
+        }
+      }
+    },
+    initPage() {
+      this.initDatas();
+      let uid = this.$route.params.uid;
+      const token = localStorage.getItem('jwt');
+      let isToken = token !== undefined && token !== null;
+      if (
+        isToken &&
+        Number(jwt_decode(token).uid) === Number(this.$route.params.uid)
+      ) {
+        this.isSameUser = true;
+      }
+      if (this.isSameUser) {
+        getArticles(
+          uid,
+          (response) => {
+            if (response.data.status) {
+              this.articles = response.data.object;
+              for (let i = 0; i < this.articles.length; ++i) {
+                this.articleTitles.push(this.articles[i].title);
+              }
+              window.kakao && window.kakao.maps
+                ? this.initMap()
+                : this.addScript();
+              // alert('article list를 받았습니다.');
+            } else {
+              alert('article list 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('article list 받기에 실패했습니다.');
+          }
+        );
+
+        getRecentArticles(
+          uid,
+          (response) => {
+            if (response.data.status) {
+              this.recentArticles = response.data.object;
+              // alert('recent list를 받았습니다.');
+            } else {
+              alert('recent list 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('recent list 받기에 실패했습니다.');
+          }
+        );
+      } else {
+        getPublicArticles(
+          uid,
+          (response) => {
+            if (response.data.status) {
+              this.articles = response.data.object;
+              for (let i = 0; i < this.articles.length; ++i) {
+                this.articleTitles.push(this.articles[i].title);
+              }
+              window.kakao && window.kakao.maps
+                ? this.initMap()
+                : this.addScript();
+              // alert('article list를 받았습니다.');
+            } else {
+              alert('article list 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('article list 받기에 실패했습니다.');
+          }
+        );
+
+        getRecentPublicArticles(
+          uid,
+          (response) => {
+            if (response.data.status) {
+              this.recentArticles = response.data.object;
+              // alert('recent list를 받았습니다.');
+            } else {
+              alert('recent list 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('recent list 받기에 실패했습니다.');
+          }
+        );
+      }
+
+      getUserHashtags(
+        uid,
+        (response) => {
+          if (response.data.status) {
+            this.userHashtags = response.data.object;
+            // alert('hashtag list를 받았습니다.');
+
+            // alert(this.userHashtags.length);
+            for (let i = 0; i < this.userHashtags.length; ++i) {
+              // alert(this.userHashtags[i].hashtagName);
+              this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
+              this.userHashtagNames.push(this.userHashtags[i].hashtagName);
+              this.userHashtagSwitches.push(false);
+            }
+          } else {
+            alert('hashtag list 실패');
+          }
+        },
+        (error) => {
+          console.log(error);
+          alert('hashtag list 받기에 실패했습니다.');
+        }
+      );
+
+      // TODO : follow하는 유저들의 정보 받아오기
+      getFollowingUsers(
+        uid,
+        (response) => {
+          // console.log(response);
+          if (response.data.status) {
+            this.followUsers = response.data.object;
+            for (let i = 0; i < this.followUsers.length; ++i) {
+              this.followUserMap.set(this.followUsers[i].username, i);
+              this.followUserNames.push(this.followUsers[i].username);
+              this.followUserSwitches.push(false);
+            }
+          } else {
+            console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+          }
+        },
+        (error) => {
+          console.log(error);
+          alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+        }
+      );
+    },
+    initDatas() {
+      this.privateMarkers = [];
+      this.isShowFavorites = true;
+      this.isShowPrivate = true;
+      this.isSameUser = false;
+      this.map = {};
+      this.followUserMap = new Map();
+      this.followUserSwitches = [];
+      this.selectedFollowUserNames = [];
+      this.followUserNames = [];
+      this.searchFollowUser = '';
+      this.followUsers = [];
+      this.clusterer = {};
+      this.kakaoMarkers = [];
+      this.articleTitles = [];
+      this.selectedHashtagNames = [];
+      this.selectedArticleTitles = [];
+      this.searchHashtag = '';
+      this.searchTitle = '';
+      this.followDrawer = false;
+      this.switchDrawer = false;
+      this.expand = false;
+      this.recentArticles = [];
+      this.model = null;
+      this.selectAllHashtagSwitch = true;
+      this.drawer = false;
+      this.userHashtags = [];
+      this.userHashtagNames = [];
+      this.userHashtagMap = new Map();
+      this.userHashtagSwitches = [];
+      this.articles = [];
+    },
     clickFollowUserSwitch(idx) {
       let _this = this;
-      // 돌아오기!!@!@!@
-      console.log(this.followUsers, idx);
       if (!this.followUserSwitches[idx]) {
         this.clusterer.clear();
         this.clusterer.addMarkers(this.kakaoMarkers);
@@ -290,52 +488,46 @@ export default {
           if (response.data.status) {
             followUserArticles = response.data.object;
             // 팔로우한 사람 게시글 받아와서 지도에 표시
-            let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
-            let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
-            let spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT);
 
-            let gapX = SPRITE_MARKER_WIDTH + SPRITE_GAP;
-
-            let spriteOriginY = SPRITE_MARKER_HEIGHT + SPRITE_GAP;
-            let spriteNormalOrigin = new kakao.maps.Point(gapX, spriteOriginY);
-
-            let spriteMarkerImage = new kakao.maps.MarkerImage(
-              SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
-              spriteMarkerSize, // 마커의 크기
-              {
-                offset: spriteMarkerOffset, // 마커 이미지에서의 기준 좌표
-                spriteOrigin: spriteNormalOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
-                spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
-              }
+            let followImageSize = new kakao.maps.Size(
+              MARKER_WIDTH,
+              MARKER_HEIGHT
+            );
+            let followMarkerImage = new kakao.maps.MarkerImage(
+              FOLLOW_IMAGE_SRC,
+              followImageSize
             );
 
-            let redMarkers = [];
+            let followMarkers = [];
             for (let i = 0; i < followUserArticles.length; ++i) {
-              let marker = new kakao.maps.Marker({
-                // map: map, // 마커를 표시할 지도
-                position: new window.kakao.maps.LatLng(followUserArticles[i].positionLat, followUserArticles[i].positionLng), // 마커를 표시할 위치
-                // title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                image: spriteMarkerImage, // 마커 이미지
+              let followMarker = new kakao.maps.Marker({
+                position: new window.kakao.maps.LatLng(
+                  followUserArticles[i].positionLat,
+                  followUserArticles[i].positionLng
+                ),
+                image: followMarkerImage,
               });
+
               let overlay = new kakao.maps.CustomOverlay({
                 map: _this.map,
-                position: marker.getPosition(),
+                position: followMarker.getPosition(),
               });
-              let wrapDiv = _this.makeCustomizedOverlay(overlay, followUserArticles[i]);
-
-              // console.log(content);
+              let wrapDiv = _this.makeCustomizedOverlay(
+                overlay,
+                followUserArticles[i]
+              );
 
               overlay.setContent(wrapDiv);
 
-              kakao.maps.event.addListener(marker, 'click', function() {
+              kakao.maps.event.addListener(followMarker, 'click', function() {
                 overlay.setMap(_this.map);
               });
               overlay.setMap(null);
-              redMarkers.push(marker);
+              followMarkers.push(followMarker);
             }
             this.clusterer.clear();
-            this.clusterer.addMarkers(this.blueMarkers);
-            this.clusterer.addMarkers(redMarkers);
+            this.clusterer.addMarkers(this.kakaoMarkers);
+            this.clusterer.addMarkers(followMarkers);
           } else {
             console.log('해당 유저의 게시물들을 받아올 수 없습니다.');
           }
@@ -361,7 +553,10 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
     },
     goToArticleDetail(article) {
-      this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: article.articleNo, article: article } });
+      this.$router.push({
+        name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
+        params: { articleNo: article.articleNo, article: article },
+      });
     },
     goToMyPage() {
       alert('마이페이지로 이동');
@@ -389,7 +584,11 @@ export default {
         for (let j = 0; j < this.articles[i].hashtags.length; ++j) {
           // alert(this.articles[i].hashtags[j].hashtagName);
           // alert(this.userHashtagMap.get(this.articles[i].hashtags[j].hashtagName));
-          if (this.userHashtagSwitches[this.userHashtagMap.get(this.articles[i].hashtags[j].hashtagName)]) {
+          if (
+            this.userHashtagSwitches[
+              this.userHashtagMap.get(this.articles[i].hashtags[j].hashtagName)
+            ]
+          ) {
             cnt += 1;
           }
         }
@@ -436,38 +635,32 @@ export default {
         minLevel: 10, // 클러스터 할 최소 지도 레벨
       });
 
-      let spriteMarkerSize = new kakao.maps.Size(SPRITE_MARKER_WIDTH, SPRITE_MARKER_HEIGHT);
-      let spriteMarkerOffset = new kakao.maps.Point(SPRITE_OFFSET_X, SPRITE_OFFSET_Y);
-      let spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT);
-
-      // let gapX = MARKER_WIDTH + SPRITE_GAP;
-      let spriteOriginY = 0;
-      let spriteNormalOrigin = new kakao.maps.Point(0, spriteOriginY);
-
-      let spriteMarkerImage = new kakao.maps.MarkerImage(
-        SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
-        spriteMarkerSize, // 마커의 크기
-        {
-          offset: spriteMarkerOffset, // 마커 이미지에서의 기준 좌표
-          spriteOrigin: spriteNormalOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
-          spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
-        }
-      );
-
       for (let i = 0; i < _this.articles.length; ++i) {
         let data = _this.articles[i];
-        let imageSize = new kakao.maps.Size(24, 35);
-        let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+        let imageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
+        let markerImage = new kakao.maps.MarkerImage(
+          PUBLIC_IMAGE_SRC,
+          imageSize
+        );
+        if (data.isPrivate) {
+          markerImage = new kakao.maps.MarkerImage(
+            PRIVATE_IMAGE_SRC,
+            imageSize
+          );
+        }
         let nowMarker = new kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
+          position: new window.kakao.maps.LatLng(
+            data.positionLat,
+            data.positionLng
+          ),
           image: markerImage,
         });
-        let blueMarker = new kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
-          image: spriteMarkerImage,
-        });
+
         _this.kakaoMarkers.push(nowMarker);
-        _this.blueMarkers.push(blueMarker);
+        if (data.isPrivate) {
+          _this.privateMarkers.push(nowMarker);
+        }
+
         let overlay = new kakao.maps.CustomOverlay({
           map: _this.map,
           position: nowMarker.getPosition(),
@@ -478,9 +671,6 @@ export default {
         overlay.setContent(wrapDiv);
 
         kakao.maps.event.addListener(nowMarker, 'click', function() {
-          overlay.setMap(_this.map);
-        });
-        kakao.maps.event.addListener(blueMarker, 'click', function() {
           overlay.setMap(_this.map);
         });
 
@@ -555,7 +745,10 @@ export default {
       let aTag = document.createElement('button');
       aTag.textContent = '게시물 보기';
       aTag.onclick = function() {
-        _this.$router.push({ name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL, params: { articleNo: data.articleNo, article: data } });
+        _this.$router.push({
+          name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
+          params: { articleNo: data.articleNo, article: data },
+        });
       };
       descDiv.appendChild(aTag);
       bodyDiv.appendChild(imgDiv);
@@ -565,9 +758,7 @@ export default {
       return wrapDiv;
       // console.log(evaluation);
     },
-    closeOverlay() {
-      alert('close');
-    },
+
     addScript() {
       const script = document.createElement('script');
       /* global kakao */
@@ -583,6 +774,9 @@ export default {
   },
   data: () => {
     return {
+      privateMarkers: [],
+      isShowFavorites: true,
+      isShowPrivate: true,
       isSameUser: false,
       map: {},
       followUserMap: new Map(),
@@ -590,11 +784,9 @@ export default {
       selectedFollowUserNames: [],
       followUserNames: [],
       searchFollowUser: '',
-      blueMarkers: [],
       followUsers: [],
       clusterer: {},
       kakaoMarkers: [],
-      starValue: 4,
       articleTitles: [],
       selectedHashtagNames: [],
       selectedArticleTitles: [],

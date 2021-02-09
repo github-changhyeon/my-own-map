@@ -45,20 +45,12 @@
       <form encType="multipart/form-data">
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
-      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">+</button>
+      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">
+        +
+      </button>
       <v-carousel class="picture-size" v-if="imgs.length != 0">
-        <v-carousel-item
-          class="picture-size"
-          v-for="(img, idx) in imgs"
-          :key="idx"
-          :src="img"
-          append
-          reverse-transition="fade-transition"
-          transition="fade-transition"
-          multiple="true"
-        >
-        <button @click=removeImage() class="deleteButton">X
-        </button>
+        <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
+          <button @click="removeImage()" class="deleteButton">X</button>
         </v-carousel-item>
       </v-carousel>
     </div>
@@ -76,7 +68,7 @@
       <button class="upload" @click="createPost()">등록</button>
     </div>
     <div style="height:100px"></div>
-      <Navigation />
+    <Navigation />
   </div>
 </template>
 
@@ -104,7 +96,11 @@ export default {
     return {
       isCurrentMap: false,
       items: [],
-      positionObj: { positionLat: 33.450701, positionLng: 126.570667, address: '' },
+      positionObj: {
+        positionLat: 33.450701,
+        positionLng: 126.570667,
+        address: '',
+      },
       imageUrl: null,
       imageUrls: Array,
       selectedFile: null,
@@ -121,9 +117,9 @@ export default {
         evaluation: 0,
         hashtags: [],
         contents: '',
-        visitDate:'',
-        userDto:{},
-        private:0
+        visitDate: '',
+        userDto: {},
+        private: 0,
       },
     };
   },
@@ -134,7 +130,7 @@ export default {
     },
     selectDate(e) {
       this.article.visitDate = e;
-      console.log(e)
+      console.log(e);
     },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;
@@ -196,7 +192,10 @@ export default {
           // console.log(response.data);
           if (response.data.status) {
             alert('작성 성공');
-            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: uid } });
+            this.$router.push({
+              name: constants.URL_TYPE.HOME.MAIN,
+              params: { uid: uid },
+            });
           } else {
             alert('작성 실패');
           }
