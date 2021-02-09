@@ -77,11 +77,9 @@
         </div>
       </div>
     </div> -->
-    <!-- <div>
-      댓글 목록
-      <Comment />
-    </div> -->
-      <Navigation />
+    <Comment :index="index"/>
+    <CommentList />
+    <Navigation />
   </v-app>
 </template>
 
@@ -91,7 +89,8 @@ import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
-// import Comment from './Comment.vue';
+import Comment from './Comment.vue';
+import CommentList from './CommentList.vue';
 
 export default {
   name: 'ArticleDetail',
@@ -100,8 +99,9 @@ export default {
   },
   components: {
     Navigation,
+    Comment,
+    CommentList,
   },
-  //  components: { Comment },
   data() {
     const index = this.$route.query.id;
     const Articles = this.$route.query;

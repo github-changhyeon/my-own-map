@@ -1,44 +1,36 @@
 <template>
-  <div>
-    <div v-for="(comment, idx) in comments" :key="idx">
-      <button></button>
+  <v-card>
+    <v-card-title>
+      <v-text-field v-model="contents" style="height:150px;" outlined label="댓글 작성하기" @keypress.enter="createComment" hide-details></v-text-field>
+      <v-btn @click="createComment">댓글 작성</v-btn>
+    </v-card-title>
+    <div>
+
     </div>
-    <CreateComment
-      @create-comment="createComment"
-    />
-  </div>
+  </v-card>
 </template>
 
 <script>
-import CreateComment from './CreateComment.vue'
-
 export default {
-  name:Comment,
-  components: {
-    CreateComment,
+  name:'Comment',
+  props: {
+    index: Number,
   },
   data() {
     return {
-
+      contents: '',
     }
   },
   methods: {
-    getComment() {
-
-    },
     createComment() {
-
-    },
-    deleteComment() {
-      
+      this.$emit('create-comment', this.contents)
+      this.contents = ''
     }
-  },
-  created() {
-    this.getComment()
   }
 }
 </script>
 
-<style>
+<style scoped>
+
 
 </style>
