@@ -1,16 +1,21 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 50px; right: 5px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 100px; z-index: 2">
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right: 50px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px;  z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
+    
+    <v-row justify="end">
+      <KakaoSharing :articles="articles" fab small light style="position: fixed; top: 150px; z-index: 2" />
+    </v-row>
+    
     <v-row justify="center">
       <v-autocomplete
         v-model="selectedArticleTitles"
@@ -101,7 +106,7 @@
       </div>
     </v-navigation-drawer>
 
-    <div id="map" style="width: 100vw; height: 100vh; z-index: 1"></div>
+    <div id="map" style=" height: 100vh; z-index: 1"></div>
     <!-- <div style="position: fixed; bottom: 0; z-index: 2"> -->
     <v-expand-x-transition>
       <v-row justify="center" v-if="expand">
@@ -140,7 +145,7 @@
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
-      <KakaoSharing :articles="articles" class="ma-2" fab small dark style="position: fixed; bottom: 200px; right: 50px; z-index: 2" />
+      
     </v-row>
 
     <Navigation />

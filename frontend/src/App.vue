@@ -1,10 +1,14 @@
 <template>
   <v-app>
-    <v-main>
+    <v-card 
+      min-height="700"
+      class="mx-auto" 
+      style="width:800px;"  
+    >
       <!-- <Main /> -->
       <router-view> </router-view>
       <!-- <Navigation /> -->
-    </v-main>
+    </v-card>
   </v-app>
 </template>
 

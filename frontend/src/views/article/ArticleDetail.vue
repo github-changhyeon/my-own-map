@@ -4,99 +4,101 @@
 <!-- comment 데이터를 axios 요청으로 받아올 거라 게시글 상세정보도 axios로 받아옴  -->
 <!-- 휴대폰 화면으로 잘 뜨는지 확인 -->
 <template>
-  <v-app>
-    <div class="detail-main">
-      <h1 class="main-title">게시글 상세내용</h1>
-      <v-btn icon color="black" @click="goBack">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <KakaoSharing :article="article" />
-      <Favorite :article="article" />
-    </div>
+  <v-card>
+    <v-app>
+      <div class="detail-main">
+        <h1 class="main-title">게시글 상세내용</h1>
+        <v-btn icon color="black" @click="goBack">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+        <KakaoSharing :article="article" />
+        <Favorite :article="article" />
+      </div>
 
-    <hr class="line" />
-    <div class="total-contents">
-      <div>
-        <!-- 사진 -->
-        <v-carousel>
-          <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
-        </v-carousel>
-      </div>
-      <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" half-increments length="5" readonly large> </v-rating>
-      <!-- <div>
-        <label for="title"><strong>작성자</strong> | </label>
-        {{ this.$route.query.user }}
-      </div> -->
-      <!-- <div>
-        <label for="title"><strong>수정일자</strong> | </label>
-        {{ this.$route.query.updated_at | moment('YYYY-MM-DD h:mm:ss a') }}
-      </div> -->
-      <!-- <v-col md="4" offset-md="4">
-        <v-combobox v-model="{{article.hashtags}}" :items="items" multiple chips>
-          <template v-slot:selection="data">
-            <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-              <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
-              {{ data.item }}
-            </v-chip>
-          </template>
-        </v-combobox>
-      </v-col> -->
-      <div>
-        <!-- hashtags -->
-        <label for="title"><strong>해쉬태그</strong> | </label>
-        <span v-for="(hashtag, idx) in article.hashtags" :key="idx"> #{{ hashtag.hashtagName }} </span>
-      </div>
-      <div>
-        <label for="title"><strong>작성일자</strong> | </label>
-        {{ article.regiTime }}
-      </div>
-      <div>
-        <label for="title"><strong>주소</strong> | </label>
-        {{ article.address }}
-      </div>
-      <div>
-        <label for="title"><strong>제목</strong> | </label>
-        <b>{{ article.title }}</b>
-      </div>
-      <div class="content-total">
-        <label for="content"><strong>내용</strong> </label>
-        <h6>{{ article.contents }}</h6>
-      </div>
-    </div>
-
-    <div class="buttons" v-if="isOwnArticle">
-      <!-- <div class="buttons"  > -->
-      <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
-      <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
-      <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
-    </div>
-    <hr class="line" />
-    <!-- <div>
-      <h4 style="font-weight: bold">comment ({{ comments.length }}개)</h4>
-      <br />
-      <div>
-        <ul v-for="(comment, idx) in comments" :key="idx">
-          <li>
-            <strong>🙍🏻‍♂️{{ comment.user }}</strong> - {{ comment.content }} | {{ comment.created_at | moment('YYYY-MM-DD h:mm:ss a') }}
-            <button variant="outline-danger" @click="checkDeleteComment(comment)">X</button>
-          </li>
-        </ul>
-      </div>
-      <div class="commentbox">
-        <ul></ul>
+      <hr class="line" />
+      <div class="total-contents">
         <div>
-          <input class="comment-input-box" type="text" v-model.trim="content" @keypress.enter="createComment" />
-          <button variant="outline-primary" @click="createComment">댓글작성</button>
+          <!-- 사진 -->
+          <v-carousel>
+            <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+          </v-carousel>
+        </div>
+        <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" half-increments length="5" readonly large> </v-rating>
+        <!-- <div>
+          <label for="title"><strong>작성자</strong> | </label>
+          {{ this.$route.query.user }}
+        </div> -->
+        <!-- <div>
+          <label for="title"><strong>수정일자</strong> | </label>
+          {{ this.$route.query.updated_at | moment('YYYY-MM-DD h:mm:ss a') }}
+        </div> -->
+        <!-- <v-col md="4" offset-md="4">
+          <v-combobox v-model="{{article.hashtags}}" :items="items" multiple chips>
+            <template v-slot:selection="data">
+              <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
+                <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+                {{ data.item }}
+              </v-chip>
+            </template>
+          </v-combobox>
+        </v-col> -->
+        <div>
+          <!-- hashtags -->
+          <label for="title"><strong>해쉬태그</strong> | </label>
+          <span v-for="(hashtag, idx) in article.hashtags" :key="idx"> #{{ hashtag.hashtagName }} </span>
+        </div>
+        <div>
+          <label for="title"><strong>작성일자</strong> | </label>
+          {{ article.regiTime }}
+        </div>
+        <div>
+          <label for="title"><strong>주소</strong> | </label>
+          {{ article.address }}
+        </div>
+        <div>
+          <label for="title"><strong>제목</strong> | </label>
+          <b>{{ article.title }}</b>
+        </div>
+        <div class="content-total">
+          <label for="content"><strong>내용</strong> </label>
+          <h6>{{ article.contents }}</h6>
         </div>
       </div>
-    </div> -->
-    <!-- <div>
-      댓글 목록
-      <Comment />
-    </div> -->
-    <CommentList style="margin-bottom:50px;"/>
-    <Navigation />
-  </v-app>
+
+      <div class="buttons" v-if="isOwnArticle">
+        <!-- <div class="buttons"  > -->
+        <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
+        <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
+        <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
+      </div>
+      <hr class="line" />
+      <!-- <div>
+        <h4 style="font-weight: bold">comment ({{ comments.length }}개)</h4>
+        <br />
+        <div>
+          <ul v-for="(comment, idx) in comments" :key="idx">
+            <li>
+              <strong>🙍🏻‍♂️{{ comment.user }}</strong> - {{ comment.content }} | {{ comment.created_at | moment('YYYY-MM-DD h:mm:ss a') }}
+              <button variant="outline-danger" @click="checkDeleteComment(comment)">X</button>
+            </li>
+          </ul>
+        </div>
+        <div class="commentbox">
+          <ul></ul>
+          <div>
+            <input class="comment-input-box" type="text" v-model.trim="content" @keypress.enter="createComment" />
+            <button variant="outline-primary" @click="createComment">댓글작성</button>
+          </div>
+        </div>
+      </div> -->
+      <!-- <div>
+        댓글 목록
+        <Comment />
+      </div> -->
+      <CommentList style="margin-bottom:50px;"/>
+      <Navigation />
+    </v-app>
+  </v-card>
 </template>
 
 <script>
@@ -307,6 +309,11 @@ export default {
 };
 </script>
 <style scoped>
+.page {
+  width: 800px;
+  
+}
+
 ul {
   list-style: none;
 }

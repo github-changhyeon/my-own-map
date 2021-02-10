@@ -12,16 +12,16 @@
     </div> -->
     <v-card>
       <v-tabs centered style="z-index: 2">
-        <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
+        <!-- <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
         <v-tab @click="isOpen = 2" style="width: 5vw"><v-icon>mdi-heart</v-icon></v-tab>
-        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab>
-        <v-tab @click="isOpen = 4" style="width: 5vw"><v-icon>mdi-cog</v-icon></v-tab>
+        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab> -->
+        <v-tab style="width: 5vw"><v-icon>mdi-cog</v-icon></v-tab>
       </v-tabs>
     </v-card>
-    <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
+    <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
-    <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" />
-    <ChangeInfo v-if="isOpen === 4 && isSameUser" :propsUid="uid" />
+    <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
+    <ChangeInfo />
     <Navigation />
   </div>
 </template>
@@ -35,10 +35,10 @@ import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
 import ChangeInfo from '@/components/user/ChangeInfo.vue';
 
-//NewsFeed
-import PublicNewsFeed from '@/components/sns/PublicNewsFeed.vue';
-import PrivateNewsFeed from '@/components/sns/PrivateNewsFeed.vue';
-import FavoriteNewsFeed from '@/components/sns/FavoriteNewsFeed.vue';
+// //NewsFeed
+// import PublicNewsFeed from '@/components/sns/PublicNewsFeed.vue';
+// import PrivateNewsFeed from '@/components/sns/PrivateNewsFeed.vue';
+// import FavoriteNewsFeed from '@/components/sns/FavoriteNewsFeed.vue';
 
 // import { getUserInfo } from '@/api/user.js';
 // import axios from 'axios';
@@ -54,9 +54,9 @@ export default {
     UserInfo,
     // TimeLine,
     Navigation,
-    PublicNewsFeed,
-    PrivateNewsFeed,
-    FavoriteNewsFeed,
+    // PublicNewsFeed,
+    // PrivateNewsFeed,
+    // FavoriteNewsFeed,
     ChangeInfo,
   },
   data() {
