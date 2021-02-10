@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-icon @click="share">mdi-share-variant</v-icon>
+    <v-icon fab small light @click="share">mdi-share-variant</v-icon>
   </div>
 </template>
 
