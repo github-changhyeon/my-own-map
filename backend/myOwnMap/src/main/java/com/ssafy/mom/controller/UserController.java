@@ -175,6 +175,26 @@ public class UserController {
 		result.object = hashtags;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	// 공개된 해쉬태그 만들기!!!!!
+	@ApiOperation(value = "해당 유저의 공개된 해쉬태그를 모두 반환한다.", response = List.class)
+	@GetMapping("/{uid}/userPublicHashtags")
+	public ResponseEntity<BasicResponse> retrievePublicHashtags(@PathVariable String uid) {
+		
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
+		List<UserHashtag> list = userHashtagDao.findAllByUserDtoAndPublicCntGreaterThan(userOpt.get(), 0);
+		
+		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
+		for (int i = 0; i < list.size(); i++) {
+			hashtags.add(list.get(i).getHashtagDto());
+		}
+		
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		result.object = hashtags;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 
 	// private + public -> 메인페이지에서 사용!
 	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)

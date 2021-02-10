@@ -141,11 +141,10 @@ public class ArticleController {
 				imageDao.save(imageDto);
 				saveCnt++;
 			}
-			// -------------- 이미지 저장 end
 		}
+		// -------------- 이미지 저장 end
 
 		// TODO: 회원정보 연동시 uid 가져오기
-//		int uid = 1;
 		int uid = articleDto.getUserDto().getUid();
 
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
@@ -155,46 +154,65 @@ public class ArticleController {
 			result.message = "유저 정보가 없습니다.";
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
-
-		System.out.println("등록게시물 값" +articleDto.isPrivate());
-
-		// TODO : 게시물 작성 시간 등록
 		articleDto.setUserDto(userOpt.get());
-		
-		
+		// 게시물 + 이미지 자체는 저장완료
 		articleDao.save(articleDto);
 
-		// hash - user
+		// article-hashtag-user hashtag묶음
 		// 모든 해쉬태그 정보 반환
 		List<HashtagDto> hashtags = hashtagDao.findAll();
 		// 현재 작성한 글의 해쉬태그 반환
 		List<HashtagDto> inputHashtags = articleDto.getHashtags();
-
+		
+		// 중복 제거를 위한 hashtagSet
 		Set<String> hashtagSet = new TreeSet<String>();
-
 		for (int i = 0; i < hashtags.size(); i++) {
 			hashtagSet.add(hashtags.get(i).getHashtagName());
 		}
-
+		System.out.println(articleDto.isPrivate()+ "let me see" + " " + inputHashtags.size());
+		// 작성된  글의 해쉬태그를 돌면서
 		for (int i = 0; i < inputHashtags.size(); i++) {
+			// 이미 존재하는 해쉬태그라면, 해당 해쉬태그 정보를 가져온다.
 			if (hashtagSet.contains(inputHashtags.get(i).getHashtagName())) {
-				// 이미 해당 해쉬태그가 존재한다면, 해당 해쉬태그의 번호를 조회한다.
 				HashtagDto alreadyExist = hashtagDao.findByHashtagName(inputHashtags.get(i).getHashtagName());
-				if (!articleDto.isPrivate()
-						&& !userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
-					userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist));
+				// 혹시 비공개 글이라면
+				if (articleDto.isPrivate()) {
+					// userHashtag에 정보가 없다면
+					System.out.println("private ha?");
+					if(!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
+						userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist, 0));
+					// userHashtag에 정보가 있다면
+					}else {
+						// 아무것도 안해줌 ㅇㅇ
+					}
+				// 공개 글이라면
+				}else {
+
+					System.out.println("public ha?");
+					// userHashtag에 정보가 없다면
+					if(!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
+						userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist, 1));
+					// userHashtag에 정보가 있다면 public
+					}else {
+						Optional<UserHashtag> userHashtagDto = userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist);
+//						userHashtagDto.get().setHashtagDto(userHashtagDto.get().getHashtagDto());
+//						userHashtagDto.get().setId(userHashtagDto.get().getId());
+						userHashtagDto.get().setPublicCnt(userHashtagDto.get().getPublicCnt()+1);
+//						userHashtagDto.get().setUserDto(userHashtagDto.get().getUserDto());
+						userHashtagDao.save(userHashtagDto.get());
+					}
+					
 				}
-				;
 				articleHashtagDao.save(new ArticleHashtag(articleDto, alreadyExist));
-				continue;
+			// 존재하지 않는 해쉬태그라면, 해쉬태그를 저장하고 시작한다
+			}else {
+				hashtagDao.save(inputHashtags.get(i));
+				// userHashtag를 저장하는데, 비공개글이라면 isPublic = 0, 공개글이라면 isPublic = 1
+				userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i),articleDto.isPrivate()?0:1));		
+				
+				articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
+				
 			}
-			hashtagDao.save(inputHashtags.get(i));
-			if (!articleDto.isPrivate()
-					&& !userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), inputHashtags.get(i)).isPresent()) {
-				userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i)));
-			}
-			;
-			articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
 		}
 		
 		result.status = true;
@@ -319,7 +337,7 @@ public class ArticleController {
 					// 이미 해당 해쉬태그가 존재한다면, 해당 해쉬태그의 번호를 조회한다.
 					HashtagDto alreadyExist = hashtagDao.findByHashtagName(inputHashtags.get(i).getHashtagName());
 					if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), alreadyExist).isPresent()) {
-						userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist));
+						userHashtagDao.save(new UserHashtag(userOpt.get(), alreadyExist,0));
 					}
 					;
 					articleHashtagDao.save(new ArticleHashtag(articleDto, alreadyExist));
@@ -327,7 +345,7 @@ public class ArticleController {
 				}
 				hashtagDao.save(inputHashtags.get(i));
 				if (!userHashtagDao.findByUserDtoAndHashtagDto(userOpt.get(), inputHashtags.get(i)).isPresent()) {
-					userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i)));
+					userHashtagDao.save(new UserHashtag(userOpt.get(), inputHashtags.get(i),1));
 				}
 				;
 				articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
@@ -375,9 +393,15 @@ public class ArticleController {
 					.findAllByHashtagNo(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo());
 			System.out.println("I found " + cnt);
 //			System.out.println(alreadyArticleHashtags.get(i).getHashtagDto() + "카운트는" + tmpUserHashtags.size() + "찾은건");
-			// 혹시 해당 해쉬태그로 검색한 게시글이 하나다?
-			if (cnt == 1)
+
+			UserHashtag userHashtag = userHashtagDao.findByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			// 혹시 해당 해쉬태그로 검색한 게시글이 하나면 지우기 
+			if (cnt == 1) {
 				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			// 게시글은 여러개지만, 현재 지우는 게시물이 public한 게시물이라면, 해당 userHashtag관계의 publicCnt를 1 감소시킨다
+			}else if(!articleOpt.get().isPrivate()) {
+				userHashtag.setPublicCnt(userHashtag.getPublicCnt() - 1);
+			}
 		}
 
 		imageDao.deleteAllByArticleDto(articleOpt.get());
