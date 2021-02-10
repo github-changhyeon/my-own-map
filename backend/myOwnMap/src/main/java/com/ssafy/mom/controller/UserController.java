@@ -380,6 +380,7 @@ public class UserController {
 			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		} else {
+			userDto.setUid(userOpt.get().getUid());
 			result.status = true;
 			result.message = SUCCESS;
 			result.object = userDto;
