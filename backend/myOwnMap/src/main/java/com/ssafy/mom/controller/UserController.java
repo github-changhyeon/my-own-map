@@ -182,7 +182,7 @@ public class UserController {
 	public ResponseEntity<BasicResponse> retrievePublicHashtags(@PathVariable String uid) {
 		
 		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
-		List<UserHashtag> list = userHashtagDao.findAllByUserDto(userOpt.get());
+		List<UserHashtag> list = userHashtagDao.findAllByUserDtoAndPublicCntGreaterThan(userOpt.get(), 0);
 		
 		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
 		for (int i = 0; i < list.size(); i++) {
