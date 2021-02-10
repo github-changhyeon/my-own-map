@@ -429,6 +429,7 @@ public class UserController {
 				// -------------- 이미지 저장 end
 			}
 			// ---------------------
+			userDto.setUid(userOpt.get().getUid());
 			userDao.save(userDto);
 			result.status = true;
 			result.message = SUCCESS;
