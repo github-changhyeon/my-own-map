@@ -1,6 +1,7 @@
-import { createInstance } from './index.js';
+import { createInstance, createMultipartInstance } from './index.js';
 
 const instance = createInstance();
+const multipartInstance = createMultipartInstance();
 
 function login(user, success, fail) {
   // { email: user.email, password: user.password }
@@ -24,7 +25,31 @@ function getUserInfo(uid, success, fail) {
   //   email: user.email,
   //   password: user.password,
   instance
-    .get(`/users/${uid}`)
+    .get(`/users/findByUid/${uid}`)
+    .then(success)
+    .catch(fail);
+}
+
+function deleteUser(success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
+  // const body = {
+  //   email: user.email,
+  //   password: user.password,
+  instance
+    .delete(`/users`)
+    .then(success)
+    .catch(fail);
+}
+
+function updateUser(formData, success, fail) {
+  multipartInstance.defaults.headers['jwt'] = window.localStorage.getItem(
+    'jwt'
+  );
+  // const body = {
+  //   email: user.email,
+  //   password: user.password,
+  multipartInstance
+    .put(`/users`, formData)
     .then(success)
     .catch(fail);
 }
