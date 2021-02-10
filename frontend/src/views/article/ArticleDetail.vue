@@ -77,8 +77,7 @@
         </div>
       </div>
     </div> -->
-    <Comment :index="index"/>
-    <CommentList />
+    <CommentList style="margin-bottom:50px;"/>
     <Navigation />
   </v-app>
 </template>
@@ -89,8 +88,7 @@ import { deleteArticle } from '@/api/article.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
-import Comment from './Comment.vue';
-import CommentList from './CommentList.vue';
+import CommentList from '@/views/article/CommentList.vue';
 
 export default {
   name: 'ArticleDetail',
@@ -99,7 +97,6 @@ export default {
   },
   components: {
     Navigation,
-    Comment,
     CommentList,
   },
   data() {

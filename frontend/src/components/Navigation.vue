@@ -2,7 +2,7 @@
   <v-bottom-navigation
     :value="value"
     color="primary"
-    style="position: fixed;bottom: 0px; z-index: 2; display: flex; justify-content: space-around; background-color:white;"
+    style="position: fixed; bottom: 0px; z-index: 2; display: flex; justify-content: space-around; background-color:white;"
     class="nav"
   >
     <router-link to='/newsfeed' style="textDecoration:none;">
