@@ -2,7 +2,10 @@
   <div>
     <div>
       <div v-for="(user, idx) in users" :key="idx">
-        <span>{{ user.username }} </span>
+        <v-avatar>
+          <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="" />
+        </v-avatar>
+        hi<span>{{ user.username }} </span>
       </div>
     </div>
   </div>
@@ -16,7 +19,7 @@ export default {
   props: {
     users: {
       type: Array,
-      required: true,
+      // required: true,
     },
     remove: {
       type: Function,
@@ -27,7 +30,7 @@ export default {
     return {};
   },
   created() {
-    // axios.get()
+    console.log(this.users, 'follow.vue의 콘솔');
   },
 };
 </script>
