@@ -402,22 +402,19 @@ public class UserController {
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		} else {
 			// -----프로필 사진 업로드----
-			// 파일이 들어왔다면 
+			// 파일이 들어왔다면
 			if (file != null) {
 				UUID uuid = UUID.randomUUID();
-				// 현재 시스템 시간 구하기
 				long systemTime = System.currentTimeMillis();
-				// 출력 형태를 위한 formmater
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
-				// format에 맞게 출력하기 위한 문자열 변환
 				String dTime = formatter.format(systemTime);
 
 				String uuidFilename = uuid + dTime + file.getOriginalFilename();
 
-				Path filePath = Paths.get(fileRealPath + "/profileImages/"+ uid + "/" + uuidFilename);
+				Path filePath = Paths.get(fileRealPath + "/profileImages/" + uid + "/" + uuidFilename);
 
 				try {
-					Files.write(filePath, file.getBytes()); // 하드디스크 기록
+					Files.write(filePath, file.getBytes());
 				} catch (IOException e) {
 					result.message = "이미지를 저장하지 못했습니다.";
 					result.status = false;
@@ -429,7 +426,6 @@ public class UserController {
 				profileImageDto.setUserDto(userDto);
 				profileImageDto.setProfileImage(uuidFilename);
 				profileImageDao.save(profileImageDto);
-//					profileImageDao.save(profileImageDto);
 				// -------------- 이미지 저장 end
 			}
 			// ---------------------
