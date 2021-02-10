@@ -9,7 +9,7 @@ import com.ssafy.mom.model.ArticleDto;
 import com.ssafy.mom.model.ImageDto;
 
 public interface ImageDao extends JpaRepository<ImageDto, Integer>{
-
+	//
 //	public ArrayList<ImageDto> findAllByArticleDto(ArticleDto articleDto);
 
 	public List<ImageDto> findAllByArticleDto(ArticleDto articleDto);
