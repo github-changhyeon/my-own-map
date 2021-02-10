@@ -5,21 +5,23 @@
     style="position: fixed;bottom: 0px; z-index: 2; display: flex; justify-content: space-around; background-color:white;"
     class="nav"
   >
+    <router-link :to="`/main/${this.uid}`" style="textDecoration:none;">
+      <v-btn style="background-color:white; margin-top:8px;">
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
+    </router-link>
     <router-link to='/newsfeed' style="textDecoration:none;">
       <v-btn style="background-color:white; margin-top:8px;">
-        <span>NewsFeed</span>
         <v-icon>mdi-newspaper-variant</v-icon>
       </v-btn>
     </router-link>
-    <router-link :to="`/main/${this.uid}`" style="textDecoration:none;">
+    <router-link :to="`/articles/create`" style="textDecoration:none;">
       <v-btn style="background-color:white; margin-top:8px;">
-        <span>Home</span>
-        <v-icon>mdi-home</v-icon>
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
     </router-link>
     <router-link :to="`/users/${this.uid}`" style="textDecoration:none;">
       <v-btn style="background-color:white; margin-top:8px;">
-        <span>MyPage</span>
         <v-icon>mdi-account</v-icon>
       </v-btn>
     </router-link>
