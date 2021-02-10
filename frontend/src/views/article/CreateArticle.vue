@@ -15,31 +15,27 @@
     <div class="center">
       <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
     </div>
-    <div>
-      해쉬태그
-      <br />
-      <v-col>
-        <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
-          <template v-slot:selection="data">
-            <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-              <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
-              {{ data.item }}
-            </v-chip>
-          </template>
-        </v-combobox>
-      </v-col>
-      <br />
+    <div class="center">
+      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택해 보세요." multiple chips>
+        <template v-slot:selection="data">
+          <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
+            <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+            {{ data.item }}
+          </v-chip>
+        </template>
+      </v-combobox>
     </div>
-    <div class="inline">
-      <div style="display:flex; justify-content: left;">
-        <span>이 장소의 사진</span>
-        <form encType="multipart/form-data">
-          <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
-        </form>
-        <v-btn width="20" height="20" class="lefty picture-upload" type="button" @click="onClickImageUpload">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </div>
+
+    <br />
+    <div class="center">
+      <br />
+      <span>사진을 추가해 볼까요? </span>
+      <form encType="multipart/form-data">
+        <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
+      </form>
+      <v-btn height="20" type="button" @click="onClickImageUpload">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
       <v-carousel class="picture-size" v-if="imgs.length != 0">
         <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
           <button @click="removeImage()" class="deleteButton">X</button>
@@ -47,16 +43,16 @@
       </v-carousel>
     </div>
     <br />
-    <v-checkbox id="privateToggle" v-model="article.private"></v-checkbox><label for="privateToggle">비공개글로 합니다</label>
     <div>
-      방문 정보 입력
-      <br />
       <DatePicker label="날짜를 입력해 주세요." @setDate="selectDate"> </DatePicker>
     </div>
     <div class="center">
-      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
+      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" size="45"></v-rating>
     </div>
-    <div>
+    <div class="center">
+      <v-checkbox id="privateToggle" v-model="article.private" label="비공개 글로 합니다"></v-checkbox>
+    </div>
+    <div class="center">
       <button class="upload" @click="createPost()">등록</button>
     </div>
     <div style="height:100px"></div>
