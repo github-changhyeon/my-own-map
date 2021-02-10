@@ -84,6 +84,7 @@
       댓글 목록
       <Comment />
     </div> -->
+    <CommentList style="margin-bottom:50px;"/>
     <Navigation />
   </v-app>
 </template>
@@ -98,7 +99,7 @@ import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
 import KakaoSharing from '@/components/sns/KakaoSharing.vue';
 import Favorite from '@/components/user/Favorite.vue';
-// import Comment from './Comment.vue';
+import CommentList from '@/views/article/CommentList.vue';
 
 export default {
   name: 'ArticleDetail',
@@ -109,8 +110,8 @@ export default {
     Navigation,
     KakaoSharing,
     Favorite,
+    CommentList,
   },
-  //  components: { Comment },
   data() {
     const index = this.$route.query.id;
     const Articles = this.$route.query;

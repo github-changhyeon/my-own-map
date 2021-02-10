@@ -6,8 +6,8 @@
         <v-tab @click="isAll = false" style="width: 50vw">팔로우</v-tab>
       </v-tabs>
     </v-card>
-    <AllNewsFeed v-if="isAll" style="padding-top: 70px" />
-    <FollowNewsFeed v-if="!isAll" style="padding-top: 70px" />
+    <AllNewsFeed v-if="isAll" style="padding-top: 70px; margin-bottom:50px;" />
+    <FollowNewsFeed v-if="!isAll" style="padding-top: 70px; margin-bottom:50px;" />
     <Navigation />
   </div>
 </template>
