@@ -126,9 +126,17 @@
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small dark @click="goToCreateArticle" v-if="isSameUser" style="position: fixed; bottom: 200px; right: 5px; z-index: 2">
+      <!-- <v-btn
+        class="ma-2"
+        fab
+        small
+        dark
+        @click="goToCreateArticle"
+        v-if="isSameUser"
+        style="position: fixed; bottom: 200px; right: 5px; z-index: 2"
+      >
         <v-icon dark> mdi-plus </v-icon>
-      </v-btn>
+      </v-btn> -->
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
@@ -435,9 +443,9 @@ export default {
       }
       this.clusterer.addMarkers(markers);
     },
-    goToCreateArticle() {
-      this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
-    },
+    // goToCreateArticle() {
+    //   this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
+    // },
     goToArticleDetail(article) {
       this.$router.push({
         name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,

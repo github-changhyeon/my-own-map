@@ -31,10 +31,20 @@
         <label for="title"><strong>수정일자</strong> | </label>
         {{ this.$route.query.updated_at | moment('YYYY-MM-DD h:mm:ss a') }}
       </div> -->
+      <!-- <v-col md="4" offset-md="4">
+        <v-combobox v-model="{{article.hashtags}}" :items="items" multiple chips>
+          <template v-slot:selection="data">
+            <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
+              <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+              {{ data.item }}
+            </v-chip>
+          </template>
+        </v-combobox>
+      </v-col> -->
       <div>
         <!-- hashtags -->
         <label for="title"><strong>해쉬태그</strong> | </label>
-        {{ article.hashtags }}
+        <span v-for="(hashtag, idx) in article.hashtags" :key="idx"> #{{ hashtag.hashtagName }} </span>
       </div>
       <div>
         <label for="title"><strong>작성일자</strong> | </label>
@@ -45,7 +55,7 @@
         {{ article.address }}
       </div>
       <div>
-        <label for="title"><strong>title</strong> | </label>
+        <label for="title"><strong>제목</strong> | </label>
         <b>{{ article.title }}</b>
       </div>
       <div class="content-total">
@@ -84,6 +94,7 @@
       댓글 목록
       <Comment />
     </div> -->
+    <CommentList style="margin-bottom:50px;"/>
     <Navigation />
   </v-app>
 </template>
@@ -98,7 +109,7 @@ import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
 import KakaoSharing from '@/components/sns/KakaoSharing.vue';
 import Favorite from '@/components/user/Favorite.vue';
-// import Comment from './Comment.vue';
+import CommentList from '@/views/article/CommentList.vue';
 
 export default {
   name: 'ArticleDetail',
@@ -109,8 +120,8 @@ export default {
     Navigation,
     KakaoSharing,
     Favorite,
+    CommentList,
   },
-  //  components: { Comment },
   data() {
     const index = this.$route.query.id;
     const Articles = this.$route.query;
@@ -126,6 +137,7 @@ export default {
         articleNo: 0,
         contents: '',
         evaluation: 0,
+        hashtags: [],
         positionLat: '',
         positionLng: '',
         regiTime: '',
