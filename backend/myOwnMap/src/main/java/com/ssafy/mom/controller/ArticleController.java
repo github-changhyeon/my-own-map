@@ -123,7 +123,7 @@ public class ArticleController {
 
 				String uuidFilename = uuid + "_" + dTime + file.get(saveCnt).getOriginalFilename();
 
-				Path filePath = Paths.get(fileRealPath + uuidFilename);
+				Path filePath = Paths.get(fileRealPath + "upload/" + uuidFilename);
 
 				try {
 					Files.write(filePath, file.get(saveCnt).getBytes()); // 하드디스크 기록
@@ -156,8 +156,12 @@ public class ArticleController {
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 
+		System.out.println("등록게시물 값" +articleDto.isPrivate());
+
 		// TODO : 게시물 작성 시간 등록
 		articleDto.setUserDto(userOpt.get());
+		
+		
 		articleDao.save(articleDto);
 
 		// hash - user
@@ -192,7 +196,7 @@ public class ArticleController {
 			;
 			articleHashtagDao.save(new ArticleHashtag(articleDto, inputHashtags.get(i)));
 		}
-
+		
 		result.status = true;
 		result.message = "success";
 		return new ResponseEntity<>(result, HttpStatus.OK);

@@ -1,27 +1,13 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn
-        class="ma-2"
-        fab
-        small
-        light
-        @click="switchDrawer = !switchDrawer"
-        style="position: fixed; top: 50px; right: 5px; z-index: 2"
-      >
+      <v-btn class="ma-2" fab small light @click="switchDrawer = !switchDrawer" style="position: fixed; top: 50px; right: 5px; z-index: 2">
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn
-        class="ma-2"
-        fab
-        small
-        light
-        @click="followDrawer = !followDrawer"
-        style="position: fixed; top: 50px; right: 50px; z-index: 2"
-      >
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right: 50px; z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
@@ -59,51 +45,25 @@
         ></v-autocomplete>
       </v-list-item>
       <v-list-item>
-        <v-switch
-          @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)"
-          v-model="selectAllHashtagSwitch"
-          label="전체보기"
-        ></v-switch>
+        <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
       </v-list-item>
       <v-list-item v-if="isSameUser">
-        <v-switch
-          @click="clickShowPrivateArticles(isShowPrivate)"
-          v-model="isShowPrivate"
-          label="Private"
-        ></v-switch>
+        <v-switch @click="clickShowPrivateArticles(isShowPrivate)" v-model="isShowPrivate" label="Private"></v-switch>
       </v-list-item>
       <div v-if="selectedHashtagNames.length == 0">
         <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch
-            @click="
-              clickHashtagSwitch(
-                userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
-              )
-            "
-            v-model="
-              userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
-            "
+            @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)])"
+            v-model="userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]"
             :label="hashtag.hashtagName"
           ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedHashtagNames.length > 0">
-        <v-list-item
-          v-for="(hashtagName, i) in selectedHashtagNames"
-          :key="i"
-          link
-        >
+        <v-list-item v-for="(hashtagName, i) in selectedHashtagNames" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch
-            @click="
-              clickHashtagSwitch(
-                userHashtagSwitches[userHashtagMap.get(hashtagName)]
-              )
-            "
-            v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]"
-            :label="hashtagName"
-          ></v-switch>
+          <v-switch @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtagName)])" v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]" :label="hashtagName"></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -130,27 +90,13 @@
       <div v-if="selectedFollowUserNames.length == 0">
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch
-            @click="
-              clickFollowUserSwitch(followUserMap.get(followUser.username))
-            "
-            v-model="followUserSwitches[followUserMap.get(followUser.username)]"
-            :label="followUser.username"
-          ></v-switch>
+          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUser.username))" v-model="followUserSwitches[followUserMap.get(followUser.username)]" :label="followUser.username"></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedFollowUserNames.length > 0">
-        <v-list-item
-          v-for="(followUserName, i) in selectedFollowUserNames"
-          :key="i"
-          link
-        >
+        <v-list-item v-for="(followUserName, i) in selectedFollowUserNames" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch
-            @click="clickFollowUserSwitch(followUserMap.get(followUserName))"
-            v-model="followUserSwitches[followUserMap.get(followUserName)]"
-            :label="followUserName"
-          ></v-switch>
+          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUserName))" v-model="followUserSwitches[followUserMap.get(followUserName)]" :label="followUserName"></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -159,32 +105,15 @@
     <!-- <div style="position: fixed; bottom: 0; z-index: 2"> -->
     <v-expand-x-transition>
       <v-row justify="center" v-if="expand">
-        <v-sheet
-          class="mx-auto"
-          elevation="8"
-          max-width="100vw"
-          style="position: fixed; bottom: 40px; z-index: 2"
-        >
+        <v-sheet class="mx-auto" elevation="8" max-width="100vw" style="position: fixed; bottom: 40px; z-index: 2">
           <v-slide-group v-model="model" class="pa-4" show-arrows>
             <v-slide-item v-for="(article, i) in recentArticles" :key="i">
-              <v-card
-                class="ma-4"
-                height="100px"
-                width="70px"
-                @click="goToArticleDetail(article)"
-              >
+              <v-card class="ma-4" height="100px" width="70px" @click="goToArticleDetail(article)">
                 <v-img
                   height="70px"
-                  :src="
-                    article.imagePaths.length === 0
-                      ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'
-                      : 'https://i4b107.p.ssafy.io/images/uploads/' +
-                        article.imagePaths[0]
-                  "
+                  :src="article.imagePaths.length === 0 ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg' : 'https://i4b107.p.ssafy.io/images/uploads/' + article.imagePaths[0]"
                 ></v-img>
-                <v-card-title class="txt_line" style="padding: 0">{{
-                  article.title
-                }}</v-card-title>
+                <v-card-title class="txt_line" style="padding: 0">{{ article.title }}</v-card-title>
               </v-card>
             </v-slide-item>
           </v-slide-group>
@@ -192,14 +121,7 @@
       </v-row>
     </v-expand-x-transition>
     <!-- </div> -->
-    <v-btn
-      class="ma-2"
-      light
-      fab
-      small
-      @click="expand = !expand"
-      style="position: fixed; bottom: 200px; z-index: 2"
-    >
+    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 200px; z-index: 2">
       <v-icon v-if="!expand">mdi-chevron-right</v-icon>
       <v-icon v-if="expand">mdi-chevron-left</v-icon>
     </v-btn>
@@ -228,13 +150,7 @@
 <script>
 // import constants from '../../lib/constants';
 // import { login } from '@/api/user.js';
-import {
-  getArticles,
-  getRecentArticles,
-  getUserHashtags,
-  getPublicArticles,
-  getRecentPublicArticles,
-} from '@/api/user.js';
+import { getArticles, getRecentArticles, getUserHashtags, getPublicArticles, getRecentPublicArticles } from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
@@ -248,12 +164,9 @@ const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 //   '<button type="button" tabindex="-1" aria-label="Rating 4 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-half-full theme--light orange--text" style="font-size: 20px"></button>';
 // const emptyStarHtml =
 //   '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
-const PUBLIC_IMAGE_SRC =
-  'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
-const PRIVATE_IMAGE_SRC =
-  'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
-const FOLLOW_IMAGE_SRC =
-  'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
+const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
+const PRIVATE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
+const FOLLOW_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
 // const FAVORITE_IMAGE_SRC =
 //   'https://user-images.githubusercontent.com/20719987/107175880-46d0a800-6a11-11eb-9c74-e61c393ba2f6.png';
 //   const PUBLIC_IMAGE_SRC =
@@ -300,10 +213,7 @@ export default {
       let uid = this.$route.params.uid;
       const token = localStorage.getItem('jwt');
       let isToken = token !== undefined && token !== null;
-      if (
-        isToken &&
-        Number(jwt_decode(token).uid) === Number(this.$route.params.uid)
-      ) {
+      if (isToken && Number(jwt_decode(token).uid) === Number(this.$route.params.uid)) {
         this.isSameUser = true;
       }
       if (this.isSameUser) {
@@ -315,9 +225,7 @@ export default {
               for (let i = 0; i < this.articles.length; ++i) {
                 this.articleTitles.push(this.articles[i].title);
               }
-              window.kakao && window.kakao.maps
-                ? this.initMap()
-                : this.addScript();
+              window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
               // alert('article list를 받았습니다.');
             } else {
               alert('article list 실패');
@@ -353,9 +261,7 @@ export default {
               for (let i = 0; i < this.articles.length; ++i) {
                 this.articleTitles.push(this.articles[i].title);
               }
-              window.kakao && window.kakao.maps
-                ? this.initMap()
-                : this.addScript();
+              window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
               // alert('article list를 받았습니다.');
             } else {
               alert('article list 실패');
@@ -489,22 +395,13 @@ export default {
             followUserArticles = response.data.object;
             // 팔로우한 사람 게시글 받아와서 지도에 표시
 
-            let followImageSize = new kakao.maps.Size(
-              MARKER_WIDTH,
-              MARKER_HEIGHT
-            );
-            let followMarkerImage = new kakao.maps.MarkerImage(
-              FOLLOW_IMAGE_SRC,
-              followImageSize
-            );
+            let followImageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
+            let followMarkerImage = new kakao.maps.MarkerImage(FOLLOW_IMAGE_SRC, followImageSize);
 
             let followMarkers = [];
             for (let i = 0; i < followUserArticles.length; ++i) {
               let followMarker = new kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(
-                  followUserArticles[i].positionLat,
-                  followUserArticles[i].positionLng
-                ),
+                position: new window.kakao.maps.LatLng(followUserArticles[i].positionLat, followUserArticles[i].positionLng),
                 image: followMarkerImage,
               });
 
@@ -512,10 +409,7 @@ export default {
                 map: _this.map,
                 position: followMarker.getPosition(),
               });
-              let wrapDiv = _this.makeCustomizedOverlay(
-                overlay,
-                followUserArticles[i]
-              );
+              let wrapDiv = _this.makeCustomizedOverlay(overlay, followUserArticles[i]);
 
               overlay.setContent(wrapDiv);
 
@@ -584,11 +478,7 @@ export default {
         for (let j = 0; j < this.articles[i].hashtags.length; ++j) {
           // alert(this.articles[i].hashtags[j].hashtagName);
           // alert(this.userHashtagMap.get(this.articles[i].hashtags[j].hashtagName));
-          if (
-            this.userHashtagSwitches[
-              this.userHashtagMap.get(this.articles[i].hashtags[j].hashtagName)
-            ]
-          ) {
+          if (this.userHashtagSwitches[this.userHashtagMap.get(this.articles[i].hashtags[j].hashtagName)]) {
             cnt += 1;
           }
         }
@@ -638,21 +528,12 @@ export default {
       for (let i = 0; i < _this.articles.length; ++i) {
         let data = _this.articles[i];
         let imageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-        let markerImage = new kakao.maps.MarkerImage(
-          PUBLIC_IMAGE_SRC,
-          imageSize
-        );
+        let markerImage = new kakao.maps.MarkerImage(PUBLIC_IMAGE_SRC, imageSize);
         if (data.isPrivate) {
-          markerImage = new kakao.maps.MarkerImage(
-            PRIVATE_IMAGE_SRC,
-            imageSize
-          );
+          markerImage = new kakao.maps.MarkerImage(PRIVATE_IMAGE_SRC, imageSize);
         }
         let nowMarker = new kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(
-            data.positionLat,
-            data.positionLng
-          ),
+          position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
           image: markerImage,
         });
 

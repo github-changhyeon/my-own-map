@@ -1,8 +1,8 @@
 <template>
   <div>
     <div style="float:right">
-    OO 님
-    <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
+      OO 님
+      <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
       <UserInfo :isSameUser="isSameUser" />
@@ -18,11 +18,11 @@
         <v-tab @click="isOpen = 4" style="width: 5vw"><v-icon>mdi-cog</v-icon></v-tab>
       </v-tabs>
     </v-card>
-    <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid"/>
-    <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid"/>
-    <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid"/>
-    <ChangeInfo v-if="isOpen === 4"/>
-    <Navigation/>
+    <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
+    <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
+    <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" />
+    <ChangeInfo v-if="isOpen === 4 && isSameUser" :propsUid="uid" />
+    <Navigation />
   </div>
 </template>
 
@@ -84,6 +84,7 @@ export default {
       console.log(uid);
       const token = localStorage.getItem('jwt');
       this.tokenData = jwt_decode(token);
+      this.uid = this.$route.params.uid;
 
       // 로그인된상태니까 -> 본인이 본인 페이지 올때는 토큰으로 내 정보를 찾아서 채워야되고
       // (params가 비어있으면) -> jwt로 디코드해서 email axios요청
@@ -106,10 +107,11 @@ export default {
       }
     },
   },
-  created() {   
+  created() {
     // const uid = this.$route.params.uid
     const token = localStorage.getItem('jwt');
     this.tokenData = jwt_decode(token);
+    this.uid = this.$route.params.uid;
     // 로그인된상태니까 -> 본인이 본인 페이지 올때는 토큰으로 내 정보를 찾아서 채워야되고
     // (params가 비어있으면) -> jwt로 디코드해서 email axios요청
 
