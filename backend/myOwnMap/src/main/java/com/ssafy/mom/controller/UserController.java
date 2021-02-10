@@ -391,6 +391,7 @@ public class UserController {
 	@ApiOperation(value = "회원정보 수정")
 	public Object updateUser(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("user") UserDto userDto, HttpServletRequest request) {
+		System.out.println(file + " " + userDto + " " + request);
 		final BasicResponse result = new BasicResponse();
 		int uid = jwtService.getUserUid();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
@@ -411,7 +412,7 @@ public class UserController {
 
 				String uuidFilename = uuid + dTime + file.getOriginalFilename();
 
-				Path filePath = Paths.get(fileRealPath + "/profileImages/" + uid + "/" + uuidFilename);
+				Path filePath = Paths.get(fileRealPath + "profileImages/" + uid + uuidFilename);
 
 				try {
 					Files.write(filePath, file.getBytes());
@@ -421,10 +422,14 @@ public class UserController {
 					e.printStackTrace();
 					return result;
 				}
-
+				System.out.println("hello");
+				ProfileImageDto tmpProfileImageDto = profileImageDao.findByUserDto(userDto);
 				ProfileImageDto profileImageDto = new ProfileImageDto();
 				profileImageDto.setUserDto(userDto);
 				profileImageDto.setProfileImage(uuidFilename);
+				if(tmpProfileImageDto != null) {
+					profileImageDto.setId(tmpProfileImageDto.getId());
+				}
 				profileImageDao.save(profileImageDto);
 				// -------------- 이미지 저장 end
 			}

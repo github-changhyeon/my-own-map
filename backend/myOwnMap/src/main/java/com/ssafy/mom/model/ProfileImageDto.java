@@ -8,8 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,14 +32,12 @@ public class ProfileImageDto{
 	private int id;
 	private String profileImage; //프로필 파일 이름
 	
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(name="uid")
 	private UserDto userDto;
 	
 	@CreationTimestamp
 	private Timestamp createDate;
-	@CreationTimestamp
+	@UpdateTimestamp
 	private Timestamp updateDate;
-
-	
 }

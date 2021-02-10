@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -37,8 +38,9 @@ public class UserDto {
 	@CreationTimestamp
 	private LocalDateTime joinDate;
 	private String stateMsg;
-	@OneToOne(orphanRemoval = true)
-	private ProfileImageDto profileImageDto;
+
+	@Transient
+	private String profileImagePath;
 
 
 	

@@ -119,7 +119,7 @@ export default {
         contents: '',
         visitDate: '',
         userDto: {},
-        private: 0,
+        private: false,
       },
     };
   },
