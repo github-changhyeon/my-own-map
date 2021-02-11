@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import constants from '../lib/constants';
 import Main from '../views/home/Main.vue';
+import ListView from '../views/home/ListView.vue';
 import Login from '../views/user/Login.vue';
 import Agreement from '../views/user/Agreement';
 // Article
@@ -26,6 +27,13 @@ const routes = [
     // name: 'Main',
     name: constants.URL_TYPE.HOME.MAIN,
     component: Main,
+    props: true,
+  },
+  {
+    path: '/listView',
+    // name: 'Main',
+    name: constants.URL_TYPE.HOME.FILTEREDLIST,
+    component: ListView,
     props: true,
   },
   // {

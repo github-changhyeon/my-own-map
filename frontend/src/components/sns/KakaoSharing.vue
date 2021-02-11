@@ -9,6 +9,9 @@
 export default {
   name: 'KakaoSharing',
   props: {
+    filteredHashtagSwitches: {
+      type: [Object, Array],
+    },
     article: {
       type: [Object, Array],
     },
@@ -31,7 +34,10 @@ export default {
       // this.articles !== undefined || this.articles !== null || this.articles.length !== 0
       if (this.articles !== undefined && this.articles.length > 0) {
         this.tmpArticle = this.articles[0];
-        this.baseUrl = `http://localhost:8081/main/${this.articles[0].userDto.uid}`;
+
+        this.baseUrl = `http://localhost:8081/main/${
+          this.articles[0].userDto.uid
+        }?jsonQueryData=${JSON.stringify(this.filteredHashtagSwitches)}`;
       } else if (this.article !== undefined) {
         console.log(this.article, 'this.article?');
         console.log(this.$route.params, 'route 파람스');
