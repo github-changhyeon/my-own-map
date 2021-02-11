@@ -16,6 +16,7 @@ export default {
     },
     HOME: {
       MAIN: 'main',
+      FILTEREDLIST: 'filteredList',
     },
     ARTICLE: {
       CREATEARTICLE: 'createArticle',
@@ -31,7 +32,7 @@ export default {
       PAGENOTFOUND: 'pageNotFound',
     },
     SNS: {
-      NEWSFEED: 'newsfeed'
-    }
+      NEWSFEED: 'newsfeed',
+    },
   },
 };

@@ -1,13 +1,27 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small light @click="hashtagDrawer = !hashtagDrawer" style="position: fixed; top: 50px; right: 5px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        small
+        light
+        @click="hashtagDrawer = !hashtagDrawer"
+        style="position: fixed; top: 50px; right: 5px; z-index: 2"
+      >
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right: 50px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        small
+        light
+        @click="followDrawer = !followDrawer"
+        style="position: fixed; top: 50px; right: 50px; z-index: 2"
+      >
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
@@ -45,25 +59,51 @@
         ></v-autocomplete>
       </v-list-item>
       <v-list-item>
-        <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
+        <v-switch
+          @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)"
+          v-model="selectAllHashtagSwitch"
+          label="전체보기"
+        ></v-switch>
       </v-list-item>
       <v-list-item v-if="isSameUser">
-        <v-switch @click="clickShowFavoriteSwitch(isShowFavorites)" v-model="isShowFavorites" label="스크랩한 게시물 보기"></v-switch>
+        <v-switch
+          @click="clickShowFavoriteSwitch(isShowFavorites)"
+          v-model="isShowFavorites"
+          label="스크랩한 게시물 보기"
+        ></v-switch>
       </v-list-item>
       <div v-if="selectedHashtagNames.length == 0">
         <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch
-            @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)])"
-            v-model="userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]"
+            @click="
+              clickHashtagSwitch(
+                userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
+              )
+            "
+            v-model="
+              userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
+            "
             :label="hashtag.hashtagName"
           ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedHashtagNames.length > 0">
-        <v-list-item v-for="(hashtagName, i) in selectedHashtagNames" :key="i" link>
+        <v-list-item
+          v-for="(hashtagName, i) in selectedHashtagNames"
+          :key="i"
+          link
+        >
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtagName)])" v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]" :label="hashtagName"></v-switch>
+          <v-switch
+            @click="
+              clickHashtagSwitch(
+                userHashtagSwitches[userHashtagMap.get(hashtagName)]
+              )
+            "
+            v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]"
+            :label="hashtagName"
+          ></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -90,13 +130,27 @@
       <div v-if="selectedFollowUserNames.length == 0">
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUser.username))" v-model="followUserSwitches[followUserMap.get(followUser.username)]" :label="followUser.username"></v-switch>
+          <v-switch
+            @click="
+              clickFollowUserSwitch(followUserMap.get(followUser.username))
+            "
+            v-model="followUserSwitches[followUserMap.get(followUser.username)]"
+            :label="followUser.username"
+          ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedFollowUserNames.length > 0">
-        <v-list-item v-for="(followUserName, i) in selectedFollowUserNames" :key="i" link>
+        <v-list-item
+          v-for="(followUserName, i) in selectedFollowUserNames"
+          :key="i"
+          link
+        >
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUserName))" v-model="followUserSwitches[followUserMap.get(followUserName)]" :label="followUserName"></v-switch>
+          <v-switch
+            @click="clickFollowUserSwitch(followUserMap.get(followUserName))"
+            v-model="followUserSwitches[followUserMap.get(followUserName)]"
+            :label="followUserName"
+          ></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -104,10 +158,13 @@
     <div id="map" style="width: 100vw; height: 100vh; z-index: 1"></div>
 
     <!-- </div> -->
-    <v-btn class="ma-2" light fab small @click="expand = !expand" style="position: fixed; bottom: 200px; z-index: 2">
-      <v-icon v-if="!expand">mdi-chevron-right</v-icon>
-      <v-icon v-if="expand">mdi-chevron-left</v-icon>
-    </v-btn>
+
+    <v-btn
+      @click="goToFilteredDataList"
+      style="position: fixed; bottom: 200px; z-index: 2"
+      >리스트 vue</v-btn
+    >
+
     <v-row justify="end">
       <!-- <v-btn
         class="ma-2"
@@ -123,7 +180,16 @@
       <!-- <v-btn class="ma-2" @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" icon> -->
       <!-- <v-icon @click="moveCreateArticle" style="position: fixed; bottom: 160px; right:5px; z-index: 2;" link>mdi-plus-circle</v-icon> -->
       <!-- </v-btn> -->
-      <KakaoSharing :articles="articles" class="ma-2" fab small dark style="position: fixed; bottom: 200px; right: 50px; z-index: 2" />
+      <KakaoSharing
+        :filteredHashtagSwitches="userHashtagSwitches"
+        :isShowFavorites="isShowFavorites"
+        :articles="articles"
+        class="ma-2"
+        fab
+        small
+        dark
+        style="position: fixed; bottom: 200px; right: 50px; z-index: 2"
+      />
     </v-row>
 
     <Navigation />
@@ -133,7 +199,13 @@
 <script>
 // import constants from '../../lib/constants';
 // import { login } from '@/api/user.js';
-import { getArticles, getUserHashtags, getUserPublicHashtags, myFavorite } from '@/api/user.js';
+import {
+  getArticles,
+  getUserHashtags,
+  getUserPublicHashtags,
+  getPublicArticles,
+  myFavorite,
+} from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
@@ -147,10 +219,14 @@ const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 //   '<button type="button" tabindex="-1" aria-label="Rating 4 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-half-full theme--light orange--text" style="font-size: 20px"></button>';
 // const emptyStarHtml =
 //   '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
-const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
-const PRIVATE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
-const FOLLOW_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
-const FAVORITE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175880-46d0a800-6a11-11eb-9c74-e61c393ba2f6.png';
+const PUBLIC_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
+const PRIVATE_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
+const FOLLOW_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
+const FAVORITE_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175880-46d0a800-6a11-11eb-9c74-e61c393ba2f6.png';
 //   const PUBLIC_IMAGE_SRC =
 //   'https://i4b107.p.ssafy.io/images/markers/publicMarker.jpg';
 // const PRIVATE_IMAGE_SRC =
@@ -179,20 +255,53 @@ export default {
     },
   },
   methods: {
+    goToFilteredDataList() {
+      let filteredData = {
+        articles: {},
+        scrapArticles: {},
+        followArticles: {},
+      };
+      // let tempArticles = this.articles;
+      // if (!this.isSameUser) {
+      //   tempArticles = this.publicArticles;
+      // }
+      // for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
+      //   if (this.userHashtagSwitches[i]) {
+      //     filteredData.articles.push(tempArticles[i]);
+      //   }
+      // }
+      filteredData.articles = this.articles;
+      if (this.isShowFavorites) {
+        filteredData.scrapArticles = this.favoriteArticles;
+      }
+      filteredData.followArticles = this.followArticles;
+      this.$router.push({
+        name: constants.URL_TYPE.HOME.FILTEREDLIST,
+        params: { filteredData: filteredData },
+      });
+    },
     initPage() {
       this.initDatas();
       let uid = this.$route.params.uid;
       const token = localStorage.getItem('jwt');
       let isToken = token !== undefined && token !== null;
-      if (isToken && Number(jwt_decode(token).uid) === Number(this.$route.params.uid)) {
+      if (
+        isToken &&
+        Number(jwt_decode(token).uid) === Number(this.$route.params.uid)
+      ) {
         this.isSameUser = true;
       }
-      if (this.isSameUser) {
-        getUserHashtags(
-          uid,
-          (response) => {
-            if (response.data.status) {
-              this.userHashtags = response.data.object;
+
+      getUserHashtags(
+        uid,
+        (response) => {
+          if (response.data.status) {
+            let fullHashtags = response.data.object;
+            for (let i = 0; i < fullHashtags.length; ++i) {
+              this.fullHashtagNames.push(fullHashtags[i].hashtagName);
+            }
+            if (this.isSameUser) {
+              this.userHashtags = fullHashtags;
               // alert('hashtag list를 받았습니다.');
 
               // alert(this.userHashtags.length);
@@ -202,16 +311,17 @@ export default {
                 this.userHashtagNames.push(this.userHashtags[i].hashtagName);
                 this.userHashtagSwitches.push(false);
               }
-            } else {
-              alert('hashtag list 실패');
             }
-          },
-          (error) => {
-            console.log(error);
-            alert('hashtag list 받기에 실패했습니다.');
+          } else {
+            alert('hashtag list 실패');
           }
-        );
-      } else {
+        },
+        (error) => {
+          console.log(error);
+          alert('hashtag list 받기에 실패했습니다.');
+        }
+      );
+      if (!this.isSameUser) {
         getUserPublicHashtags(
           uid,
           (response) => {
@@ -252,7 +362,9 @@ export default {
                 this.articleTitles.push(this.articles[i].title);
               }
             }
-            window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
+            window.kakao && window.kakao.maps
+              ? this.initMap()
+              : this.addScript();
             // alert('article list를 받았습니다.');
           } else {
             alert('article list 실패');
@@ -291,19 +403,31 @@ export default {
       myFavorite(
         (response) => {
           if (response.data.status) {
-            let favoriteArticles = response.data.object;
-            let favoriteImageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-            let favoriteMarkerImage = new kakao.maps.MarkerImage(FAVORITE_IMAGE_SRC, favoriteImageSize);
-            for (let i = 0; i < favoriteArticles.length; ++i) {
+            this.favoriteArticles = response.data.object;
+            let favoriteImageSize = new kakao.maps.Size(
+              MARKER_WIDTH,
+              MARKER_HEIGHT
+            );
+            let favoriteMarkerImage = new kakao.maps.MarkerImage(
+              FAVORITE_IMAGE_SRC,
+              favoriteImageSize
+            );
+            for (let i = 0; i < this.favoriteArticles.length; ++i) {
               let favoriteMarker = new kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(favoriteArticles[i].positionLat, favoriteArticles[i].positionLng),
+                position: new window.kakao.maps.LatLng(
+                  this.favoriteArticles[i].positionLat,
+                  this.favoriteArticles[i].positionLng
+                ),
                 image: favoriteMarkerImage,
               });
               let overlay = new kakao.maps.CustomOverlay({
                 map: this.map,
                 position: favoriteMarker.getPosition(),
               });
-              let wrapDiv = this.makeCustomizedOverlay(overlay, favoriteArticles[i]);
+              let wrapDiv = this.makeCustomizedOverlay(
+                overlay,
+                this.favoriteArticles[i]
+              );
 
               overlay.setContent(wrapDiv);
 
@@ -325,6 +449,9 @@ export default {
       );
     },
     initDatas() {
+      this.fullHashtagNames = [];
+      this.followArticles = [];
+      this.favoriteArticles = [];
       this.favoriteMarkers = [];
       this.followMarkers = [];
       this.publicArticles = [];
@@ -369,6 +496,7 @@ export default {
       if (!this.followUserSwitches[idx]) {
         this.clusterer.removeMarkers(this.followMarkers);
         this.followMarkers = [];
+        this.followArticles = [];
         return;
       }
 
@@ -380,20 +508,29 @@ export default {
       }
 
       // TODO : idx에 해당하는 articles 얻어오기
-      getArticles(
+      getPublicArticles(
         _this.followUsers[idx].uid,
         (response) => {
           if (response.data.status) {
-            let followUserArticles = response.data.object;
+            this.followArticles = response.data.object;
             // 팔로우한 사람 게시글 받아와서 지도에 표시
             this.clusterer.removeMarkers(this.followMarkers);
-            let followImageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-            let followMarkerImage = new kakao.maps.MarkerImage(FOLLOW_IMAGE_SRC, followImageSize);
+            let followImageSize = new kakao.maps.Size(
+              MARKER_WIDTH,
+              MARKER_HEIGHT
+            );
+            let followMarkerImage = new kakao.maps.MarkerImage(
+              FOLLOW_IMAGE_SRC,
+              followImageSize
+            );
 
             this.followMarkers = [];
-            for (let i = 0; i < followUserArticles.length; ++i) {
+            for (let i = 0; i < this.followArticles.length; ++i) {
               let followMarker = new kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(followUserArticles[i].positionLat, followUserArticles[i].positionLng),
+                position: new window.kakao.maps.LatLng(
+                  this.followArticles[i].positionLat,
+                  this.followArticles[i].positionLng
+                ),
                 image: followMarkerImage,
               });
 
@@ -401,7 +538,10 @@ export default {
                 map: _this.map,
                 position: followMarker.getPosition(),
               });
-              let wrapDiv = _this.makeCustomizedOverlay(overlay, followUserArticles[i]);
+              let wrapDiv = _this.makeCustomizedOverlay(
+                overlay,
+                this.followArticles[i]
+              );
 
               overlay.setContent(wrapDiv);
 
@@ -543,12 +683,21 @@ export default {
       for (let i = 0; i < nowArticles.length; ++i) {
         let data = nowArticles[i];
         let imageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-        let markerImage = new kakao.maps.MarkerImage(PUBLIC_IMAGE_SRC, imageSize);
+        let markerImage = new kakao.maps.MarkerImage(
+          PUBLIC_IMAGE_SRC,
+          imageSize
+        );
         if (data.private) {
-          markerImage = new kakao.maps.MarkerImage(PRIVATE_IMAGE_SRC, imageSize);
+          markerImage = new kakao.maps.MarkerImage(
+            PRIVATE_IMAGE_SRC,
+            imageSize
+          );
         }
         let nowMarker = new kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
+          position: new window.kakao.maps.LatLng(
+            data.positionLat,
+            data.positionLng
+          ),
           image: markerImage,
         });
 
@@ -571,7 +720,36 @@ export default {
       }
 
       _this.clusterer.addMarkers(_this.kakaoMarkers);
-      this.getMyFavoriteMarkers();
+      if (
+        this.$route.query.jsonQueryData !== undefined &&
+        this.$route.query.jsonQueryData !== null
+      ) {
+        this.setHashtagMarkers();
+      }
+      if (this.isSameUser) {
+        this.getMyFavoriteMarkers();
+      }
+    },
+    setHashtagMarkers() {
+      let queryData = JSON.parse(this.$route.query.jsonQueryData);
+      let markers = [];
+      console.log(queryData, '쿼리');
+      for (let i = 0; i < this.fullHashtagNames.length; ++i) {
+        if (
+          queryData[i] &&
+          this.userHashtagNames.includes(this.fullHashtagNames[i])
+        ) {
+          this.userHashtagSwitches[
+            this.userHashtagMap.get(this.fullHashtagNames[i])
+          ] = true;
+          markers.push(this.kakaoMarkers[i]);
+        }
+      }
+      if (markers.length > 0) {
+        this.selectAllHashtagSwitch = false;
+        this.clusterer.removeMarkers(this.kakaoMarkers);
+        this.clusterer.addMarkers(markers);
+      }
     },
     makeCustomizedOverlay(overlay, data) {
       let _this = this;
@@ -664,8 +842,11 @@ export default {
   },
   data: () => {
     return {
+      fullHashtagNames: [],
+      favoriteArticles: [],
       favoriteMarkers: [],
       followMarkers: [],
+      followArticles: [],
       publicArticles: [],
       isShowFavorites: true,
       isSameUser: false,
