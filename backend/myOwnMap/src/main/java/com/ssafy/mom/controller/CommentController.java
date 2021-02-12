@@ -1,5 +1,6 @@
 package com.ssafy.mom.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -109,6 +110,7 @@ public class CommentController {
 		if (commentEntities.size() == 0) {
 			result.message = "댓글이 없습니다";
 			result.status = true;
+			result.object = new ArrayList<CommentDto> ();
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} // 있다면
 		else {
