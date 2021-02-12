@@ -8,14 +8,14 @@ function getComment(articleNo, success, fail) {
     .then(success)
     .catch(fail);
 }
-  
+
 function createComment(comment, success, fail) {
   instance
     .post(`/comments`, comment)
     .then(success)
     .catch(fail);
 }
-  
+
 function updateComment(comment, config, success, fail) {
   instance
     .put(`/comments`, comment, config)
@@ -23,11 +23,11 @@ function updateComment(comment, config, success, fail) {
     .catch(fail);
 }
 
-function deleteComment(commentNo, success, fail) {
+function deleteComment(commentNo, config, success, fail) {
   instance
-    .delete(`/comments/${commentNo}`)
+    .delete(`/comments/${commentNo}`, config)
     .then(success)
     .catch(fail);
 }
 
-export { getComment, deleteComment, createComment, updateComment, };
+export { getComment, deleteComment, createComment, updateComment };

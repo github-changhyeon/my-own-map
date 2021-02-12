@@ -94,7 +94,7 @@
       댓글 목록
       <Comment />
     </div> -->
-    <CommentList style="margin-bottom:50px;"/>
+    <CommentList style="margin-bottom:50px;" :articleNo="$route.params.articleNo" />
     <Navigation />
   </v-app>
 </template>
@@ -286,7 +286,7 @@ export default {
       this.$route.params.articleNo,
       (response) => {
         this.article = response.data.object;
-
+        // console.log(this.article, 'article detail');
         if (token !== null && token !== undefined && this.article.userDto.uid === uid) {
           this.isOwnArticle = true;
         }
