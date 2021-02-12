@@ -162,7 +162,7 @@
     <v-btn
       @click="goToFilteredDataList"
       style="position: fixed; bottom: 200px; z-index: 2"
-      >리스트 vue</v-btn
+      >리스트 view</v-btn
     >
 
     <v-row justify="end">
@@ -256,25 +256,29 @@ export default {
   },
   methods: {
     goToFilteredDataList() {
-      let filteredData = {
-        articles: {},
-        scrapArticles: {},
-        followArticles: {},
-      };
-      // let tempArticles = this.articles;
-      // if (!this.isSameUser) {
-      //   tempArticles = this.publicArticles;
-      // }
-      // for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
-      //   if (this.userHashtagSwitches[i]) {
-      //     filteredData.articles.push(tempArticles[i]);
-      //   }
-      // }
-      filteredData.articles = this.articles;
-      if (this.isShowFavorites) {
-        filteredData.scrapArticles = this.favoriteArticles;
+      let filteredData = [];
+
+      let paramArticles = this.articles;
+      if (!this.isSameUser) {
+        paramArticles = this.publicArticles;
       }
-      filteredData.followArticles = this.followArticles;
+      let currentArticles = this.getCurrentArticles(paramArticles);
+      for (let i = 0; i < currentArticles.length; ++i) {
+        filteredData.push(currentArticles[i]);
+      }
+      if (this.isShowFavorites) {
+        for (let i = 0; i < this.favoriteArticles.length; ++i) {
+          filteredData.push(this.favoriteArticles[i]);
+        }
+      }
+      for (let i = 0; i < this.followArticles.length; ++i) {
+        for (let i = 0; i < this.followArticles.length; ++i) {
+          if (filteredData.includes(this.followArticles[i])) {
+            continue;
+          }
+          filteredData.push(this.followArticles[i]);
+        }
+      }
       this.$router.push({
         name: constants.URL_TYPE.HOME.FILTEREDLIST,
         params: { filteredData: filteredData },
@@ -624,6 +628,9 @@ export default {
     },
 
     getCurrentMarkers(paramArticles) {
+      if (this.selectAllHashtagSwitch) {
+        return this.kakaoMarkers;
+      }
       let retMarkers = [];
       let currentOnHashtagNames = [];
       for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
@@ -631,6 +638,7 @@ export default {
           currentOnHashtagNames.push(this.userHashtagNames[i]);
         }
       }
+
       if (currentOnHashtagNames.length == 0) {
         return retMarkers;
       }
@@ -653,6 +661,42 @@ export default {
       }
 
       return retMarkers;
+    },
+
+    getCurrentArticles(paramArticles) {
+      if (this.selectAllHashtagSwitch) {
+        return paramArticles;
+      }
+      let retArticles = [];
+      let currentOnHashtagNames = [];
+      for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
+        if (this.userHashtagSwitches[i]) {
+          currentOnHashtagNames.push(this.userHashtagNames[i]);
+        }
+      }
+
+      if (currentOnHashtagNames.length == 0) {
+        return retArticles;
+      }
+
+      for (let i = 0; i < paramArticles.length; ++i) {
+        let isCurrentArticle = true;
+        let articleHashtagNames = [];
+        for (let j = 0; j < paramArticles[i].hashtags.length; ++j) {
+          articleHashtagNames.push(paramArticles[i].hashtags[j].hashtagName);
+        }
+        for (let j = 0; j < currentOnHashtagNames.length; ++j) {
+          if (!articleHashtagNames.includes(currentOnHashtagNames[j])) {
+            isCurrentArticle = false;
+            break;
+          }
+        }
+        if (isCurrentArticle) {
+          retArticles.push(paramArticles[i]);
+        }
+      }
+
+      return retArticles;
     },
 
     initMap() {
@@ -732,8 +776,8 @@ export default {
     },
     setHashtagMarkers() {
       let queryData = JSON.parse(this.$route.query.jsonQueryData);
-      let markers = [];
       console.log(queryData, '쿼리');
+      let cnt = 0;
       for (let i = 0; i < this.fullHashtagNames.length; ++i) {
         if (
           queryData[i] &&
@@ -742,14 +786,19 @@ export default {
           this.userHashtagSwitches[
             this.userHashtagMap.get(this.fullHashtagNames[i])
           ] = true;
-          markers.push(this.kakaoMarkers[i]);
+          cnt += 1;
         }
       }
-      if (markers.length > 0) {
-        this.selectAllHashtagSwitch = false;
-        this.clusterer.removeMarkers(this.kakaoMarkers);
-        this.clusterer.addMarkers(markers);
+      let paramArticles = this.articles;
+      if (!this.isSameUser) {
+        paramArticles = this.publicArticles;
       }
+      let currentMarkers = this.getCurrentMarkers(paramArticles);
+      if (cnt > 0) {
+        this.selectAllHashtagSwitch = false;
+      }
+      this.clusterer.removeMarkers(this.kakaoMarkers);
+      this.clusterer.addMarkers(currentMarkers);
     },
     makeCustomizedOverlay(overlay, data) {
       let _this = this;

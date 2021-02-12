@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <v-row>
+      <v-row v-if="articles.length > 0">
         <v-col v-for="(article, i) in articles" :key="i" cols="6">
           <v-card class="mx-auto" max-width="344">
             <v-img
@@ -61,7 +61,7 @@ import constants from '@/lib/constants.js';
 export default {
   name: 'ListView',
   created() {
-    this.articles = this.$route.params.filteredData.articles;
+    this.articles = this.$route.params.filteredData;
   },
   components: {
     // FollowNewsFeed,
