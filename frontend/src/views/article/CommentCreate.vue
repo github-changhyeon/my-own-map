@@ -15,13 +15,16 @@ export default {
   },
   data() {
     return {
-      content: '',
+      content: null,
     };
   },
   methods: {
     createComment() {
-      this.$emit('create-comment', this.content);
-      this.content = '';
+      if (this.content !== null) {
+        console.log(this.content, typeof this.content);
+        this.$emit('create-comment', this.content);
+        this.content = '';
+      }
     },
   },
 };

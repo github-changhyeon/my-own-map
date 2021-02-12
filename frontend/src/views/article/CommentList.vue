@@ -6,9 +6,10 @@
           <v-list-item v-for="(item, index) in items" :key="index">
             <v-list-item-avatar>
               <v-img :src="item.avatar"></v-img>
+              <!-- {{ item.userDto.username }} -->
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title v-html="item.content"></v-list-item-title>
+              <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
               <CommentCreate v-if="isModify[index]" :index="index" @create-comment="checkUpdateComment" />
             </v-list-item-content>
             <v-btn v-if="!isModify[index]" @click="checkModify(index)">수정</v-btn>
@@ -35,6 +36,7 @@ export default {
   data() {
     return {
       isModify: [],
+      commentDto: {},
       items: [
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -47,14 +49,14 @@ export default {
       ],
       comment: {
         uid: 0,
-        content: '',
+        content: null,
         articleNo: 0,
       },
     };
   },
   props: {
     index: Number,
-    articleNo: Number,
+    articleNo: [Number, String],
   },
   methods: {
     setToken: function() {
@@ -72,6 +74,7 @@ export default {
         (response) => {
           if (response.data.status) {
             this.items = response.data.object;
+            this.isModify = [];
             for (let i = 0; i < this.items.length; i++) {
               this.isModify.push(false);
             }
@@ -129,14 +132,18 @@ export default {
         document.form.submit();
       }
     },
-    checkUpdateComment(item) {
+    checkUpdateComment(content) {
       const config = this.setToken();
-      const comment = item;
+      // const comment = content;
+      this.commentDto.content = content;
+      // item.preventDefault();
       updateComment(
-        comment,
+        this.commentDto,
         config,
-        (response) => {
-          console.log(response);
+        () => {
+          console.log(this.commentDto, '수정후dto');
+
+          this.checkGetComment();
         },
         (error) => {
           console.log(error);
@@ -144,9 +151,8 @@ export default {
       );
     },
     checkModify(index) {
-      console.log(index);
-      this.isModify[index] = true;
-      console.log(this.isModify[index]);
+      this.isModify.splice(index, 1, true);
+      this.commentDto.commentNo = this.items[index].commentNo;
     },
   },
   created() {
