@@ -5,7 +5,7 @@
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserInfo :isSameUser="isSameUser" />
+      <UserInfo :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
       <TimeLine />
@@ -66,8 +66,9 @@ export default {
       tokenData: '',
       isSameUser: true,
       isOpen: '',
-
       uid: '',
+      followingList: [],
+      followerList: [],
     };
   },
   methods: {
@@ -86,13 +87,7 @@ export default {
       this.tokenData = jwt_decode(token);
       this.uid = this.$route.params.uid;
 
-      // 로그인된상태니까 -> 본인이 본인 페이지 올때는 토큰으로 내 정보를 찾아서 채워야되고
-      // (params가 비어있으면) -> jwt로 디코드해서 email axios요청
-
-      // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
-      // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
-
-      console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
+      // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
       if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
         console.log('본인입니다');
         this.isSameUser = true;
@@ -102,9 +97,31 @@ export default {
       } else {
         console.log('본인이아님');
         this.isSameUser = false;
-        console.log(this.$route.params);
         this.userDto = this.$route.params;
       }
+      findFollowing(
+        this.uid,
+        (response) => {
+          this.followingList = response.data.object;
+          // this.$emit('followingList', this.followingList);
+        },
+        (error) => {
+          console.log(error);
+          console.log('findfollowing');
+        }
+      );
+
+      findFollower(
+        this.uid,
+        (response) => {
+          this.followerList = response.data.object;
+          console.log(this.followerList);
+          // this.$emit('followerList', this.followerList);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
   created() {
@@ -118,19 +135,39 @@ export default {
     // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
     // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
 
-    console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
+    // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
     if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
       console.log('본인입니다');
       this.isSameUser = true;
-
-      // 팔로우버튼 자체를 on/off -> 팔로우버튼이 on -> isfollow -> +, -
-      // 토큰 디코드해서 찍힌 uid or email로 article controller에 게시글 요청. 받아서 Userinfo components에 props,emit
     } else {
       console.log('본인이아님');
       this.isSameUser = false;
       console.log(this.$route.params);
       this.userDto = this.$route.params;
     }
+    findFollowing(
+      this.uid,
+      (response) => {
+        this.followingList = response.data.object;
+        // this.$emit('followingList', this.followingList);
+      },
+      (error) => {
+        console.log(error);
+        console.log('findfollowing');
+      }
+    );
+
+    findFollower(
+      this.uid,
+      (response) => {
+        this.followerList = response.data.object;
+        console.log(this.followerList);
+        // this.$emit('followerList', this.followerList);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   },
 };
 </script>

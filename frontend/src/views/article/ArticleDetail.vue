@@ -83,22 +83,15 @@
             </li>
           </ul>
         </div>
-        <div class="commentbox">
-          <ul></ul>
-          <div>
-            <input class="comment-input-box" type="text" v-model.trim="content" @keypress.enter="createComment" />
-            <button variant="outline-primary" @click="createComment">댓글작성</button>
-          </div>
-        </div>
-      </div> -->
-      <!-- <div>
-        댓글 목록
-        <Comment />
-      </div> -->
-      <CommentList style="margin-bottom:50px;"/>
-      <Navigation />
-    </v-app>
-  </v-card>
+      </div>
+    </div> -->
+    <!-- <div>
+      댓글 목록
+      <Comment />
+    </div> -->
+    <CommentList style="margin-bottom:50px;" :articleNo="$route.params.articleNo" />
+    <Navigation />
+  </v-app>
 </template>
 
 <script>
@@ -288,7 +281,7 @@ export default {
       this.$route.params.articleNo,
       (response) => {
         this.article = response.data.object;
-
+        // console.log(this.article, 'article detail');
         if (token !== null && token !== undefined && this.article.userDto.uid === uid) {
           this.isOwnArticle = true;
         }
