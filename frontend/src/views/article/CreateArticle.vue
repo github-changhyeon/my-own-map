@@ -36,11 +36,13 @@
       <v-btn height="20" type="button" @click="onClickImageUpload">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
-      <v-carousel class="picture-size" v-if="imgs.length != 0">
-        <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
-          <button @click="removeImage()" class="deleteButton">X</button>
-        </v-carousel-item>
-      </v-carousel>
+      <div>
+        <v-carousel class="picture-size" v-if="imgs.length != 0">
+          <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
+            <button @click="removeImage()" class="deleteButton">X</button>
+          </v-carousel-item>
+        </v-carousel>
+      </div>
     </div>
     <br />
     <div>
