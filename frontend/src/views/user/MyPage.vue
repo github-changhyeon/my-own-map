@@ -5,7 +5,11 @@
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserInfo :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
+      <UserInfo
+        :isSameUser="isSameUser"
+        :followerList="followerList"
+        :followingList="followingList"
+      />
     </div>
     <!-- <div>
       <TimeLine />
@@ -21,7 +25,7 @@
     <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
-    <ChangeInfo />
+    <ChangeInfo :propsUid="uid" />
     <Navigation />
   </div>
 </template>
@@ -41,6 +45,7 @@ import ChangeInfo from '@/components/user/ChangeInfo.vue';
 // import FavoriteNewsFeed from '@/components/sns/FavoriteNewsFeed.vue';
 
 // import { getUserInfo } from '@/api/user.js';
+import { findFollower, findFollowing } from '@/api/user.js';
 // import axios from 'axios';
 
 // import Vue from 'vue';
