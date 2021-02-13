@@ -1,13 +1,17 @@
 package com.ssafy.mom.model;
+import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,30 +19,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity(name="userFollow")
+@Entity(name = "profileImage")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserFollow {
+public class ProfileImageDto{
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@ManyToOne
-	@JoinColumn(name = "uidFrom") // 외래키의 주인
-	private UserDto userFrom;
-	@ManyToOne
-	@JoinColumn(name = "uidTo")
-	private UserDto userTo;
+	private String profileImage; //프로필 파일 이름
 	
-	@Builder
-	public UserFollow(UserDto userFrom, UserDto userTo) {
-		super();
-		this.userFrom = userFrom;
-		this.userTo = userTo;
-	}
+	@OneToOne
+	@JoinColumn(name="uid")
+	private UserDto userDto;
 	
-	
+	@CreationTimestamp
+	private Timestamp createDate;
+	@UpdateTimestamp
+	private Timestamp updateDate;
 }

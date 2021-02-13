@@ -1,6 +1,6 @@
 package com.ssafy.mom.model;
 
-import java.sql.Timestamp;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -36,6 +38,9 @@ public class UserDto {
 	@CreationTimestamp
 	private LocalDateTime joinDate;
 	private String stateMsg;
+
+	@Transient
+	private String profileImagePath;
 
 
 	

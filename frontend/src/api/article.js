@@ -38,6 +38,28 @@ function getAllArticles(success, fail) {
     .catch(fail);
 }
 
+function getPublicArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/publicArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getPrivateArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/privateArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+function getFavoriteArticles(uid, success, fail) {
+  instance
+    .get(`/users/${uid}/favoriteArticles`)
+    .then(success)
+    .catch(fail);
+}
+
+
 function createArticle(article, success, fail) {
   // let userId = 1;
   multipartInstance
@@ -60,4 +82,4 @@ function updateArticle(article, success, fail) {
     .catch(fail);
 }
 
-export { getArticle, deleteArticle, getAllArticles, updateArticle, createArticle };
+export { getArticle, deleteArticle, getAllArticles, getPublicArticles, getPrivateArticles, getFavoriteArticles, updateArticle, createArticle };

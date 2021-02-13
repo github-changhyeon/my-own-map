@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import constants from '../lib/constants';
 import Main from '../views/home/Main.vue';
+import ListView from '../views/home/ListView.vue';
 import Login from '../views/user/Login.vue';
 import Agreement from '../views/user/Agreement';
 // Article
@@ -16,6 +17,7 @@ import Join from '@/views/user/Join';
 
 // SNS
 import NewsFeed from '@/views/sns/NewsFeed';
+import KakaoSharing from '@/components/sns/KakaoSharing';
 
 Vue.use(VueRouter);
 
@@ -25,6 +27,13 @@ const routes = [
     // name: 'Main',
     name: constants.URL_TYPE.HOME.MAIN,
     component: Main,
+    props: true,
+  },
+  {
+    path: '/listView',
+    // name: 'Main',
+    name: constants.URL_TYPE.HOME.FILTEREDLIST,
+    component: ListView,
     props: true,
   },
   // {
@@ -85,6 +94,12 @@ const routes = [
     path: '/newsfeed',
     name: constants.URL_TYPE.SNS.NEWSFEED,
     component: NewsFeed,
+    props: true,
+  },
+  {
+    path: '/share',
+    name: 'KakaoSharing',
+    component: KakaoSharing,
     props: true,
   },
 ];

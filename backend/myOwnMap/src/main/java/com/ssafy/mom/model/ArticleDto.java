@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -61,6 +62,9 @@ public class ArticleDto {
 	private ArrayList<HashtagDto> hashtags;
 	@Transient
 	private ArrayList<String> imagePaths;
+	
+	@Column(columnDefinition="tinyint(1) default 0")
+	private boolean isPrivate;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "uid") // 외래키의 주인

@@ -1,12 +1,20 @@
 package com.ssafy.mom.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,12 +25,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.mom.config.jwt.JwtServiceImpl;
 import com.ssafy.mom.dao.ArticleDao;
 import com.ssafy.mom.dao.ArticleHashtagDao;
 import com.ssafy.mom.dao.ImageDao;
+import com.ssafy.mom.dao.ProfileImageDao;
 import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.dao.UserHashtagDao;
 import com.ssafy.mom.email.EmailService;
@@ -31,6 +42,7 @@ import com.ssafy.mom.model.ArticleHashtag;
 import com.ssafy.mom.model.BasicResponse;
 import com.ssafy.mom.model.HashtagDto;
 import com.ssafy.mom.model.ImageDto;
+import com.ssafy.mom.model.ProfileImageDto;
 import com.ssafy.mom.model.UserDto;
 import com.ssafy.mom.model.UserHashtag;
 
@@ -55,6 +67,9 @@ public class UserController {
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 
+	@Value("${file.path}")
+	private String fileRealPath;
+
 	@Autowired
 	private ArticleDao articleDao;
 
@@ -76,12 +91,47 @@ public class UserController {
 	@Autowired
 	private UserHashtagDao userHashtagDao;
 
+	@Autowired
+	private ProfileImageDao profileImageDao;
+
+	// 나의 메인페이지
 	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
 	@GetMapping("/{uid}/recentArticles")
-	public ResponseEntity<BasicResponse> retrieveNewTenArticle(@PathVariable int uid) {
-		Optional<UserDto> userOpt = userDao.findByUid(uid);
-		// TODO: 작성 시간이 확립되면 진행
+	public ResponseEntity<BasicResponse> retrieveNewTenArticle(@PathVariable String uid) {
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
 		List<ArticleDto> articles = articleDao.findTop10ByUserDtoOrderByUpdateTimeDesc(userOpt.get());
+		for (int i = 0; i < articles.size(); ++i) {
+			List<ArticleHashtag> articleHashtags = articleHashtagDao.findAllByArticleDto(articles.get(i));
+			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
+			for (int j = 0; j < articleHashtags.size(); ++j) {
+				tmpHashtags.add(articleHashtags.get(j).getHashtagDto());
+			}
+
+			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
+//			articles.get(i).setUid(userOpt.get().getUid());
+			articles.get(i).setUserDto(userOpt.get());
+		}
+
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		result.object = articles;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	// ------------------공개/비공개 게시물!
+	@ApiOperation(value = "해당 유저의 공개된 최신 게시물 10개를 받아온다", response = List.class)
+	@GetMapping("/{uid}/recentPublicArticles")
+	public ResponseEntity<BasicResponse> retrieveNewTenPublicArticle(@PathVariable String uid) {
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
+		List<ArticleDto> articles = articleDao.findTop10ByUserDtoAndIsPrivateOrderByUpdateTimeDesc(userOpt.get(),
+				false);
 		for (int i = 0; i < articles.size(); ++i) {
 			List<ArticleHashtag> articleHashtags = articleHashtagDao.findAllByArticleDto(articles.get(i));
 			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
@@ -109,9 +159,9 @@ public class UserController {
 
 	@ApiOperation(value = "해당 유저의 해쉬태그를 모두 반환한다.", response = List.class)
 	@GetMapping("/{uid}/userHashtags")
-	public ResponseEntity<BasicResponse> retrieveHashtags(@PathVariable int uid) {
+	public ResponseEntity<BasicResponse> retrieveHashtags(@PathVariable String uid) {
 
-		Optional<UserDto> userOpt = userDao.findByUid(uid);
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
 		List<UserHashtag> list = userHashtagDao.findAllByUserDto(userOpt.get());
 
 		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
@@ -125,12 +175,33 @@ public class UserController {
 		result.object = hashtags;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	// 공개된 해쉬태그 만들기!!!!!
+	@ApiOperation(value = "해당 유저의 공개된 해쉬태그를 모두 반환한다.", response = List.class)
+	@GetMapping("/{uid}/userPublicHashtags")
+	public ResponseEntity<BasicResponse> retrievePublicHashtags(@PathVariable String uid) {
+		
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
+		List<UserHashtag> list = userHashtagDao.findAllByUserDtoAndPublicCntGreaterThan(userOpt.get(), 0);
+		
+		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
+		for (int i = 0; i < list.size(); i++) {
+			hashtags.add(list.get(i).getHashtagDto());
+		}
+		
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		result.object = hashtags;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 
+	// private + public -> 메인페이지에서 사용!
 	@ApiOperation(value = "해당 유저의 모든 게시글을 반환한다", response = List.class)
 	@GetMapping("/{uid}/articles")
-	public ResponseEntity<BasicResponse> retrieveArticles(@PathVariable int uid) {
+	public ResponseEntity<BasicResponse> retrieveArticles(@PathVariable String uid) {
 
-		Optional<UserDto> userOpt = userDao.findByUid(uid);
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
 		final BasicResponse result = new BasicResponse();
 		result.status = true;
 		result.message = "success";
@@ -159,6 +230,82 @@ public class UserController {
 
 	}
 
+	// 공개게시글만! -> 다른사람이 메인지도를 볼때!
+	@ApiOperation(value = "해당 유저의 모든 공개 게시글을 반환한다", response = List.class)
+	@GetMapping("/{uid}/publicArticles")
+	public ResponseEntity<BasicResponse> retrievePublicArticles(@PathVariable String uid) {
+
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
+		final BasicResponse result = new BasicResponse();
+		result.status = true;
+		result.message = "success";
+		List<ArticleDto> articles = articleDao.findAllByUserDtoAndIsPrivate(userOpt.get(), false);
+
+		for (int i = 0; i < articles.size(); ++i) {
+
+			List<ArticleHashtag> list = articleHashtagDao.findAllByArticleDto(articles.get(i));
+			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
+			for (int j = 0; j < list.size(); ++j) {
+				tmpHashtags.add(list.get(j).getHashtagDto());
+			}
+
+			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
+			articles.get(i).setUserDto(userOpt.get());
+		}
+		result.object = articles;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	// 비공개게시글만! -> 내 메인지도를 볼때!
+	@ApiOperation(value = "해당 유저의 모든 비공개 게시글을 반환한다", response = List.class)
+	@GetMapping("/{uid}/privateArticles")
+	public ResponseEntity<BasicResponse> retrievePrivateArticles(@PathVariable String uid
+//			, HttpServletRequest request
+	) {
+		final BasicResponse result = new BasicResponse();
+
+		// 요청하는 uid가 본인인지 확인
+//		int myUid = jwtService.getUserUid();
+//		if(uid != myUid) {
+//			result.status = false;
+//			result.message = "본인이 아닙니다";
+//			return new ResponseEntity<>(result, HttpStatus.OK);
+//		}
+		System.out.println("before");
+		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
+		System.out.println(uid + " " + userOpt.get() + "laksejfoashiefoaisehfoi");
+		result.status = true;
+		result.message = "success";
+		List<ArticleDto> articles = articleDao.findAllByUserDtoAndIsPrivate(userOpt.get(), true);
+//		List<ArticleDto> articles = articleDao.findAllByUserDto(userOpt.get());
+
+		for (int i = 0; i < articles.size(); ++i) {
+
+			List<ArticleHashtag> list = articleHashtagDao.findAllByArticleDto(articles.get(i));
+			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
+			for (int j = 0; j < list.size(); ++j) {
+				tmpHashtags.add(list.get(j).getHashtagDto());
+			}
+
+			articles.get(i).setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			articles.get(i).setImagePaths(tmpImagePaths);
+			articles.get(i).setUserDto(userOpt.get());
+		}
+		result.object = articles;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인")
 	public Object login(@RequestBody @ApiParam(value = "로그인 시 필요한 회원정보(아이디, 비밀번호).", required = true) UserDto user) {
@@ -169,7 +316,6 @@ public class UserController {
 		String email = user.getEmail();
 		String password = user.getPassword();
 		Optional<UserDto> userOpt = userDao.findUserByEmailAndPassword(email, password);
-		ResponseEntity response = null;
 
 		if (userOpt.isPresent()) {
 			String token = jwtService.create("uid", userOpt.get().getUid(), "access-token");// key, data, subject
@@ -177,15 +323,13 @@ public class UserController {
 			result.status = true;
 			result.message = SUCCESS;
 			result.object = token;
-			response = new ResponseEntity<>(result, HttpStatus.OK);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			// resultMap.put("message", "존재하지 않는 사용자입니다.");
 			result.status = false;
 			result.message = FAIL;
-			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
-
-		return response;
 	}
 
 	@GetMapping("/account/verify/{key}")
@@ -207,7 +351,7 @@ public class UserController {
 		final BasicResponse result = new BasicResponse();
 		System.out.println("user: " + user);
 		user.setRole("ROLE_USER");
-		user.setStateMsg("상태메시지를 입력해주세요");
+		user.setStateMsg("input stateMsg");
 		userDao.save(user);
 		result.object = user;
 		result.status = true;
@@ -247,9 +391,9 @@ public class UserController {
 
 	@GetMapping("/findByUid/{uid}")
 	@ApiOperation(value = "회원번호로 찾기")
-	public Object retrieveUserByUid(@PathVariable int uid) {
+	public Object retrieveUserByUid(@PathVariable String uid) {
 		final BasicResponse result = new BasicResponse();
-		Optional<UserDto> findUser = userDao.findByUid(uid);
+		Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
 
 		if (!findUser.isPresent()) {
 			result.status = false;
@@ -265,7 +409,9 @@ public class UserController {
 
 	@PutMapping
 	@ApiOperation(value = "회원정보 수정")
-	public Object updateUser(@RequestBody UserDto userDto, HttpServletRequest request) {
+	public Object updateUser(@RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart("user") UserDto userDto, HttpServletRequest request) {
+		System.out.println(file + " " + userDto + " " + request);
 		final BasicResponse result = new BasicResponse();
 		int uid = jwtService.getUserUid();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
@@ -276,10 +422,43 @@ public class UserController {
 			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		} else {
+			// -----프로필 사진 업로드----
+			// 파일이 들어왔다면
+			if (file != null) {
+				UUID uuid = UUID.randomUUID();
+				long systemTime = System.currentTimeMillis();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
+				String dTime = formatter.format(systemTime);
+
+				String uuidFilename = uuid + dTime + file.getOriginalFilename();
+
+				Path filePath = Paths.get(fileRealPath + "profileImages/" + uid + uuidFilename);
+
+				try {
+					Files.write(filePath, file.getBytes());
+				} catch (IOException e) {
+					result.message = "이미지를 저장하지 못했습니다.";
+					result.status = false;
+					e.printStackTrace();
+					return result;
+				}
+				System.out.println("hello");
+				ProfileImageDto tmpProfileImageDto = profileImageDao.findByUserDto(userDto);
+				ProfileImageDto profileImageDto = new ProfileImageDto();
+				profileImageDto.setUserDto(userDto);
+				profileImageDto.setProfileImage(uuidFilename);
+				if(tmpProfileImageDto != null) {
+					profileImageDto.setId(tmpProfileImageDto.getId());
+				}
+				profileImageDao.save(profileImageDto);
+				// -------------- 이미지 저장 end
+			}
+			// ---------------------
+			userDto.setUid(userOpt.get().getUid());
+			userDao.save(userDto);
 			result.status = true;
 			result.message = SUCCESS;
 			result.object = userDto;
-			userDao.save(userDto);
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 	}
