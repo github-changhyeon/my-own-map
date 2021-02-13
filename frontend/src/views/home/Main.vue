@@ -7,10 +7,15 @@
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right: 50px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px;  z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
+
+    <v-row justify="end">
+      <KakaoSharing :articles="articles" fab small light style="position: fixed; top: 150px; z-index: 2" />
+    </v-row>
+
     <v-row justify="center">
       <v-autocomplete
         v-model="selectedArticleTitles"

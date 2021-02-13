@@ -5,66 +5,56 @@
     <!-- <div v-if="!isCurrentMap"><SelectPosition :propsPositionObj="positionObj" /></div> -->
     <!-- <div v-if="isCurrentMap" id="currentMap" style="width:100%; height:350px"></div> -->
     <br />
+    <div></div>
+    <div class="center">
+      <v-text-field outlined type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다."> </v-text-field>
+    </div>
+    <div class="center">
+      <v-text-field outlined label="제목을 입력해 주세요." type="text" id="title" v-model="article.title"> </v-text-field>
+    </div>
+    <div class="center">
+      <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
+    </div>
+    <div class="center">
+      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택해 보세요." multiple chips>
+        <template v-slot:selection="data">
+          <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
+            <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+            {{ data.item }}
+          </v-chip>
+        </template>
+      </v-combobox>
+    </div>
 
-    <div class="center">
-      <label for="address"></label>
-      <input class="inputbox" type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다." />
-    </div>
     <br />
     <div class="center">
-      <label for="title"></label>
-      <input class="inputbox" type="text" id="title" v-model="article.title" placeholder="제목" />
-    </div>
-    <br />
-    <div class="center">
-      <label for="contents"></label>
-      <input class="inputbox" type="text" id="contents" v-model="article.contents" placeholder="설명" />
-    </div>
-    <br />
-    <div>
-      해쉬태그
       <br />
-      <br />
-      <v-col md="4" offset-md="4">
-        <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
-          <template v-slot:selection="data">
-            <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-              <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
-              {{ data.item }}
-            </v-chip>
-          </template>
-        </v-combobox>
-      </v-col>
-      <br />
-    </div>
-    <br />
-    <div class="inline">
-      이 장소의 사진
-      <br />
-      <br />
+      <span>사진을 추가해 볼까요? </span>
       <form encType="multipart/form-data">
         <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
       </form>
-      <button class="lefty picture-upload" type="button" @click="onClickImageUpload">
-        +
-      </button>
-      <v-carousel class="picture-size" v-if="imgs.length != 0">
-        <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
-          <button @click="removeImage()" class="deleteButton">X</button>
-        </v-carousel-item>
-      </v-carousel>
+      <v-btn height="20" type="button" @click="onClickImageUpload">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+      <div>
+        <v-carousel class="picture-size" v-if="imgs.length != 0">
+          <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
+            <button @click="removeImage()" class="deleteButton">X</button>
+          </v-carousel-item>
+        </v-carousel>
+      </div>
     </div>
     <br />
-    <v-checkbox id="privateToggle" v-model="article.private"></v-checkbox><label for="privateToggle">비공개글로 합니다</label>
     <div>
-      방문 정보 입력
-      <br />
       <DatePicker label="날짜를 입력해 주세요." @setDate="selectDate"> </DatePicker>
     </div>
     <div class="center">
-      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
+      <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" size="45"></v-rating>
     </div>
-    <div>
+    <div class="center">
+      <v-checkbox id="privateToggle" v-model="article.private" label="비공개 글로 합니다"></v-checkbox>
+    </div>
+    <div class="center">
       <button class="upload" @click="createPost()">등록</button>
     </div>
     <div style="height:100px"></div>
@@ -241,13 +231,6 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  /* width: 500px; */
-  width: 100vw;
-  min-height: 100vh;
-  margin: 0 auto;
-}
-
 .center {
   display: flex;
   justify-content: center;
@@ -259,10 +242,9 @@ export default {
 }
 
 .picture-size {
-  width: 480px;
-  height: 480px;
+  width: 240px;
   border: 1px solid black;
-  float: left;
+  float: center;
   margin-right: 10px;
 }
 
@@ -283,9 +265,9 @@ export default {
 }
 
 .picture-upload {
-  width: 40px;
-  height: 40px;
-  border: solid black 2px;
+  width: 50px;
+  height: 50px;
+  border: solid black 0.1px;
   border-radius: 5px;
   margin-bottom: 13px;
 }

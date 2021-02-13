@@ -5,7 +5,7 @@
         <v-container fluid fill-height class="loginOverlay">
           <v-layout flex align-center justify-center>
             <v-flex xs12 sm4 elevation-6>
-              <v-toolbar class="pt-5 blue darken-4">
+              <v-toolbar class="pt-5 darken-4" style="background-color:#FF70BC">
                 <v-toolbar-title class="white--text"><h4>MOM에 오신 것을 환영합니다.</h4></v-toolbar-title>
               </v-toolbar>
               <v-card>
@@ -70,7 +70,7 @@ export default {
 
           this.tokenData = jwt_decode(response.data.object);
           this.$router.replace({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.tokenData.uid } });
-          console.log(this.tokenData.uid, "이걸로 로그인합니다.....");
+          console.log(this.tokenData.uid, '이걸로 로그인합니다.....');
         },
         (error) => {
           console.log(error);
