@@ -18,11 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mom.config.jwt.JwtService;
 import com.ssafy.mom.dao.ArticleDao;
+import com.ssafy.mom.dao.ArticleHashtagDao;
 import com.ssafy.mom.dao.FavoriteDao;
+import com.ssafy.mom.dao.ImageDao;
 import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.model.ArticleDto;
+import com.ssafy.mom.model.ArticleHashtag;
 import com.ssafy.mom.model.BasicResponse;
-
+import com.ssafy.mom.model.HashtagDto;
+import com.ssafy.mom.model.ImageDto;
 import com.ssafy.mom.model.UserDto;
 import com.ssafy.mom.model.UserFavoriteDto;
 
@@ -56,6 +60,12 @@ public class FavoriteController {
 	
 	@Autowired
 	FavoriteDao favoriteDao;
+	
+	@Autowired
+	ImageDao imageDao;
+	
+	@Autowired
+	ArticleHashtagDao articleHashtagDao;
 
 	@GetMapping("/doFavorite/{articleNo}")
 	@ApiOperation(value = "찜하기, 찜 취소")
@@ -117,6 +127,19 @@ public class FavoriteController {
 		}
 		List<ArticleDto> articleEntites = new ArrayList<ArticleDto>();
 		for (int i = 0; i < FavoriteEntities.size(); i++) {
+			List<ArticleHashtag> list = articleHashtagDao.findAllByArticleDto(FavoriteEntities.get(i).getArticleDto());
+			ArrayList<HashtagDto> tmpHashtags = new ArrayList<>();
+			for (int j = 0; j < list.size(); ++j) {
+				tmpHashtags.add(list.get(j).getHashtagDto());
+			}
+
+			FavoriteEntities.get(i).getArticleDto().setHashtags(tmpHashtags);
+			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(FavoriteEntities.get(i).getArticleDto());
+			ArrayList<String> tmpImagePaths = new ArrayList<>();
+			for (int j = 0; j < tmpImages.size(); j++) {
+				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			}
+			FavoriteEntities.get(i).getArticleDto().setImagePaths(tmpImagePaths);
 			articleEntites.add(FavoriteEntities.get(i).getArticleDto());
 		}
 		result.status= true;

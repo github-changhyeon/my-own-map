@@ -62,6 +62,7 @@ export default {
   name: 'ListView',
   created() {
     this.articles = this.$route.params.filteredData;
+    console.log(this.articles);
   },
   components: {
     // FollowNewsFeed,

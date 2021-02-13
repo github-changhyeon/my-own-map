@@ -20,10 +20,27 @@
         <div>
           <!-- 사진 -->
           <v-carousel>
-            <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+            <v-carousel-item
+              v-for="(item, i) in items"
+              :key="i"
+              :src="item.src"
+              append
+              reverse-transition="fade-transition"
+              transition="fade-transition"
+              multiple="true"
+            ></v-carousel-item>
           </v-carousel>
         </div>
-        <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" half-increments length="5" readonly large> </v-rating>
+        <v-rating
+          v-model="this.article.evaluation"
+          background-color="orange lighten-3"
+          color="orange"
+          half-increments
+          length="5"
+          readonly
+          large
+        >
+        </v-rating>
         <!-- <div>
           <label for="title"><strong>작성자</strong> | </label>
           {{ this.$route.query.user }}
@@ -45,7 +62,9 @@
         <div>
           <!-- hashtags -->
           <label for="title"><strong>해쉬태그</strong> | </label>
-          <span v-for="(hashtag, idx) in article.hashtags" :key="idx"> #{{ hashtag.hashtagName }} </span>
+          <span v-for="(hashtag, idx) in article.hashtags" :key="idx">
+            #{{ hashtag.hashtagName }}
+          </span>
         </div>
         <div>
           <label for="title"><strong>작성일자</strong> | </label>
@@ -67,8 +86,18 @@
 
       <div class="buttons" v-if="isOwnArticle">
         <!-- <div class="buttons"  > -->
-        <button variant="danger"><a href="javascript:;" @click="checkDelete" class="btn" style="color: black">삭제</a></button>
-        <button variant="outline-primary"><a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a></button>
+        <button variant="danger">
+          <a
+            href="javascript:;"
+            @click="checkDelete"
+            class="btn"
+            style="color: black"
+            >삭제</a
+          >
+        </button>
+        <button variant="outline-primary">
+          <a href="javascript:;" @click="goToUpdateArticle" class="btn">수정</a>
+        </button>
         <v-btn @click="findRoute">카카오맵 길찾기</v-btn>
       </div>
       <hr class="line" />
@@ -85,13 +114,17 @@
         </div>
       </div>
     </div> -->
-    <!-- <div>
+      <!-- <div>
       댓글 목록
       <Comment />
     </div> -->
-    <CommentList style="margin-bottom:50px;" :articleNo="$route.params.articleNo" />
-    <Navigation />
-  </v-app>
+      <CommentList
+        style="margin-bottom:50px;"
+        :articleNo="$route.params.articleNo"
+      />
+      <Navigation />
+    </v-app>
+  </v-card>
 </template>
 
 <script>
@@ -170,7 +203,9 @@ export default {
     // },
 
     findRoute() {
-      window.open(`https://map.kakao.com/link/to/${this.$route.params.article.address},${this.$route.params.article.positionLat},${this.$route.params.article.positionLng}`);
+      window.open(
+        `https://map.kakao.com/link/to/${this.$route.params.article.address},${this.$route.params.article.positionLat},${this.$route.params.article.positionLng}`
+      );
     },
 
     goBack() {
@@ -196,7 +231,10 @@ export default {
           this.article.articleNo,
           () => {
             // 메인으로
-            this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.article.userDto.uid } });
+            this.$router.push({
+              name: constants.URL_TYPE.HOME.MAIN,
+              params: { uid: this.article.userDto.uid },
+            });
             // this.goToList();
           },
           (error) => {
@@ -282,11 +320,17 @@ export default {
       (response) => {
         this.article = response.data.object;
         // console.log(this.article, 'article detail');
-        if (token !== null && token !== undefined && this.article.userDto.uid === uid) {
+        if (
+          token !== null &&
+          token !== undefined &&
+          this.article.userDto.uid === uid
+        ) {
           this.isOwnArticle = true;
         }
         for (var i = 0; i < this.article.imagePaths.length; ++i) {
-          this.items.push({ src: '@/assets/upload/' + this.article.imagePaths[i] });
+          this.items.push({
+            src: '@/assets/upload/' + this.article.imagePaths[i],
+          });
         }
       },
       (error) => {
@@ -304,7 +348,6 @@ export default {
 <style scoped>
 .page {
   width: 800px;
-  
 }
 
 ul {
