@@ -2,7 +2,7 @@
   <div id="app">
     <v-app class="center">
       <main class="center" style="margin-top:50px; width:350px;">
-        <img class="logo" src="@/assets/MOM_Icon.png" alt="" />
+        <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
         <div class="titlebar">
           회원이 아니신가요?
           <router-link to="/join"><a href="">회원가입 하기</a></router-link>
@@ -18,7 +18,7 @@
           </div>
           <v-text-field style="padding-top:0px;" name="password" type="password" placeholder="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
           <v-layout justify-space-between>
-            <button @click="checkLogin" class="loginbar">로그인 하기</button>
+            <v-btn @click="checkLogin()" color="primary" height="50" class="loginbar">로그인 하기</v-btn>
           </v-layout>
           <!-- <NaverLogin /> -->
           <div class="findPassword">
@@ -59,6 +59,7 @@ export default {
   },
   methods: {
     checkLogin() {
+      console.log('아무거나');
       login(
         this.loginForm,
         (response) => {
