@@ -59,6 +59,7 @@ export default {
   },
   methods: {
     checkLogin() {
+      console.log('아무거나');
       login(
         this.loginForm,
         (response) => {
