@@ -11,16 +11,23 @@
       <input class="inputbox" type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다." />
     </div>
     <br />
-    <div class="center">
-      <label for="title"></label>
-      <input class="inputbox" type="text" id="title" v-model="article.title" placeholder="제목" />
-    </div>
+    <ValidationProvider rules="required" v-slot="{ errors }">
+      <div class="input-wrap">
+        <input v-model="user.nickname" id="nickname" placeholder="닉네임을 입력해주세요" type="text" />
+      </div>
+      <div>
+        <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
+      </div>
+    </ValidationProvider>
     <br />
-    <div class="center">
-      <label for="contents"></label>
-      <input class="inputbox" type="text" id="contents" v-model="article.contents" placeholder="설명" />
-    </div>
-    <br />
+    <ValidationProvider rules="email|required" v-slot="{ errors }">
+      <div class="input-wrap">
+        <input v-model="user.email" id="email" placeholder="이메일을 입력해주세요" type="text" />
+      </div>
+      <div>
+        <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
+      </div>
+    </ValidationProvider>
     <div>
       해쉬태그
       <br />
@@ -73,6 +80,8 @@
 </template>
 
 <script>
+import { ValidationProvider } from 'vee-validate';
+
 import SelectPosition from '@/components/map/SelectPosition.vue';
 import constants from '@/lib/constants';
 // import axios from 'axios';
@@ -91,6 +100,7 @@ export default {
     CreateArticleNav,
     DatePicker,
     Navigation,
+    ValidationProvider,
   },
   data() {
     return {
