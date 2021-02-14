@@ -11,4 +11,5 @@ new Vue({
   router,
   vuetify,
   render: (h) => h(App),
+  async beforeCreate() {},
 }).$mount('#app');

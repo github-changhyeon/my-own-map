@@ -46,6 +46,13 @@ import ChangeInfo from '@/components/user/ChangeInfo.vue';
 
 // import { getUserInfo } from '@/api/user.js';
 import { findFollower, findFollowing } from '@/api/user.js';
+import { deleteFcmToken } from '@/api/fcm.js';
+import {
+  deleteToken,
+  // receiveMessage,
+  // requestPermission,
+  // getToken,
+} from '@/api/notification.js';
 // import axios from 'axios';
 
 // import Vue from 'vue';
@@ -79,6 +86,22 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem('jwt');
+      deleteToken(() => {
+        console.log('token delete');
+        deleteFcmToken(
+          (success) => {
+            if (success.data.status) {
+              console.log('토큰 delete 성공');
+            } else {
+              console.log('fcm 토큰 delete 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('서버 에러');
+          }
+        );
+      });
       // location.reload();
       // this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
       // this.$router.go()
