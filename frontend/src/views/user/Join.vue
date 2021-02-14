@@ -2,7 +2,7 @@
   <div id="app">
     <v-app class="center">
       <main class="center" style="margin-top:50px; width:350px;">
-        <img class="logo" src="@/assets/MOM_Icon.png" alt="" />
+        <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
         <div class="titlebar">
           이미 회원이신가요?
           <router-link to="/"><a href="">로그인하기</a></router-link>
@@ -25,7 +25,7 @@
             닉네임
           </div>
           <v-text-field style="padding-top:0px;" placeholder="닉네임을 입력해 주세요." v-model="joinForm.username"></v-text-field>
-          <button class="joinbar" @click="joinUser">가입하기</button>
+          <v-btn class="joinbar" color="primary" height="50" @click="joinUser()">가입하기</v-btn>
         </v-form>
       </main>
     </v-app>
