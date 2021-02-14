@@ -30,4 +30,8 @@ public class NotificationService {
 		fcmService.send(notificationRequest);
 		
 	}
+
+	public void deleteToken(int userUid) {
+		tokenMap.remove(userUid);		
+	}
 }
