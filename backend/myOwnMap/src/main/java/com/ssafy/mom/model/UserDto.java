@@ -39,6 +39,7 @@ public class UserDto {
 	private LocalDateTime joinDate;
 	private String stateMsg;
 	private boolean isLogin;
+	private int notificationCheck;
 
 	@Transient
 	private String profileImagePath;
