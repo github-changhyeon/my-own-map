@@ -25,32 +25,34 @@
       <v-icon>mdi-account</v-icon>
     </v-btn>
     </router-link> -->
-    <router-link :to="`/main/${this.uid}`" style="textDecoration:none;">
-      <v-btn style="background-color:white; margin-top:8px;">
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
-    </router-link>
-    <router-link to="/newsfeed" style="textDecoration:none;">
-      <v-btn style="background-color:white; margin-top:8px;">
-        <v-icon>mdi-newspaper-variant</v-icon>
-      </v-btn>
-    </router-link>
-    <router-link :to="`/articles/create`" style="textDecoration:none;">
-      <v-btn style="background-color:white; margin-top:8px;">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </router-link>
-    <router-link :to="`/articles/create`" style="textDecoration:none;">
-      <v-btn style="background-color:white; margin-top:8px;">
-        <img width="40px" height="44px" src="@/assets/MOM_Icon.png" />
-      </v-btn>
-    </router-link>
+    <!-- 버튼을 router link로 해보자! -->
 
-    <router-link :to="`/users/${this.uid}`" style="textDecoration:none;">
-      <v-btn style="background-color:white; margin-top:8px;">
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
-    </router-link>
+    <!-- <router-link :to="`/main/${this.uid}`" style="textDecoration:none;"> -->
+    <v-btn :to="`/main/${this.uid}`" @click="one" replace style="background-color:white; margin-top:8px;">
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
+    <!-- </router-link> -->
+    <!-- <router-link to="/newsfeed" style="textDecoration:none;"> -->
+    <v-btn to="/newsfeed" @click="two" replace style="background-color:white; margin-top:8px;">
+      <v-icon>mdi-newspaper-variant</v-icon>
+    </v-btn>
+    <!-- </router-link> -->
+    <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
+    <v-btn :to="`/articles/create`" @click="three" replace style="background-color:white; margin-top:8px;">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <!-- </router-link> -->
+    <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
+    <v-btn :to="`/articles/create`" @click="four" replace style="background-color:white; margin-top:8px;">
+      <img width="40px" height="44px" src="@/assets/MOM_Icon.png" />
+    </v-btn>
+    <!-- </router-link> -->
+
+    <!-- <router-link :to="`/users/${this.uid}`" style="textDecoration:none;"> -->
+    <v-btn :to="`/users/${this.uid}`" @click="five" replace style="background-color:white; margin-top:8px;">
+      <v-icon>mdi-account</v-icon>
+    </v-btn>
+    <!-- </router-link> -->
   </v-bottom-navigation>
 </template>
 
@@ -58,10 +60,33 @@
 import jwt_decode from 'jwt-decode';
 export default {
   data: () => ({
-    value: 1,
+    value: 3,
     uid: 0,
+    isSelected: false,
     // uid:jwt_decode(localStorage.getItem('jwt')),
   }),
+  watch: {
+    // 'window.location.pathname': function() {
+    // console.log(window.location.pathname, '패쓰네임쓰');
+    // let nowLocation = window.location.pathname.split('/');
+    // switch (nowLocation) {
+    //   case 'main':
+    //     this.value = 0;
+    //     break;
+    //   case 'newsfeed':
+    //     this.value = 1;
+    //     break;
+    //   case 'article':
+    //     this.value = 3;
+    //     break;
+    //   case 'user':
+    //     this.value = 5;
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // },
+  },
   methods: {
     // goToNewsFeed() {
     // },
@@ -71,6 +96,21 @@ export default {
     // const token = localStorage.getItem('jwt');
     // this.uid = jwt_decode(token).uid;
     // }
+    // one() {
+    //   console.log('one', window.location.pathname);
+    // },
+    // two() {
+    //   console.log('two', window.location.pathname);
+    // },
+    // three() {
+    //   console.log('three', window.location.pathname);
+    // },
+    // four() {
+    //   console.log('four', window.location.pathname);
+    // },
+    // five() {
+    //   console.log('five', window.location.pathname);
+    // },
   },
   created() {
     const token = localStorage.getItem('jwt');

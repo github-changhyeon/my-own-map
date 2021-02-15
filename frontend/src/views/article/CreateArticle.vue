@@ -9,8 +9,15 @@
     <div class="center">
       <v-text-field outlined type="text" id="address" disabled v-model="article.address" placeholder="주소는 자동입력됩니다."> </v-text-field>
     </div>
+    <div class="center">
+      <v-text-field outlined label="제목을 입력해 주세요." type="text" id="title" v-model="article.title"> </v-text-field>
+    </div>
+    <div class="center">
+      <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
+    </div>
+
     <br />
-    <ValidationProvider rules="required" v-slot="{ errors }">
+    <!-- <ValidationProvider rules="required" v-slot="{ errors }">
       <div class="input-wrap">
         <input v-model="user.nickname" id="nickname" placeholder="닉네임을 입력해주세요" type="text" />
       </div>
@@ -26,7 +33,7 @@
       <div>
         <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
       </div>
-    </ValidationProvider>
+    </ValidationProvider> -->
     <div>
       해쉬태그
       <br />
@@ -35,7 +42,7 @@
         <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
           <template v-slot:selection="data">
             <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-              <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+              <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
               {{ data.item }}
             </v-chip>
           </template>
@@ -81,7 +88,7 @@
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate';
 
 import SelectPosition from '@/components/map/SelectPosition.vue';
 import constants from '@/lib/constants';
@@ -101,7 +108,7 @@ export default {
     CreateArticleNav,
     DatePicker,
     Navigation,
-    ValidationProvider,
+    // ValidationProvider,
   },
   data() {
     return {
