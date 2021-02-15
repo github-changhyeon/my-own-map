@@ -1,11 +1,11 @@
 <template>
   <v-card>
     <v-card-title style="height:150px;">
-      <v-text-field v-model="content" outlined label="댓글 작성하기" @keypress.enter="createComment" hide-details>
+      <v-textarea @keydown.enter.exact="createComment" @keydown.enter.shift.exact="newline" auto-grow rows="1" v-model="content" outlined label="댓글 작성하기" hide-details>
         <template v-slot:append>
           <v-btn depressed tile color="primary" class="createbutton" @click="createComment">작성</v-btn>
         </template>
-      </v-text-field>
+      </v-textarea>
     </v-card-title>
   </v-card>
 </template>
@@ -15,6 +15,7 @@ export default {
   name: 'CommentCreate',
   props: {
     // index: Number,
+    updateContent: String,
   },
   data() {
     return {
@@ -23,12 +24,17 @@ export default {
   },
   methods: {
     createComment() {
-      if (this.content !== null) {
-        console.log(this.content, typeof this.content);
+      if (this.content !== null && this.content !== undefined) {
         this.$emit('create-comment', this.content);
         this.content = '';
       }
     },
+    newline() {
+      this.content = `${this.content}\n`;
+    },
+  },
+  created() {
+    this.content = this.updateContent;
   },
 };
 </script>

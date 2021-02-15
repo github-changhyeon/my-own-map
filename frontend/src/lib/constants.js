@@ -13,6 +13,7 @@ export default {
       JOIN: 'join',
       INFO: 'info',
       MYPAGE: 'mypage',
+      HISTORY: 'history',
     },
     HOME: {
       MAIN: 'main',
