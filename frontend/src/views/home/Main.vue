@@ -110,22 +110,19 @@
 
     <!-- </div> -->
 
-    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 200px; z-index: 2">리스트 view</v-btn>
+    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 200px; z-index: 2" depressed><v-icon>mdi-view-list</v-icon></v-btn>
 
     <Navigation />
   </div>
 </template>
 
 <script>
-// import constants from '../../lib/constants';
-// import { login } from '@/api/user.js';
 import { getArticles, getUserHashtags, getUserPublicHashtags, getPublicArticles, myFavorite } from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
 import KakaoSharing from '@/components/sns/KakaoSharing.vue';
-// import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 // const fullStarHtml = '<button type="button" tabindex="-1" aria-label="Rating 1 of 5" class="v-icon notranslate v-icon--link mdi mdi-star theme--light orange--text" style="font-size: 20px"></button>';

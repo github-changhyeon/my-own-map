@@ -19,7 +19,7 @@
               <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-camera" @change="changeProfileFunc"></v-file-input>
             </v-list-item-action>
             <v-list-item-content>
-              <v-text-field label="Nickname" placeholder="Placeholder" v-model="userDto.username"></v-text-field>
+              <v-text-field label="닉네임" placeholder="Placeholder" v-model="userDto.username"></v-text-field>
             </v-list-item-content>
           </v-list-item>
 
@@ -30,7 +30,7 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                <v-text-field label="Email" placeholder="Placeholder" v-model="userDto.email" disabled></v-text-field>
+                <v-text-field label="이메일" placeholder="Placeholder" v-model="userDto.email" disabled></v-text-field>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -41,7 +41,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Password" placeholder="Placeholder" v-model="userDto.password" disabled type="password"></v-text-field>
+              <v-text-field label="비밀번호" placeholder="Placeholder" v-model="userDto.password" disabled type="password"></v-text-field>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -55,7 +55,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Change password" placeholder="Placeholder" v-model="userDto.password" type="password"></v-text-field>
+              <v-text-field label="새 비밀번호" placeholder="새 비밀번호를 입력해 주세요" v-model="userDto.password" type="password"></v-text-field>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -69,7 +69,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Confirm password" placeholder="Placeholder" v-model="passwordConfirm" type="password"></v-text-field>
+              <v-text-field label="새 비밀번호 확인" placeholder="새 비밀번호를 입력해 주세요" v-model="passwordConfirm" type="password"></v-text-field>
             </v-list-item-content>
           </v-list-item>
 
