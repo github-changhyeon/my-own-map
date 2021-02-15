@@ -28,7 +28,13 @@
         @change="clickSearchTitleBar"
         label="제목을 검색해주세요"
         style="position: fixed; top: 10px; z-index: 2"
-      ></v-autocomplete>
+      >
+        <template slot="no-data">
+          <div class="center ml-2" style="font-size:0.8em">
+            검색 후보가 존재하지 않아요 :(
+          </div>
+        </template>
+      </v-autocomplete>
     </v-row>
 
     <v-navigation-drawer v-model="hashtagDrawer" absolute right temporary>

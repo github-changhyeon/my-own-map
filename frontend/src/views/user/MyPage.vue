@@ -1,11 +1,12 @@
 <template>
   <div>
-    <div style="float:right">
-      <!-- {{ userDto }} -->
+    <div style="text-align:right;">
+      OO 님
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserInfo :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
+      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUid="uid" />
+      <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
       <TimeLine />
@@ -21,7 +22,8 @@
     <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
-    <ChangeInfo :propsUid="uid" />
+    <router-link to="/changeinfo" class="changeInfobutton"><v-icon v-if="isSameUser">mdi-cog</v-icon></router-link>
+    <!-- <ChangeInfo :propsUid="uid" /> -->
     <Navigation />
   </div>
 </template>
@@ -33,7 +35,8 @@ import jwt_decode from 'jwt-decode';
 import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
-import ChangeInfo from '@/components/user/ChangeInfo.vue';
+// import ChangeInfo from '@/components/user/ChangeInfo.vue';
+import UserPicture from '@/components/user/UserPicture.vue';
 
 // //NewsFeed
 // import PublicNewsFeed from '@/components/sns/PublicNewsFeed.vue';
@@ -65,7 +68,8 @@ export default {
     // PublicNewsFeed,
     // PrivateNewsFeed,
     // FavoriteNewsFeed,
-    ChangeInfo,
+    // ChangeInfo,
+    UserPicture,
   },
   data() {
     return {
@@ -73,7 +77,7 @@ export default {
       userDto: {},
       tokenData: '',
       isSameUser: true,
-      isOpen: '',
+      isOpen: 0,
       uid: '',
       followingList: [],
       followerList: [],
@@ -192,4 +196,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.changeInfobutton {
+  float: right;
+  margin-bottom: 70px;
+  margin-right: 20px;
+  text-decoration: none;
+}
+</style>
