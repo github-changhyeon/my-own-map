@@ -23,7 +23,7 @@
               </v-list-item-avatar>
               <v-list-item-content v-if="history.state === 'FOLLOW'">
                 <div>
-                  <button @click="goToUserPage">
+                  <button @click="goToUserPage(history.userFrom.uid)">
                     {{ history.userFrom.username }}
                   </button>
                   님이 당신을 팔로우합니다.
@@ -44,11 +44,13 @@
               </v-list-item-content>
               <v-list-item-content v-if="history.state === 'COMMENT'">
                 <div>
-                  <button @click="goToUserPage">
+                  <button @click="goToUserPage(history.userFrom.uid)">
                     {{ history.userFrom.username }}
                   </button>
                   님이
-                  <button @click="goToArticleDetail">
+                  <button
+                    @click="goToArticleDetail(history.articleDto.articleNo)"
+                  >
                     {{ history.articleDto.articleNo }}번 게시글</button
                   >에 댓글을 달았습니다.
                 </div>
@@ -58,6 +60,7 @@
         </v-list-group>
       </v-list>
     </v-card>
+    <Navigation />
   </div>
 </template>
 
@@ -65,10 +68,13 @@
 import jwt_decode from 'jwt-decode';
 import { setZero, getHistory } from '@/api/fcm.js';
 import constants from '@/lib/constants.js';
+import Navigation from '@/components/Navigation.vue';
 
 export default {
   name: 'History',
-  components: {},
+  components: {
+    Navigation,
+  },
   props: [],
   computed: {},
   watch: {},
@@ -95,13 +101,15 @@ export default {
         (success) => {
           if (success.data.status) {
             let tempHistories = success.data.object;
+            this.histories = [];
+            console.log(tempHistories, '히스토리즈');
             if (tempHistories.length > 0) {
               let tempArr = new Array();
               tempArr.push(tempHistories[0]);
               for (let i = 1; i < tempHistories.length; ++i) {
                 if (
                   tempHistories[i].regiTime.substring(0, 10) !==
-                  tempArr[0].regiTime.subString(0, 10)
+                  tempArr[0].regiTime.substring(0, 10)
                 ) {
                   this.histories.push(tempArr);
                   tempArr = new Array();
@@ -127,6 +135,7 @@ export default {
   },
   methods: {
     goToUserPage(uid) {
+      alert(uid);
       this.$router.push({
         name: constants.URL_TYPE.USER.MYPAGE,
         params: { uid: uid },

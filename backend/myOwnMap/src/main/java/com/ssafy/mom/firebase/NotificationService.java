@@ -23,11 +23,13 @@ public class NotificationService {
  
     public void register(final int userId, final String token) {
             tokenMap.put(userId, token);
-           
+    		System.out.println(tokenMap.get(userId) + "풋토큰");
+
     }
 
 	public String getToken(int receiverUid) {
 		
+		System.out.println(tokenMap.get(receiverUid) + "겟토큰");
 		return tokenMap.get(receiverUid);
 	}
 

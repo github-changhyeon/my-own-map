@@ -156,6 +156,7 @@ export default {
             uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'FOLLOW',
           };
+
           notifyAction(
             body,
             (success) => {

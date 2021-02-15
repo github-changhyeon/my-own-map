@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import jwt_decode from 'jwt-decode';
 import { doFavorite, isFavorite } from '@/api/user.js';
 import { notifyAction } from '@/api/fcm.js';
 export default {
@@ -42,8 +43,9 @@ export default {
           console.log(response, '좋아요');
           this.isFavorited = !this.isFavorited;
           let body = {
-            uid: this.article.userDto.uid,
-            // uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            // uid: this.article.userDto.uid,
+            articleNo: this.article.articleNo,
+            uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'LIKE',
           };
           notifyAction(

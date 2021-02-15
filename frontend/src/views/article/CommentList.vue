@@ -124,6 +124,7 @@ export default {
           let body = {
             // uid: this.propsUid,
             uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            articleNo: this.articleNo,
             message: 'COMMENT',
           };
           notifyAction(

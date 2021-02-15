@@ -89,7 +89,7 @@ public class NotificationApiController {
 			result.message="/fcm/history : 유저가 없어";
 			return new ResponseEntity<>(result,HttpStatus.OK);
 		}
-		List<History> historyList = historyDao.findAllByUserTo(user.get());
+		List<History> historyList = historyDao.findAllByUserToOrderByRegiTimeDesc(user.get());
 		System.out.println(historyList.toString()+" /fcm/history-리스트 잘 가져옴?");
 		result.status = true;
 		result.message = "토큰 생성완료";
@@ -97,7 +97,7 @@ public class NotificationApiController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/makeZero")
+	@PostMapping("/makeZero")
 	public Object makeZero(HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		int myUid = jwtService.getUserUid();
@@ -118,6 +118,7 @@ public class NotificationApiController {
 	@PostMapping("/push")
 	private Object createReceiveNotification(@RequestBody Map<String, String> mapDto, HttpServletRequest request)
 			throws InterruptedException, ExecutionException {
+		System.out.println(mapDto.toString());
 		final BasicResponse result = new BasicResponse();
 		int receiverUid = Integer.parseInt(mapDto.get("uid"));
 		int myUid = jwtService.getUserUid();
@@ -127,18 +128,19 @@ public class NotificationApiController {
 		History history;
 		
 		// 팔로우
-		if (message == "FOLLOW") {
+		if ("FOLLOW".equals(message)) {
 			Optional<UserFollow> userFollow = userFollowDao.findByUserFromAndUserTo(sender.get(), receiver.get());
 			// 팔로우중이라면
-			if (userFollow.isPresent()) {
+			if (!userFollow.isPresent()) {
 				// 취소푸쉬 xx
 				result.status = false;
 				result.message = "이미 팔로우 중이라 팔로우취소가 되니 푸쉬알림x.";
 				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
 			
-			sendPush(message, sender.get(), receiver.get());
-			// 히스토리저장
+			if (receiver.get().isLogin()) {
+				sendPush(message, sender.get(), receiver.get());
+			}			// 히스토리저장
 			history = History.builder()
 					.userFrom(sender.get())
 					.userTo(receiver.get())
@@ -150,7 +152,7 @@ public class NotificationApiController {
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		// 댓글
-		else if (message == "COMMENT") {
+		else if ("COMMENT".equals(message)) {
 			//해당 댓글의 게시글 찾기
 			int articleNo = Integer.parseInt(mapDto.get("articleNo"));
 			Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
@@ -179,20 +181,24 @@ public class NotificationApiController {
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		// 찜하기
-		else if (message == "LIKE") {
+		else if ("LIKE".equals(message)) {
 			int articleNo = Integer.parseInt(mapDto.get("articleNo"));
 			Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
 			Optional<UserFavoriteDto> isFavorite = favoriteDao.findByUserDtoAndArticleDto(sender.get(), article.get());
 			// 찜한상태라면
-			if (isFavorite.isPresent()) {
+			if(isFavorite.isPresent()) {
+				System.out.println();
+			}
+			if (!isFavorite.isPresent()) {
 				// 취소푸쉬는 xx
 				result.status = false;
 				result.message = "이미 찜하기 중이라 찜하기취소가 되니 푸쉬알림x.";
 				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
 
-			sendPush(message, sender.get(), receiver.get());
-			// 히스토리저장
+			if (receiver.get().isLogin()) {
+				sendPush(message, sender.get(), receiver.get());
+			}			// 히스토리저장
 			history = History.builder()
 					.userFrom(sender.get())
 					.userTo(receiver.get())
@@ -235,17 +241,17 @@ public class NotificationApiController {
 		userDao.save(user);
 		
 		//message 조건 처리
-		if (message == "FOLLOW") {			
+		if ("FOLLOW".equals(message)) {			
 			NotificationRequest notificationRequest = NotificationRequest.builder().title("Follow")
 					.token(notificationService.getToken(receiver.getUid()))
 					.message(NotificationType.FOLLOW_RECEIVED.generateNotificationMessage(sender, receiver)).build();			
 			notificationService.sendNotification(notificationRequest);
-		} else if (message == "LIKE") {
+		} else if ("LIKE".equals(message)) {
 			NotificationRequest notificationRequest = NotificationRequest.builder().title("LIKE")
 					.token(notificationService.getToken(receiver.getUid()))
 					.message(NotificationType.LIKE_RECEIVED.generateNotificationMessage(sender, receiver)).build();
 			notificationService.sendNotification(notificationRequest);
-		} else if (message == "COMMENT") {
+		} else if ("COMMENT".equals(message)) {
 			NotificationRequest notificationRequest = NotificationRequest.builder().title("COMMENT")
 					.token(notificationService.getToken(receiver.getUid()))
 					.message(NotificationType.COMMENT_RECEIVED.generateNotificationMessage(sender, receiver)).build();

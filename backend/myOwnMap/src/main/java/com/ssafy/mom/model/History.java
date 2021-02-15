@@ -34,11 +34,11 @@ public class History {
 	private int historyNo;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "uid") // 외래키의 주인
+	@JoinColumn(name = "uidFrom") // 외래키의 주인
 	private UserDto userFrom;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "uid") // 외래키의 주인
+	@JoinColumn(name = "uidTo") // 외래키의 주인
 	private UserDto userTo;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
