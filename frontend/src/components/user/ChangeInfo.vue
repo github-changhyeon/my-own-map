@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-row justify="center" style="margin-top:100px;">
     <v-col cols="12" sm="8">
       <v-card>
         <v-card-title class="secondary darken-1">
@@ -10,13 +10,16 @@
         <v-divider inset></v-divider>
         <v-list>
           <v-list-item>
-            <v-list-item-action style="margin-right: 10px">
+            <!-- <v-list-item-action style="margin-right: 10px">
               <v-avatar>
                 <img :src="profileImageUrl" />
               </v-avatar>
             </v-list-item-action>
             <v-list-item-action style="margin-right: 10px">
               <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-account" @change="changeProfileFunc"></v-file-input>
+            </v-list-item-action> -->
+            <v-list-item-action style="margin-top:0px;">
+              <v-icon>mdi-account</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-text-field label="닉네임" placeholder="닉네임을 입력해 주세요" v-model="userDto.username"></v-text-field>
@@ -48,7 +51,7 @@
           </v-list-item>
 
           <v-list-item v-if="!isChangePassword">
-            <v-list-item-action>
+            <v-list-item-action style="margin-top:0px;">
               <v-icon>mdi-lock-outline</v-icon>
             </v-list-item-action>
 
@@ -108,15 +111,19 @@
 <script>
 import { getUserInfo, deleteUser, updateUser } from '@/api/user.js';
 import constants from '@/lib/constants.js';
+import jwt_decode from 'jwt-decode';
 
 export default {
-  name: 'Navigation',
+  name: 'ChangeInfo',
   components: {},
   props: ['propsUid'],
   computed: {},
   watch: {},
   created() {
-    this.uid = this.propsUid;
+    const token = localStorage.getItem('jwt');
+    // this.tokenData = jwt_decode(token);
+    console.log(jwt_decode(token));
+    this.uid = jwt_decode(token).uid;
     getUserInfo(
       this.uid,
       (response) => {
@@ -134,10 +141,10 @@ export default {
     );
   },
   methods: {
-    changeProfileFunc(e) {
-      console.log(e);
-      this.profileImageUrl = URL.createObjectURL(this.profileImage);
-    },
+    // changeProfileFunc(e) {
+    //   console.log(e);
+    //   this.profileImageUrl = URL.createObjectURL(this.profileImage);
+    // },
     changePasswordFunc() {
       this.userDto.password = '';
       this.isChangePassword = true;

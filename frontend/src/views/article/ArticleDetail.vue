@@ -276,6 +276,7 @@ ul {
   margin: 0 auto;
   /* text-align: center; */
 }
+
 .content {
   width: 45%;
 }
