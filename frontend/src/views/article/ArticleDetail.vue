@@ -59,8 +59,11 @@
         <v-btn fab small @click="goToUpdateArticle" variant="outline-primary" class="updatebutton">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
+        <v-btn fab small @click="findRoute" style="margin-right:10px;">
+          <v-icon>mdi-map</v-icon>
+        </v-btn>
       </div>
-      <div class="buttons">
+      <div class="buttons" v-if="!isOwnArticle">
         <v-btn fab small @click="findRoute" style="margin-right:10px;">
           <v-icon>mdi-map</v-icon>
         </v-btn>
@@ -123,18 +126,18 @@ export default {
         imagePaths: null,
       },
       items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-        },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+        // },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+        // },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+        // },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+        // },
       ],
     };
   },
