@@ -21,13 +21,13 @@
             <b>{{ article.title }}</b>
           </span>
         </div>
-        <div>
-          <v-carousel class="image">
+        <div style="text-align: center; max-width:500px; width: 100%">
+          <v-carousel>
             <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
           </v-carousel>
-        </div>
-        <div>
-          <v-rating style="margin-left:50px;" v-model="this.article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" readonly large> </v-rating>
+          <div>
+            <v-rating v-model="this.article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" readonly large> </v-rating>
+          </div>
         </div>
         <div style="margin-top:10px;">
           <!-- hashtags -->
@@ -271,8 +271,10 @@ ul {
 }
 
 .total-contents {
-  width: 500px;
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto;
+  /* text-align: center; */
 }
 .content {
   width: 45%;
@@ -290,8 +292,12 @@ ul {
 }
 
 .image {
-  width: 350px;
-  margin-left: 5px;
+  width: 100%;
+  max-width: 400px;
+  /* margin: 5px; */
+  /* padding: auto; */
+  text-align: center;
+  /* align-content: center; */
 }
 
 .btn {
