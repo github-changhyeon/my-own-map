@@ -59,7 +59,7 @@ import { registFcmToken } from '@/api/fcm.js';
 import constants from '@/lib/constants.js';
 import {
   // deleteToken,
-  // receiveMessage,
+  receiveMessage,
   requestPermission,
   getToken,
 } from '@/api/notification.js';
@@ -124,6 +124,7 @@ export default {
               });
               // TODO(developer): Retrieve a registration token for use with FCM.
               // ...
+              receiveMessage();
             } else {
               console.log('Unable to get permission to notify.');
             }

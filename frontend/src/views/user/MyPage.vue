@@ -85,13 +85,13 @@ export default {
   },
   methods: {
     logout() {
-      localStorage.removeItem('jwt');
       deleteToken(() => {
         console.log('token delete');
         deleteFcmToken(
           (success) => {
             if (success.data.status) {
               console.log('토큰 delete 성공');
+              localStorage.removeItem('jwt');
             } else {
               console.log('fcm 토큰 delete 실패');
             }

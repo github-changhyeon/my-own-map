@@ -30,6 +30,13 @@ function receiveMessage() {
   //   `messaging.onBackgroundMessage` handler.
   messaging.onMessage((payload) => {
     console.log('Message received. ', payload);
+
+    let title = payload.notification.title;
+    let options = {
+      body: payload.notification.body,
+    };
+
+    new Notification(title, options);
     // ...
   });
   // [END messaging_receive_message]
