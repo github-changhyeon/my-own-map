@@ -1,9 +1,7 @@
 <template>
   <div>
-    <v-icon v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
-    <v-icon v-if="!isFavorited" @click="checkFavorited"
-      >mdi-heart-outline</v-icon
-    >
+    <v-icon size="30" v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
+    <v-icon size="30" v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
   </div>
 </template>
 
@@ -87,4 +85,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

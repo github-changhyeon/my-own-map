@@ -1,34 +1,20 @@
 <template>
   <div>
     <v-card width="800" class="mx-auto">
-      <v-list three-line>
-        <template>
-          <v-list-item v-for="(item, index) in items" :key="index">
-            <v-list-item-avatar>
-              <v-img :src="item.avatar"></v-img>
-              <!-- {{ item.userDto.username }} -->
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title
-                v-if="!isModify[index]"
-                v-html="item.content"
-              ></v-list-item-title>
-              <CommentCreate
-                v-if="isModify[index]"
-                :index="index"
-                @create-comment="checkUpdateComment"
-              />
-            </v-list-item-content>
-            <v-btn v-if="!isModify[index]" @click="checkModify(index)"
-              >수정</v-btn
-            >
-            <v-btn v-if="!isModify[index]" @click="checkDeleteComment(item)"
-              >삭제</v-btn
-            >
-          </v-list-item>
-          <v-divider :key="index" inset></v-divider>
-        </template>
-      </v-list>
+      <template>
+        <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
+          <v-list-item-avatar>
+            <v-img :src="item.avatar"></v-img>
+            <!-- {{ item.userDto.username }} -->
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
+            <CommentCreate v-if="isModify[index]" :index="index" @create-comment="checkUpdateComment" />
+          </v-list-item-content>
+          <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"><v-icon small>mdi-pencil-outline</v-icon></v-btn>
+          <v-btn x-small v-if="!isModify[index]" @click="checkDeleteComment(item)"><v-icon small>mdi-trash-can</v-icon></v-btn>
+        </v-list-item>
+      </template>
     </v-card>
     <CommentCreate @create-comment="checkCreateComment" />
   </div>
@@ -203,3 +189,9 @@ export default {
   watch: {},
 };
 </script>
+
+<style scoped>
+.commentlist {
+  border-bottom: 1px solid rgb(209, 209, 209);
+}
+</style>

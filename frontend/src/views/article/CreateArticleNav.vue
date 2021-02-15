@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style=" padding-bottom:10px; position: fixed; z-index: 2;">
     <!-- <router-link to="/">
     </router-link> -->
     <button @click="goToMain" class="back"><v-icon>mdi-arrow-left</v-icon></button>

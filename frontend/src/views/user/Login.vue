@@ -1,49 +1,30 @@
 <template>
   <div id="app">
-    <v-app>
-      <main>
-        <v-container fluid fill-height class="loginOverlay">
-          <v-layout flex align-center justify-center>
-            <v-flex xs12 sm4 elevation-6>
-              <v-toolbar class="pt-5 darken-4" style="background-color:#FF70BC">
-                <v-toolbar-title class="white--text"
-                  ><h4>MOM에 오신 것을 환영합니다.</h4></v-toolbar-title
-                >
-              </v-toolbar>
-              <v-card>
-                <v-card-text class="pt-4">
-                  <div>
-                    <!-- <v-form v-model="valid" ref="form"> -->
-                    <v-form ref="form">
-                      <v-text-field
-                        name="email"
-                        type="email"
-                        label="이메일을 입력해 주세요."
-                        v-model="loginForm.email"
-                      ></v-text-field>
-                      <v-text-field
-                        name="password"
-                        type="password"
-                        label="비밀번호를 입력해 주세요."
-                        v-model="loginForm.password"
-                        min="8"
-                      ></v-text-field>
-                      <v-layout justify-space-between>
-                        <v-btn @click="checkLogin">로그인 하기</v-btn>
-                        <!-- <a :href="naverLoginURL">네이버 아이디로 로그인하기 -->
-                        <NaverLogin />
-                        <a href="">비밀번호 찾기</a>
-                        <router-link to="/join"
-                          ><a href="">회원가입</a></router-link
-                        >
-                      </v-layout>
-                    </v-form>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-flex>
+    <v-app class="center">
+      <main class="center" style="margin-top:50px; width:350px;">
+        <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
+        <div class="titlebar">
+          회원이 아니신가요?
+          <router-link to="/join"><a href="">회원가입 하기</a></router-link>
+        </div>
+        <!-- <v-form v-model="valid" ref="form"> -->
+        <v-form ref="form">
+          <div class="InfoName">
+            이메일
+          </div>
+          <v-text-field style="padding-top:0px;" name="email" type="email" placeholder="이메일을 입력해 주세요." v-model="loginForm.email"></v-text-field>
+          <div class="InfoName">
+            비밀번호
+          </div>
+          <v-text-field style="padding-top:0px;" name="password" type="password" placeholder="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
+          <v-layout justify-space-between>
+            <v-btn @click="checkLogin()" color="primary" height="50" class="loginbar">로그인 하기</v-btn>
           </v-layout>
-        </v-container>
+          <!-- <NaverLogin /> -->
+          <div class="findPassword">
+            <a href="">비밀번호 찾기</a>
+          </div>
+        </v-form>
       </main>
     </v-app>
   </div>
@@ -67,7 +48,7 @@ import {
 export default {
   name: 'Login',
   components: {
-    NaverLogin,
+    // NaverLogin,
   },
   data() {
     return {
@@ -85,6 +66,7 @@ export default {
   },
   methods: {
     checkLogin() {
+      console.log('아무거나');
       login(
         this.loginForm,
         (response) => {
@@ -151,36 +133,54 @@ export default {
 </script>
 
 <style scoped>
-.main {
-  height: 400px;
-  /* background-image: url(https://cdn.wadiz.kr/ft/images/green001/2019/1114/20191114141744658_46316.gif); */
-  margin-bottom: 80px;
-  background-size: 1920px;
-  filter: grayscale(100%);
+.center {
+  margin: 0 auto;
 }
 
-.main-title {
+.logo {
+  width: 200px;
+  height: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.titlebar {
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 30px;
+}
+
+.loginbar {
+  width: 350px;
+  height: 50px;
+  margin: 0 auto;
+  background-color: #ff70bc;
   color: white;
-  position: relative;
-  padding-top: 180px;
+  box-shadow: 0 4px 16px rgba(216, 37, 136, 0.3);
   font-weight: bold;
+  border-radius: 10px;
+  transition: 0.3s;
 }
 
-.login-form {
-  margin-bottom: 80px;
+.loginbar:hover {
+  box-shadow: 0 2px 4px rgba(216, 37, 136, 0.9);
+  transform: translateY(1px);
 }
 
-.password-input {
-  margin-bottom: 20px;
+.loginbar:focus {
+  outline: 0px;
 }
 
-label {
-  font-weight: bold;
-  color: rgb(41, 109, 236);
-  margin-right: 5px;
+.InfoName {
+  color: pink;
 }
 
-input {
-  width: 250px;
+.findPassword {
+  color: grey;
+  font-size: 15px;
+  padding-top: 20px;
+  float: right;
 }
 </style>
