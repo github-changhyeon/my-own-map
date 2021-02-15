@@ -320,6 +320,7 @@ public class UserController {
 		if (userOpt.isPresent()) {
 			String token = jwtService.create("uid", userOpt.get().getUid(), "access-token");// key, data, subject
 			userOpt.get().setLogin(true);
+			userDao.save(userOpt.get());
 			result.status = true;
 			result.message = SUCCESS;
 			result.object = token;
