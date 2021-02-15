@@ -28,28 +28,28 @@
     <!-- 버튼을 router link로 해보자! -->
 
     <!-- <router-link :to="`/main/${this.uid}`" style="textDecoration:none;"> -->
-    <v-btn :to="`/main/${this.uid}`" @click="one" replace style="background-color:white; margin-top:8px;">
+    <v-btn :to="`/main/${this.uid}`" replace style="background-color:white; margin-top:8px;">
       <v-icon>mdi-home</v-icon>
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link to="/newsfeed" style="textDecoration:none;"> -->
-    <v-btn to="/newsfeed" @click="two" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="/newsfeed" replace style="background-color:white; margin-top:8px;">
       <v-icon>mdi-newspaper-variant</v-icon>
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
-    <v-btn :to="`/articles/create`" @click="three" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="`/articles/create`" replace style="background-color:white; margin-top:8px;">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
-    <v-btn :to="`/articles/create`" @click="four" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="`/articles/create`" replace style="background-color:white; margin-top:8px;">
       <img width="40px" height="44px" src="@/assets/MOM_Icon.png" />
     </v-btn>
     <!-- </router-link> -->
 
     <!-- <router-link :to="`/users/${this.uid}`" style="textDecoration:none;"> -->
-    <v-btn :to="`/users/${this.uid}`" @click="five" replace style="background-color:white; margin-top:8px;">
+    <v-btn :to="`/users/${this.uid}`" replace style="background-color:white; margin-top:8px;">
       <v-icon>mdi-account</v-icon>
     </v-btn>
     <!-- </router-link> -->
@@ -60,33 +60,14 @@
 import jwt_decode from 'jwt-decode';
 export default {
   data: () => ({
-    value: 3,
+    value: 0,
     uid: 0,
     isSelected: false,
     // uid:jwt_decode(localStorage.getItem('jwt')),
   }),
-  watch: {
-    // 'window.location.pathname': function() {
-    // console.log(window.location.pathname, '패쓰네임쓰');
-    // let nowLocation = window.location.pathname.split('/');
-    // switch (nowLocation) {
-    //   case 'main':
-    //     this.value = 0;
-    //     break;
-    //   case 'newsfeed':
-    //     this.value = 1;
-    //     break;
-    //   case 'article':
-    //     this.value = 3;
-    //     break;
-    //   case 'user':
-    //     this.value = 5;
-    //     break;
-    //   default:
-    //     break;
-    // }
-    // },
-  },
+  // watch: {
+
+  // },
   methods: {
     // goToNewsFeed() {
     // },
@@ -118,6 +99,27 @@ export default {
       this.uid = jwt_decode(token).uid;
     }
     console.log(token, 'uid는', this.uid);
+    // this.value = 2;
+
+    console.log(window.location.pathname, '패쓰네임쓰');
+    let nowLocation = window.location.pathname.split('/');
+    console.log(nowLocation[1], 'helllo');
+    switch (nowLocation[1]) {
+      case 'main':
+        this.value = 0;
+        break;
+      case 'newsfeed':
+        this.value = 1;
+        break;
+      case 'articles':
+        this.value = 2;
+        break;
+      case 'users':
+        this.value = 4;
+        break;
+      default:
+        break;
+    }
   },
 };
 </script>
