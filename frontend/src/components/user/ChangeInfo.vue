@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-row justify="center" style="margin-top:100px;">
     <v-col cols="12" sm="8">
       <v-card>
         <v-card-title class="secondary darken-1">
@@ -10,16 +10,31 @@
         <v-divider inset></v-divider>
         <v-list>
           <v-list-item>
-            <v-list-item-action style="margin-right: 10px">
+            <!-- <v-list-item-action style="margin-right: 10px">
               <v-avatar>
                 <img :src="profileImageUrl" />
               </v-avatar>
             </v-list-item-action>
             <v-list-item-action style="margin-right: 10px">
-              <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-camera" @change="changeProfileFunc"></v-file-input>
+              <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-account" @change="changeProfileFunc"></v-file-input>
+            </v-list-item-action> -->
+            <v-list-item-action style="margin-top:0px;">
+              <v-icon>mdi-account</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-text-field label="Nickname" placeholder="Placeholder" v-model="userDto.username"></v-text-field>
+              <v-text-field label="닉네임" placeholder="닉네임을 입력해 주세요" v-model="userDto.username"></v-text-field>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-action>
+              <v-icon>mdi-message-draw</v-icon>
+            </v-list-item-action>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                <v-text-field label="상태 메세지" placeholder="메세지를 입력해 주세요" v-model="userDto.stateMsg"></v-text-field>
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -30,18 +45,18 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                <v-text-field label="Email" placeholder="Placeholder" v-model="userDto.email" disabled></v-text-field>
+                <v-text-field label="이메일" placeholder="이메일은 변경할 수 없습니다" v-model="userDto.email" disabled></v-text-field>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
           <v-list-item v-if="!isChangePassword">
-            <v-list-item-action>
+            <v-list-item-action style="margin-top:0px;">
               <v-icon>mdi-lock-outline</v-icon>
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Password" placeholder="Placeholder" v-model="userDto.password" disabled type="password"></v-text-field>
+              <v-text-field label="비밀번호" placeholder="Placeholder" v-model="userDto.password" disabled type="password"></v-text-field>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -55,7 +70,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Change password" placeholder="Placeholder" v-model="userDto.password" type="password"></v-text-field>
+              <v-text-field label="새 비밀번호" placeholder="새 비밀번호를 입력해 주세요" v-model="userDto.password" type="password"></v-text-field>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -69,7 +84,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Confirm password" placeholder="Placeholder" v-model="passwordConfirm" type="password"></v-text-field>
+              <v-text-field label="새 비밀번호 확인" placeholder="새 비밀번호를 입력해 주세요" v-model="passwordConfirm" type="password"></v-text-field>
             </v-list-item-content>
           </v-list-item>
 
@@ -96,15 +111,19 @@
 <script>
 import { getUserInfo, deleteUser, updateUser } from '@/api/user.js';
 import constants from '@/lib/constants.js';
+import jwt_decode from 'jwt-decode';
 
 export default {
-  name: 'Navigation',
+  name: 'ChangeInfo',
   components: {},
   props: ['propsUid'],
   computed: {},
   watch: {},
   created() {
-    this.uid = this.propsUid;
+    const token = localStorage.getItem('jwt');
+    // this.tokenData = jwt_decode(token);
+    console.log(jwt_decode(token));
+    this.uid = jwt_decode(token).uid;
     getUserInfo(
       this.uid,
       (response) => {
@@ -122,10 +141,10 @@ export default {
     );
   },
   methods: {
-    changeProfileFunc(e) {
-      console.log(e);
-      this.profileImageUrl = URL.createObjectURL(this.profileImage);
-    },
+    // changeProfileFunc(e) {
+    //   console.log(e);
+    //   this.profileImageUrl = URL.createObjectURL(this.profileImage);
+    // },
     changePasswordFunc() {
       this.userDto.password = '';
       this.isChangePassword = true;
@@ -135,7 +154,7 @@ export default {
       this.isChangePassword = false;
     },
     deleteUserFunc() {
-      if (confirm('Do you really want to delete?')) {
+      if (confirm('탈퇴하실건가요?')) {
         deleteUser(
           (response) => {
             if (response.data.status) {
@@ -165,6 +184,7 @@ export default {
           if (response.data.status) {
             this.userDto = response.data.object;
             this.storePassword = this.userDto.password;
+            this.stateMsg = this.userDto.stateMsg;
             alert('정보수정에 성공했습니다.');
           } else {
             alert('회원 정보 수정을 할 수 없습니다.');
@@ -181,6 +201,7 @@ export default {
     return {
       profileImageUrl: '',
       profileImage: {},
+      stateMsg: '',
       storePassword: '',
       passwordConfirm: '',
       uid: '',

@@ -82,9 +82,9 @@ public class ArticleController {
 	ArticleHashtagDao articleHashtagDao;
 
 	@GetMapping
-	@ApiOperation(value = "전체 게시물을 받아온다", response = List.class)
-	public Object retrieveAllArticles() {
-		List<ArticleDto> list = articleDao.findAll();
+	@ApiOperation(value = "전체 공개 게시물을 받아온다", response = List.class)
+	public Object retrievePublicArticles() {
+		List<ArticleDto> list = articleDao.findAllByIsPrivate(false);
 		for (int i = 0; i < list.size(); i++) {
 			ArticleDto articleDto = list.get(i);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleDto);
@@ -96,7 +96,7 @@ public class ArticleController {
 		}
 		final BasicResponse result = new BasicResponse();
 		result.status = true;
-		result.message = "전체 게시글 반환에 성공하였습니다.";
+		result.message = "전체 공개 게시글 반환에 성공하였습니다.";
 		result.object = list;
 		return result;
 	}
@@ -123,7 +123,7 @@ public class ArticleController {
 
 				String uuidFilename = uuid + "_" + dTime + file.get(saveCnt).getOriginalFilename();
 
-				Path filePath = Paths.get(fileRealPath + "upload/" + uuidFilename);
+				Path filePath = Paths.get(fileRealPath + "uploads/" + uuidFilename);
 
 				try {
 					Files.write(filePath, file.get(saveCnt).getBytes()); // 하드디스크 기록

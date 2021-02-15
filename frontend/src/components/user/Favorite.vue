@@ -1,12 +1,14 @@
 <template>
   <div>
-    <v-icon v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
-    <v-icon v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
+    <v-icon color="primary" size="30" v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
+    <v-icon color="pink" size="30" v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
   </div>
 </template>
 
 <script>
+import jwt_decode from 'jwt-decode';
 import { doFavorite, isFavorite } from '@/api/user.js';
+import { notifyAction } from '@/api/fcm.js';
 export default {
   name: 'Favorite',
   props: {
@@ -38,6 +40,26 @@ export default {
         (response) => {
           console.log(response, '좋아요');
           this.isFavorited = !this.isFavorited;
+          let body = {
+            // uid: this.article.userDto.uid,
+            articleNo: this.article.articleNo,
+            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            message: 'LIKE',
+          };
+          notifyAction(
+            body,
+            (success) => {
+              if (success.data.status) {
+                console.log('알림 ok');
+              } else {
+                console.log('알림을 할 수 없습니다.');
+              }
+            },
+            (error) => {
+              console.log(error);
+              alert('서버에러');
+            }
+          );
         },
         (error) => {
           console.log(error);
@@ -63,4 +85,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

@@ -1,31 +1,29 @@
 <template>
   <div>
-    <div style="float:right">
+    <div style="text-align:right;">
       OO 님
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserInfo
-        :isSameUser="isSameUser"
-        :followerList="followerList"
-        :followingList="followingList"
-      />
+      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUid="uid" />
+      <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
       <TimeLine />
     </div> -->
-    <v-card>
+    <!-- <v-card>
       <v-tabs centered style="z-index: 2">
-        <!-- <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
+        <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
         <v-tab @click="isOpen = 2" style="width: 5vw"><v-icon>mdi-heart</v-icon></v-tab>
-        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab> -->
+        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab>
         <v-tab style="width: 5vw"><v-icon>mdi-cog</v-icon></v-tab>
       </v-tabs>
-    </v-card>
+    </v-card> -->
     <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
-    <ChangeInfo :propsUid="uid" />
+    <router-link to="/changeinfo" class="changeInfobutton"><v-icon v-if="isSameUser">mdi-cog</v-icon></router-link>
+    <!-- <ChangeInfo :propsUid="uid" /> -->
     <Navigation />
   </div>
 </template>
@@ -37,7 +35,8 @@ import jwt_decode from 'jwt-decode';
 import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
-import ChangeInfo from '@/components/user/ChangeInfo.vue';
+// import ChangeInfo from '@/components/user/ChangeInfo.vue';
+import UserPicture from '@/components/user/UserPicture.vue';
 
 // //NewsFeed
 // import PublicNewsFeed from '@/components/sns/PublicNewsFeed.vue';
@@ -46,6 +45,13 @@ import ChangeInfo from '@/components/user/ChangeInfo.vue';
 
 // import { getUserInfo } from '@/api/user.js';
 import { findFollower, findFollowing } from '@/api/user.js';
+import { deleteFcmToken } from '@/api/fcm.js';
+import {
+  deleteToken,
+  // receiveMessage,
+  // requestPermission,
+  // getToken,
+} from '@/api/notification.js';
 // import axios from 'axios';
 
 // import Vue from 'vue';
@@ -62,7 +68,8 @@ export default {
     // PublicNewsFeed,
     // PrivateNewsFeed,
     // FavoriteNewsFeed,
-    ChangeInfo,
+    // ChangeInfo,
+    UserPicture,
   },
   data() {
     return {
@@ -70,7 +77,7 @@ export default {
       userDto: {},
       tokenData: '',
       isSameUser: true,
-      isOpen: '',
+      isOpen: 0,
       uid: '',
       followingList: [],
       followerList: [],
@@ -78,10 +85,24 @@ export default {
   },
   methods: {
     logout() {
-      localStorage.removeItem('jwt');
+      deleteToken(() => {
+        console.log('token delete');
+        deleteFcmToken(
+          (success) => {
+            if (success.data.status) {
+              console.log('토큰 delete 성공');
+              localStorage.removeItem('jwt');
+            } else {
+              console.log('fcm 토큰 delete 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('서버 에러');
+          }
+        );
+      });
       // location.reload();
-      // this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
-      // this.$router.go()
       this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
     },
   },
@@ -108,7 +129,6 @@ export default {
         this.uid,
         (response) => {
           this.followingList = response.data.object;
-          // this.$emit('followingList', this.followingList);
         },
         (error) => {
           console.log(error);
@@ -121,7 +141,6 @@ export default {
         (response) => {
           this.followerList = response.data.object;
           console.log(this.followerList);
-          // this.$emit('followerList', this.followerList);
         },
         (error) => {
           console.log(error);
@@ -140,6 +159,9 @@ export default {
     // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
     // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
 
+    console.log(this.$route.params.uid, '히스토리에서온 파람 uid');
+    console.log(this.tokenData.uid, 'jwt uid');
+
     // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
     if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
       console.log('본인입니다');
@@ -147,14 +169,12 @@ export default {
     } else {
       console.log('본인이아님');
       this.isSameUser = false;
-      console.log(this.$route.params);
       this.userDto = this.$route.params;
     }
     findFollowing(
       this.uid,
       (response) => {
         this.followingList = response.data.object;
-        // this.$emit('followingList', this.followingList);
       },
       (error) => {
         console.log(error);
@@ -167,7 +187,6 @@ export default {
       (response) => {
         this.followerList = response.data.object;
         console.log(this.followerList);
-        // this.$emit('followerList', this.followerList);
       },
       (error) => {
         console.log(error);
@@ -177,4 +196,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.changeInfobutton {
+  float: right;
+  margin-bottom: 70px;
+  margin-right: 20px;
+  text-decoration: none;
+}
+</style>

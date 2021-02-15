@@ -1,7 +1,7 @@
 # Mockup
 
 ## 로그인, 회원가입 화면 
-
+ 
 ![image](https://user-images.githubusercontent.com/20719987/104943346-f90be580-59f8-11eb-8fad-a38f488c62ab.png)
 
 ## Main

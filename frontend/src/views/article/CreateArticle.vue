@@ -16,7 +16,7 @@
       <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
     </div>
     <div class="center">
-      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택해 보세요." multiple chips>
+      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 입력해 보세요." multiple chips>
         <template v-slot:selection="data">
           <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
             <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
@@ -25,21 +25,21 @@
         </template>
       </v-combobox>
     </div>
-
-    <br />
-    <div class="center">
+    <div>
       <br />
-      <span>사진을 추가해 볼까요? </span>
-      <form encType="multipart/form-data">
-        <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
-      </form>
-      <v-btn height="20" type="button" @click="onClickImageUpload">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+      <div class="lefty">
+        <span>사진 </span>
+        <form encType="multipart/form-data">
+          <input ref="imageInput" type="file" accept="image/*" hidden @change="onChangeImages" multiple />
+        </form>
+        <v-btn class="ma-2" fab small light type="button" style="top: -15px; z-index: 2" @click="onClickImageUpload">
+          <v-icon dark>mdi-plus</v-icon>
+        </v-btn>
+      </div>
       <div>
         <v-carousel class="picture-size" v-if="imgs.length != 0">
           <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
-            <button @click="removeImage()" class="deleteButton">X</button>
+            <button @click="removeImage(idx)" class="deleteButton">X</button>
           </v-carousel-item>
         </v-carousel>
       </div>
@@ -55,7 +55,7 @@
       <v-checkbox id="privateToggle" v-model="article.private" label="비공개 글로 합니다"></v-checkbox>
     </div>
     <div class="center">
-      <button class="upload" @click="createPost()">등록</button>
+      <button class="uploadbutton" @click="createPost()">등록</button>
     </div>
     <div style="height:100px"></div>
     <Navigation />
@@ -114,9 +114,11 @@ export default {
     };
   },
   methods: {
-    removeImage(image) {
+    removeImage(idx) {
       // this.imgs = '';
-      this.imgs.splice(this.imgs.indexOf(image), 1);
+      console.log(idx, '이미지');
+      console.log(this.imgs, '이미지');
+      this.imgs.splice(idx, 1);
     },
     selectDate(e) {
       this.article.visitDate = e;
@@ -140,32 +142,28 @@ export default {
         this.images.push(file);
       }
     },
-    // addHash() {
-    //   const newHash = {
-    //     content: this.hash,
-    //   };
-    //   axios.post('url', newHash).then((res) => {
-    //     this.hashs.splice(0, 0, res.data);
-    //     this.hash = '';
-    //   });
-    // },
     createPost() {
-      // console.log(this.article.images[0])
-      var params = new URLSearchParams();
-      params.append('file', this.images);
-      params.append('article', this.article);
-      for (let i = 0; i < this.hashtagNames.length; ++i) {
-        let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
-        this.article.hashtags.push(obj);
+      if (this.article.positionLat === '' || this.article.positionLng === '' || this.article.address === '') {
+        alert('주소가 선택되지 않았습니다!');
+        return;
       }
 
+      if (this.title === '') {
+        alert('제목이 입력되지 않았습니다!');
+        return;
+      }
+
+      // console.log(this.article.images[0])
+      // var params = new URLSearchParams();
+      // params.append('file', this.images);
+      // params.append('article', this.article);
+      // for (let i = 0; i < this.hashtagNames.length; ++i) {
+      //   let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
+      //   this.article.hashtags.push(obj);
+      // }
+
       // const imgs = new FormData();
-      // sonsole.log(typeof(this.article.images))
       const formData = new FormData();
-      // console.log(this.images);
-      // console.log(typeof(this.images));
-      // console.log(this.images[0]);
-      // console.log(this.images[1]);
 
       this.images.forEach((image) => formData.append('file[]', image));
       // formData.append("file", this.images);
@@ -242,14 +240,17 @@ export default {
 }
 
 .picture-size {
-  width: 240px;
-  border: 1px solid black;
-  float: center;
-  margin-right: 10px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .lefty {
-  float: left;
+  display: flex;
+  justify-content: left;
 }
 
 .inline {
@@ -272,8 +273,24 @@ export default {
   margin-bottom: 13px;
 }
 
-.upload {
-  float: right;
+.uploadbutton {
+  width: 200px;
+  height: 50px;
+  margin: 0 auto;
+  background-color: #ff70bc;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.uploadbutton:hover {
+  box-shadow: 0 2px 4px rgba(216, 37, 136, 0.9);
+  transform: translateY(1px);
+}
+
+.uploadbutton:focus {
+  outline: 0px;
 }
 
 .deleteButton {
