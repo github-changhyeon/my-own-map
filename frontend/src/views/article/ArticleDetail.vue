@@ -97,7 +97,11 @@
       댓글 목록
       <Comment />
     </div> -->
-      <CommentList style="margin-bottom:50px;" :articleNo="$route.params.articleNo" />
+      <CommentList
+        style="margin-bottom:50px;"
+        :articleNo="$route.params.articleNo"
+        :propsUid="article.userDto.uid"
+      />
       <Navigation />
     </v-app>
   </v-card>

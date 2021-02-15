@@ -42,6 +42,13 @@ import ChangeInfo from '@/components/user/ChangeInfo.vue';
 
 // import { getUserInfo } from '@/api/user.js';
 import { findFollower, findFollowing } from '@/api/user.js';
+import { deleteFcmToken } from '@/api/fcm.js';
+import {
+  deleteToken,
+  // receiveMessage,
+  // requestPermission,
+  // getToken,
+} from '@/api/notification.js';
 // import axios from 'axios';
 
 // import Vue from 'vue';
@@ -74,7 +81,23 @@ export default {
   },
   methods: {
     logout() {
-      localStorage.removeItem('jwt');
+      deleteToken(() => {
+        console.log('token delete');
+        deleteFcmToken(
+          (success) => {
+            if (success.data.status) {
+              console.log('토큰 delete 성공');
+              localStorage.removeItem('jwt');
+            } else {
+              console.log('fcm 토큰 delete 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('서버 에러');
+          }
+        );
+      });
       // location.reload();
       // this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
       // this.$router.go()
@@ -135,6 +158,9 @@ export default {
 
     // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
     // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
+
+    console.log(this.$route.params.uid, '히스토리에서온 파람 uid');
+    console.log(this.tokenData.uid, 'jwt uid');
 
     // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
     if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {

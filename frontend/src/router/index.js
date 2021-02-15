@@ -14,6 +14,7 @@ import UpdateArticle from '@/views/article/UpdateArticle';
 // User
 import MyPage from '@/views/user/MyPage';
 import Join from '@/views/user/Join';
+import History from '@/views/user/History';
 
 // SNS
 import NewsFeed from '@/views/sns/NewsFeed';
@@ -34,6 +35,13 @@ const routes = [
     // name: 'Main',
     name: constants.URL_TYPE.HOME.FILTEREDLIST,
     component: ListView,
+    props: true,
+  },
+  {
+    path: '/history',
+    // name: 'Main',
+    name: constants.URL_TYPE.USER.HISTORY,
+    component: History,
     props: true,
   },
   // {
