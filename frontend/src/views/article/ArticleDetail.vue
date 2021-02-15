@@ -121,6 +121,7 @@
       <CommentList
         style="margin-bottom:50px;"
         :articleNo="$route.params.articleNo"
+        :propsUid="article.userDto.uid"
       />
       <Navigation />
     </v-app>

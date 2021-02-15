@@ -2,7 +2,7 @@ import { createInstance } from './index.js';
 
 const instance = createInstance();
 
-function notifyFollowing(body, success, fail) {
+function notifyAction(body, success, fail) {
   instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
 
   instance
@@ -29,4 +29,22 @@ function deleteFcmToken(success, fail) {
     .catch(fail);
 }
 
-export { notifyFollowing, registFcmToken, deleteFcmToken };
+function getHistory(success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
+
+  instance
+    .get(`/fcm/history`)
+    .then(success)
+    .catch(fail);
+}
+
+function setZero(success, fail) {
+  instance.defaults.headers['jwt'] = window.localStorage.getItem('jwt');
+
+  instance
+    .post(`/fcm/makeZero`)
+    .then(success)
+    .catch(fail);
+}
+
+export { notifyAction, registFcmToken, deleteFcmToken, getHistory, setZero };

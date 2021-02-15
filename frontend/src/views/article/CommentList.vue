@@ -9,11 +9,22 @@
               <!-- {{ item.userDto.username }} -->
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
-              <CommentCreate v-if="isModify[index]" :index="index" @create-comment="checkUpdateComment" />
+              <v-list-item-title
+                v-if="!isModify[index]"
+                v-html="item.content"
+              ></v-list-item-title>
+              <CommentCreate
+                v-if="isModify[index]"
+                :index="index"
+                @create-comment="checkUpdateComment"
+              />
             </v-list-item-content>
-            <v-btn v-if="!isModify[index]" @click="checkModify(index)">수정</v-btn>
-            <v-btn v-if="!isModify[index]" @click="checkDeleteComment(item)">삭제</v-btn>
+            <v-btn v-if="!isModify[index]" @click="checkModify(index)"
+              >수정</v-btn
+            >
+            <v-btn v-if="!isModify[index]" @click="checkDeleteComment(item)"
+              >삭제</v-btn
+            >
           </v-list-item>
           <v-divider :key="index" inset></v-divider>
         </template>
@@ -24,8 +35,14 @@
 </template>
 
 <script>
-import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
+import {
+  getComment,
+  createComment,
+  deleteComment,
+  updateComment,
+} from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
+import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';
 
 export default {
@@ -57,6 +74,7 @@ export default {
   props: {
     index: Number,
     articleNo: [Number, String],
+    propsUid: Number,
   },
   methods: {
     setToken: function() {
@@ -103,6 +121,25 @@ export default {
         (response) => {
           console.log(response, '작성성공');
           this.checkGetComment();
+          let body = {
+            // uid: this.propsUid,
+            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            message: 'COMMENT',
+          };
+          notifyAction(
+            body,
+            (success) => {
+              if (success.data.status) {
+                console.log('알림 ok');
+              } else {
+                console.log('알림을 할 수 없습니다.');
+              }
+            },
+            (error) => {
+              console.log(error);
+              alert('서버에러');
+            }
+          );
         },
         (error) => {
           console.log(error, '작성실패');
