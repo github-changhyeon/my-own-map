@@ -19,6 +19,7 @@ public class NotificationService {
  
     public void register(final int userId, final String token) {
             tokenMap.put(userId, token);
+            System.out.println(tokenMap.get(userId) + " 맵 토큰");
     }
 
 	public String getToken(int receiverUid) {

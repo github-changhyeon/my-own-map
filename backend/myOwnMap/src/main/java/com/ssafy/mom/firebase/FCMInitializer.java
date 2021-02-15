@@ -17,7 +17,7 @@ import com.google.firebase.FirebaseOptions;
 public class FCMInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(FCMInitializer.class);
-    private static final String FIREBASE_CONFIG_PATH = "woowa-turkey-firebase-adminsdk.json";
+    private static final String FIREBASE_CONFIG_PATH = "myownmap-304803-firebase-adminsdk-1gswq-f58a020d7f.json";
 
     @PostConstruct
     public void initialize() {
