@@ -1,15 +1,11 @@
 <template>
   <div>
     <div style="float:right">
-      OO 님
+      {{ userDto }}
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserInfo
-        :isSameUser="isSameUser"
-        :followerList="followerList"
-        :followingList="followingList"
-      />
+      <UserInfo :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
       <TimeLine />
@@ -80,8 +76,6 @@ export default {
     logout() {
       localStorage.removeItem('jwt');
       // location.reload();
-      // this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
-      // this.$router.go()
       this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
     },
   },
@@ -108,7 +102,6 @@ export default {
         this.uid,
         (response) => {
           this.followingList = response.data.object;
-          // this.$emit('followingList', this.followingList);
         },
         (error) => {
           console.log(error);
@@ -121,7 +114,6 @@ export default {
         (response) => {
           this.followerList = response.data.object;
           console.log(this.followerList);
-          // this.$emit('followerList', this.followerList);
         },
         (error) => {
           console.log(error);
@@ -147,14 +139,12 @@ export default {
     } else {
       console.log('본인이아님');
       this.isSameUser = false;
-      console.log(this.$route.params);
       this.userDto = this.$route.params;
     }
     findFollowing(
       this.uid,
       (response) => {
         this.followingList = response.data.object;
-        // this.$emit('followingList', this.followingList);
       },
       (error) => {
         console.log(error);
@@ -167,7 +157,6 @@ export default {
       (response) => {
         this.followerList = response.data.object;
         console.log(this.followerList);
-        // this.$emit('followerList', this.followerList);
       },
       (error) => {
         console.log(error);

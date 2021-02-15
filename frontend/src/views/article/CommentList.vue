@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div>
+      <h4 style="font-weight: bold">댓글 ({{ items.length }}개)</h4>
+      <br />
+    </div>
     <v-card width="800" class="mx-auto">
       <v-list three-line>
         <template>
