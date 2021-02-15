@@ -13,10 +13,7 @@
         <KakaoSharing :article="article" style="position: fixed; display:flex; right:10px; top: 10px; z-index: 2" />
         <Favorite :article="article" style="position: fixed; display:flex; right:70px; top: 25px; z-index: 2" />
       </div>
-      <<<<<<< HEAD
 
-      <!-- <hr class="line" /> -->
-      ======= >>>>>>> 1eea511dfe786111b6ad54b8ccb6fbe461c04714
       <div class="total-contents">
         <div>
           <label for="title"></label>
@@ -26,14 +23,13 @@
         </div>
         <div>
           <!-- 사진 -->
-          <<<<<<< HEAD
+
           <v-carousel>
             <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
           </v-carousel>
         </div>
         <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" half-increments length="5" readonly large> </v-rating>
         <div>
-          =======
           <v-carousel class="image">
             <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
           </v-carousel>
@@ -41,25 +37,6 @@
         <div>
           <v-rating style="margin-left:50px;" v-model="this.article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" readonly large> </v-rating>
         </div>
-        <!-- <div>
->>>>>>> 1eea511dfe786111b6ad54b8ccb6fbe461c04714
-          <label for="title"><strong>작성자</strong> | </label>
-          {{ article.userDto.username }}
-        </div>
-        <!-- <div>
-          <label for="title"><strong>수정일자</strong> | </label>
-          {{ this.$route.query.updated_at | moment('YYYY-MM-DD h:mm:ss a') }}
-        </div> -->
-        <!-- <v-col md="4" offset-md="4">
-          <v-combobox v-model="{{article.hashtags}}" :items="items" multiple chips>
-            <template v-slot:selection="data">
-              <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-                <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
-                {{ data.item }}
-              </v-chip>
-            </template>
-          </v-combobox>
-        </v-col> -->
         <div style="margin-top:10px;">
           <!-- hashtags -->
           <v-icon>mdi-pound</v-icon>
