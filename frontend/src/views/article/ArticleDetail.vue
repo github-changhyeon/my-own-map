@@ -32,7 +32,7 @@
         <div style="margin-top:10px;">
           <!-- hashtags -->
           <v-icon>mdi-pound</v-icon>
-          <span class="hashbox" v-for="(hashtag, idx) in article.hashtags" :key="idx"> #{{ hashtag.hashtagName }} </span>
+          <span class="hashbox" v-for="(hashtag, idx) in article.hashtags" :key="idx"> {{ hashtag.hashtagName }} </span>
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-calendar</v-icon>
@@ -59,27 +59,12 @@
         <v-btn fab small @click="goToUpdateArticle" variant="outline-primary" class="updatebutton">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
+      </div>
+      <div class="buttons">
         <v-btn fab small @click="findRoute" style="margin-right:10px;">
           <v-icon>mdi-map</v-icon>
         </v-btn>
       </div>
-      <!-- <div>
-        <h4 style="font-weight: bold">comment ({{ comments.length }}개)</h4>
-        <br />
-        <div>
-          <ul v-for="(comment, idx) in comments" :key="idx">
-            <li>
-              <strong>🙍🏻‍♂️{{ comment.user }}</strong> - {{ comment.content }} | {{ comment.created_at | moment('YYYY-MM-DD h:mm:ss a') }}
-              <button variant="outline-danger" @click="checkDeleteComment(comment)">X</button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div> -->
-      <!-- <div>
-      댓글 목록
-      <Comment />
-    </div> -->
       <CommentList style="margin-bottom:50px;" :articleNo="$route.params.articleNo" />
       <Navigation />
     </v-app>
@@ -166,7 +151,8 @@ export default {
     // },
 
     findRoute() {
-      window.open(`https://map.kakao.com/link/to/${this.$route.params.article.address},${this.$route.params.article.positionLat},${this.$route.params.article.positionLng}`);
+      // window.open(`https://map.kakao.com/link/to/${this.$route.params.article.address},${this.$route.params.article.positionLat},${this.$route.params.article.positionLng}`);
+      window.open(`https://map.kakao.com/link/to/${this.article.address},${this.article.positionLat},${this.article.positionLng}`);
     },
 
     goBack() {
@@ -208,66 +194,6 @@ export default {
         document.form.submit();
       }
     },
-
-    // getComment() {
-    //   const config = this.setToken();
-    //   axios.get(`http://127.0.0.1:8000/articles/${this.id}/comments/`, config).then((res) => {
-    //     console.log('getcomment입니다');
-    //     console.log(res);
-    //     this.comments = res.data;
-    //   });
-    // },
-    // createComment: function() {
-    //   const config = this.setToken();
-
-    //   const commentItem = {
-    //     content: this.content,
-    //   };
-
-    //   if (commentItem.content) {
-    //     axios
-    //       .post(`http://127.0.0.1:8000/community/${this.id}/comments/`, commentItem, config)
-    //       .then((res) => {
-    //         console.log(res);
-
-    //         this.content = '';
-    //         this.getComment();
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   }
-    // },
-
-    // deleteComment: function(comment) {
-    //   const config = this.setToken();
-    //   const commentId = comment.id;
-    //   const reviewId = Number(this.id);
-    //   console.log('delete요청');
-    //   console.log(reviewId);
-    //   console.log(commentId);
-
-    //   axios
-    //     .delete(`http://127.0.0.1:8000/community/${reviewId}/comments/delete/${commentId}/`, config)
-    //     .then(() => {
-    //       this.getComment();
-    //     })
-    //     .catch((err) => {
-    //       console.log('comment delete 에러');
-    //       console.log(err);
-    //       alert('본인 글이 아닙니다');
-    //     });
-    // },
-
-    // checkDeleteComment(comment) {
-    //   if (confirm('정말 삭제하시겠습니까?🤷‍♂️') == true) {
-    //     //확인
-    //     this.deleteComment(comment);
-    //   } else {
-    //     //취소
-    //     document.form.submit();
-    //   }
-    // },
   },
 
   created() {
@@ -280,7 +206,7 @@ export default {
       this.$route.params.articleNo,
       (response) => {
         this.article = response.data.object;
-        // console.log(this.article, 'article detail');
+        console.log(this.article, 'article detail');
         if (token !== null && token !== undefined && this.article.userDto.uid === uid) {
           this.isOwnArticle = true;
         }
