@@ -395,7 +395,6 @@ public class UserController {
 	public Object retrieveUserByUid(@PathVariable String uid) {
 		final BasicResponse result = new BasicResponse();
 		Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
-
 		if (!findUser.isPresent()) {
 			result.status = false;
 			result.message = FAIL;
