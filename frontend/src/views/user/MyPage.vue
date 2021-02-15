@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="float:right">
-      {{ userDto }}
+      <!-- {{ userDto }} -->
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>

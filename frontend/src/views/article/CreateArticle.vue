@@ -15,40 +15,15 @@
     <div class="center">
       <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
     </div>
-
-    <br />
-    <!-- <ValidationProvider rules="required" v-slot="{ errors }">
-      <div class="input-wrap">
-        <input v-model="user.nickname" id="nickname" placeholder="닉네임을 입력해주세요" type="text" />
-      </div>
-      <div>
-        <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
-      </div>
-    </ValidationProvider>
-    <br />
-    <ValidationProvider rules="email|required" v-slot="{ errors }">
-      <div class="input-wrap">
-        <input v-model="user.email" id="email" placeholder="이메일을 입력해주세요" type="text" />
-      </div>
-      <div>
-        <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
-      </div>
-    </ValidationProvider> -->
-    <div>
-      해쉬태그
-      <br />
-      <br />
-      <v-col md="4" offset-md="4">
-        <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택하세요." multiple chips>
-          <template v-slot:selection="data">
-            <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-              <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
-              {{ data.item }}
-            </v-chip>
-          </template>
-        </v-combobox>
-      </v-col>
-      <br />
+    <div class="center">
+      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택해 보세요." multiple chips>
+        <template v-slot:selection="data">
+          <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
+            <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
+            {{ data.item }}
+          </v-chip>
+        </template>
+      </v-combobox>
     </div>
 
     <br />
@@ -88,8 +63,6 @@
 </template>
 
 <script>
-// import { ValidationProvider } from 'vee-validate';
-
 import SelectPosition from '@/components/map/SelectPosition.vue';
 import constants from '@/lib/constants';
 // import axios from 'axios';
@@ -108,7 +81,6 @@ export default {
     CreateArticleNav,
     DatePicker,
     Navigation,
-    // ValidationProvider,
   },
   data() {
     return {
