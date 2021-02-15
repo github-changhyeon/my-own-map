@@ -26,7 +26,7 @@
         background-color="white"
         :search-input.sync="searchTitle"
         @change="clickSearchTitleBar"
-        label="Title을 검색해주세요"
+        label="제목을 검색해주세요"
         style="position: fixed; top: 10px; z-index: 2"
       ></v-autocomplete>
     </v-row>
