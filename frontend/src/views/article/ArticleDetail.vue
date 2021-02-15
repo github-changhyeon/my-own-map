@@ -253,18 +253,7 @@ export default {
     if (token !== null && token !== undefined) {
       uid = jwt_decode(token).uid;
     }
-    for (var i = 0; i < this.article.imagePaths.length; ++i) {
-      this.items.push({
-        src:
-          'https://i4b107.p.ssafy.io/images/uploads/' +
-          this.article.imagePaths[i],
-      });
-    }
-    if (this.article.imagePaths.length === 0) {
-      this.items.push({
-        src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-      });
-    }
+
     getArticle(
       this.$route.params.articleNo,
       (response) => {
@@ -277,9 +266,16 @@ export default {
         ) {
           this.isOwnArticle = true;
         }
-        for (var i = 0; i < this.article.imagePaths.length; ++i) {
+        for (let i = 0; i < this.article.imagePaths.length; ++i) {
           this.items.push({
-            src: '@/assets/upload/' + this.article.imagePaths[i],
+            src:
+              'https://i4b107.p.ssafy.io/images/uploads/' +
+              this.article.imagePaths[i],
+          });
+        }
+        if (this.article.imagePaths.length === 0) {
+          this.items.push({
+            src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
           });
         }
       },
