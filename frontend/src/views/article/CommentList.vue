@@ -25,8 +25,14 @@
 </template>
 
 <script>
-import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
+import {
+  getComment,
+  createComment,
+  deleteComment,
+  updateComment,
+} from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
+import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';
 
 export default {
@@ -58,6 +64,7 @@ export default {
   props: {
     index: Number,
     articleNo: [Number, String],
+    propsUid: Number,
   },
   methods: {
     setToken: function() {
@@ -104,6 +111,26 @@ export default {
         (response) => {
           console.log(response, '작성성공');
           this.checkGetComment();
+          let body = {
+            // uid: this.propsUid,
+            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            articleNo: this.articleNo,
+            message: 'COMMENT',
+          };
+          notifyAction(
+            body,
+            (success) => {
+              if (success.data.status) {
+                console.log('알림 ok');
+              } else {
+                console.log('알림을 할 수 없습니다.');
+              }
+            },
+            (error) => {
+              console.log(error);
+              alert('서버에러');
+            }
+          );
         },
         (error) => {
           console.log(error, '작성실패');

@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <v-card min-height="700" class="mx-auto" style="width:800px;" color="tertiary">
+    <v-card
+      min-height="700"
+      class="mx-auto"
+      style="width:800px;"
+      color="tertiary"
+    >
       <!-- <Main /> -->
       <router-view> </router-view>
       <!-- <Navigation /> -->
@@ -19,8 +24,12 @@ export default {
     // Main,
     // Navigation,
   },
-  mounted() {},
+  mounted() {
+    // getToken();
+    // receiveMessage();
+  },
   methods: {},
+  created() {},
   data: () => ({
     articleNo: '',
     positionObj: null,
