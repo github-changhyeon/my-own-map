@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-icon color="pink" size="30" v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
+    <v-icon color="primary" size="30" v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
     <v-icon color="pink" size="30" v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
   </div>
 </template>

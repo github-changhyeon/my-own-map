@@ -1,30 +1,5 @@
 <template>
   <v-bottom-navigation :value="value" color="primary" style="position: fixed;bottom: 0px; z-index: 2; display: flex; justify-content: space-around; background-color:white;" class="nav">
-    <!-- <router-link :to="`/main/${this.uid}`" style="textDecoration:none;">
-    <v-btn @click="$router.push(`/main/${uid}`)" style="background-color:white; margin-top:8px;">
-      <v-icon>mdi-home</v-icon>
-    </v-btn>
-    </router-link>
-    <router-link to="/newsfeed" style="textDecoration:none;">
-    <v-btn @click="$router.push(`/newsfeed`)" style="background-color:white; margin-top:8px;">
-      <v-icon>mdi-newspaper-variant</v-icon>
-    </v-btn>
-    </router-link>
-    <router-link :to="`/articles/create`" style="textDecoration:none;">
-    <v-btn @click="$router.push(`/articles/create`)" style="background-color:white; margin-top:8px;">
-      <img width="40px" height="44px" src="@/assets/MOM_Icon.png" />
-    </v-btn>
-    </router-link>
-    <router-link :to="`/articles/create`" style="textDecoration:none;">
-    <v-btn @click="$router.push(`/articles/create`)" style="background-color:white; margin-top:8px;">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-    </router-link>
-    <router-link :to="`/users/${this.uid}`" style="textDecoration:none;">
-    <v-btn @click="$router.push(`/user/${uid}`)" style="background-color:white; margin-top:8px;">
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
-    </router-link> -->
     <!-- 버튼을 router link로 해보자! -->
 
     <!-- <router-link :to="`/main/${this.uid}`" style="textDecoration:none;"> -->
@@ -38,12 +13,12 @@
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
-    <v-btn to="`/articles/create`" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="/articles/create" replace style="background-color:white; margin-top:8px;">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
-    <v-btn to="`/articles/create`" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="/articles/create" replace style="background-color:white; margin-top:8px;">
       <img width="40px" height="44px" src="@/assets/MOM_Icon.png" />
     </v-btn>
     <!-- </router-link> -->
