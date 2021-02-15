@@ -39,7 +39,7 @@
 
 <script>
 import constants from '@/lib/constants.js';
-import { notifyFollowing } from '@/api/fcm.js';
+import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';
 
 // import Follow from '@/components/user/Follow';
@@ -154,9 +154,9 @@ export default {
           let body = {
             // uid: this.uid,
             uid: jwt_decode(localStorage.getItem('jwt')).uid,
-            message: 'follow',
+            message: 'FOLLOW',
           };
-          notifyFollowing(
+          notifyAction(
             body,
             (success) => {
               if (success.data.status) {
