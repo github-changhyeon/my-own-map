@@ -2,16 +2,13 @@
   <div>
     <div class="map_wrap">
       <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-
-      <div id="menu_wrap_search" class="bg_white">
+      <div style="width:170px; height:35px;" id="menu_wrap_search" class="bg_white">
         <div class="option">
           <div>
             <v-form @submit.prevent="searchPlaces">
-              키워드 :
-              <input type="text" placeholder="검색어를 입력해주세요" id="keyword" size="15" />
-              <button type="submit">검색하기</button>
+              <input type="text" placeholder="장소명, 주소로 검색" id="keyword" size="17" />
+              <button type="submit"><v-icon>mdi-magnify</v-icon></button>
             </v-form>
-            <button></button>
           </div>
         </div>
       </div>
@@ -369,7 +366,7 @@ export default {
     return {
       infowindow: {},
       map: {},
-      isShowList: true,
+      isShowList: false,
       starMarker: {},
       markers: [],
       positions: { positionLat: '', positionLng: '', address: '' },
@@ -413,7 +410,7 @@ export default {
 #menu_wrap_search {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 42.5px;
   bottom: 0;
   width: 250px;
   height: 36px;
@@ -443,7 +440,7 @@ export default {
 
 #menu_wrap_bottom {
   position: absolute;
-  left: 62.5px;
+  left: 65.5px;
   text-align: center;
   bottom: 30px;
   width: 120px;
