@@ -17,18 +17,10 @@
       <div class="total-contents">
         <div>
           <label for="title"></label>
-          <span class="article-title"
-            ><b>{{ article.title }}</b></span
-          >
+          <span class="article-title">
+            <b>{{ article.title }}</b>
+          </span>
         </div>
-        <div>
-          <!-- 사진 -->
-
-          <v-carousel>
-            <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
-          </v-carousel>
-        </div>
-        <v-rating v-model="this.article.evaluation" background-color="orange lighten-3" color="orange" half-increments length="5" readonly large> </v-rating>
         <div>
           <v-carousel class="image">
             <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
@@ -44,7 +36,8 @@
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-calendar</v-icon>
-          {{ article.regiTime | moment('YYYY-MM-DD') }}
+          <!-- {{ article.regiTime | moment('YYYY-MM-DD') }} -->
+          {{ article.regiTime.split('T')[0] }}
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-map-marker</v-icon>
