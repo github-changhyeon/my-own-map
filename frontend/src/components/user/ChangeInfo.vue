@@ -16,7 +16,7 @@
               </v-avatar>
             </v-list-item-action>
             <v-list-item-action style="margin-right: 10px">
-              <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-camera" @change="changeProfileFunc"></v-file-input>
+              <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-account" @change="changeProfileFunc"></v-file-input>
             </v-list-item-action>
             <v-list-item-content>
               <v-text-field label="닉네임" placeholder="닉네임을 입력해 주세요" v-model="userDto.username"></v-text-field>

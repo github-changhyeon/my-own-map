@@ -10,14 +10,14 @@
     <!-- <div>
       <TimeLine />
     </div> -->
-    <v-card>
+    <!-- <v-card>
       <v-tabs centered style="z-index: 2">
-        <!-- <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
+        <v-tab @click="isOpen = 1" style="width: 50vw">내 게시글 보기</v-tab>
         <v-tab @click="isOpen = 2" style="width: 5vw"><v-icon>mdi-heart</v-icon></v-tab>
-        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab> -->
+        <v-tab @click="isOpen = 3" style="width: 5vw"><v-icon>mdi-lock</v-icon></v-tab>
         <v-tab style="width: 5vw"><v-icon>mdi-cog</v-icon></v-tab>
       </v-tabs>
-    </v-card>
+    </v-card> -->
     <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
