@@ -7,10 +7,6 @@
     <div>
       <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
       <v-icon v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
-      <!-- <v-icon @click="dofolldoFollow(
-        this.uid, config,
-        (response) => {
-          ow">mdi-account-minus</v-icon> -->
     </div>
     <div @click="goToFollowerList">
       팔로워
@@ -18,7 +14,6 @@
       <div style="margin-left:20px;">
         {{ followerList.length }}
       </div>
-      <!-- <Follow :users="followerList" /> -->
     </div>
 
     <br />
@@ -28,13 +23,15 @@
       <div style="margin-left:20px;">
         {{ followingList.length }}
       </div>
-      <!-- <Follow :users="followingList" /> -->
     </div>
   </div>
 </template>
 
 <script>
 import constants from '@/lib/constants.js';
+import { notifyAction } from '@/api/fcm.js';
+import jwt_decode from 'jwt-decode';
+
 // import Follow from '@/components/user/Follow';
 import { doFollow, findFollower, findFollowing, isFollow } from '@/api/user.js';
 
@@ -134,7 +131,10 @@ export default {
       this.$router.push({ name: 'Follow', params: { follow: this.followerList } });
     },
     goToMap() {
-      this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.uid } });
+      this.$router.push({
+        name: constants.URL_TYPE.HOME.MAIN,
+        params: { uid: this.uid },
+      });
     },
     checkFollow() {
       const config = this.setToken();
@@ -144,6 +144,26 @@ export default {
         (response) => {
           this.followerList = response.data.object.body.object;
           this.isFollow = !this.isFollow;
+          let body = {
+            // uid: this.uid,
+            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            message: 'FOLLOW',
+          };
+
+          notifyAction(
+            body,
+            (success) => {
+              if (success.data.status) {
+                console.log('알림 ok');
+              } else {
+                console.log('알림을 할 수 없습니다.');
+              }
+            },
+            (error) => {
+              console.log(error);
+              alert('서버에러');
+            }
+          );
         },
         (error) => {
           console.log(error);

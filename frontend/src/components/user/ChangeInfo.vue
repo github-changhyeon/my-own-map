@@ -25,6 +25,18 @@
 
           <v-list-item>
             <v-list-item-action>
+              <v-icon>mdi-message-draw</v-icon>
+            </v-list-item-action>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                <v-text-field label="상태 메세지" placeholder="메세지를 입력해 주세요" v-model="userDto.stateMsg"></v-text-field>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-action>
               <v-icon>mdi-email</v-icon>
             </v-list-item-action>
 
@@ -135,7 +147,7 @@ export default {
       this.isChangePassword = false;
     },
     deleteUserFunc() {
-      if (confirm('Do you really want to delete?')) {
+      if (confirm('탈퇴하실건가요?')) {
         deleteUser(
           (response) => {
             if (response.data.status) {
@@ -165,6 +177,7 @@ export default {
           if (response.data.status) {
             this.userDto = response.data.object;
             this.storePassword = this.userDto.password;
+            this.stateMsg = this.userDto.stateMsg;
             alert('정보수정에 성공했습니다.');
           } else {
             alert('회원 정보 수정을 할 수 없습니다.');
@@ -181,6 +194,7 @@ export default {
     return {
       profileImageUrl: '',
       profileImage: {},
+      stateMsg: '',
       storePassword: '',
       passwordConfirm: '',
       uid: '',

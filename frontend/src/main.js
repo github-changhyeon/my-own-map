@@ -13,4 +13,5 @@ new Vue({
   vuetify,
   VeeValidate,
   render: (h) => h(App),
+  async beforeCreate() {},
 }).$mount('#app');

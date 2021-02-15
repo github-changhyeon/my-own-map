@@ -34,4 +34,5 @@ public class SwaggerConfig {
 				.apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
 				.paths(PathSelectors.any()).build();
 	}
+
 }
