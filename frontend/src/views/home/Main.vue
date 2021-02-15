@@ -142,8 +142,8 @@ const FAVORITE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/1
 //   'https://i4b107.p.ssafy.io/images/markers/followMarker.jpg';
 // const FAVORITE_IMAGE_SRC =
 //   'https://i4b107.p.ssafy.io/images/markers/favoriteMarker.jpg';
-const MARKER_WIDTH = 40;
-const MARKER_HEIGHT = 40;
+const MARKER_WIDTH = 50;
+const MARKER_HEIGHT = 50;
 
 export default {
   components: {
