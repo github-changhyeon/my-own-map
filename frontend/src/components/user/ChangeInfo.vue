@@ -10,13 +10,16 @@
         <v-divider inset></v-divider>
         <v-list>
           <v-list-item>
-            <v-list-item-action style="margin-right: 10px">
+            <!-- <v-list-item-action style="margin-right: 10px">
               <v-avatar>
                 <img :src="profileImageUrl" />
               </v-avatar>
             </v-list-item-action>
             <v-list-item-action style="margin-right: 10px">
               <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-account" @change="changeProfileFunc"></v-file-input>
+            </v-list-item-action> -->
+            <v-list-item-action style="margin-top:0px;">
+              <v-icon>mdi-account</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-text-field label="닉네임" placeholder="Placeholder" v-model="userDto.username"></v-text-field>
@@ -24,7 +27,7 @@
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-action>
+            <v-list-item-action style="margin-top:0px;">
               <v-icon>mdi-email</v-icon>
             </v-list-item-action>
 
@@ -36,7 +39,7 @@
           </v-list-item>
 
           <v-list-item v-if="!isChangePassword">
-            <v-list-item-action>
+            <v-list-item-action style="margin-top:0px;">
               <v-icon>mdi-lock-outline</v-icon>
             </v-list-item-action>
 
@@ -98,7 +101,7 @@ import { getUserInfo, deleteUser, updateUser } from '@/api/user.js';
 import constants from '@/lib/constants.js';
 
 export default {
-  name: 'Navigation',
+  name: 'ChangeInfo',
   components: {},
   props: ['propsUid'],
   computed: {},

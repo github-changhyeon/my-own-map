@@ -1,11 +1,12 @@
 <template>
   <div>
-    <div style="float:right">
+    <div style="text-align:right;">
       OO 님
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserInfo :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
+      <UserPicture style="margin-top:30px;" />
+      <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
       <TimeLine />
@@ -34,6 +35,7 @@ import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
 import ChangeInfo from '@/components/user/ChangeInfo.vue';
+import UserPicture from '@/components/user/UserPicture.vue';
 
 // //NewsFeed
 // import PublicNewsFeed from '@/components/sns/PublicNewsFeed.vue';
@@ -59,6 +61,7 @@ export default {
     // PrivateNewsFeed,
     // FavoriteNewsFeed,
     ChangeInfo,
+    UserPicture,
   },
   data() {
     return {
