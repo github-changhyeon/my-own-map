@@ -143,22 +143,27 @@ export default {
       }
     },
     createPost() {
-      // console.log(this.article.images[0])
-      var params = new URLSearchParams();
-      params.append('file', this.images);
-      params.append('article', this.article);
-      for (let i = 0; i < this.hashtagNames.length; ++i) {
-        let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
-        this.article.hashtags.push(obj);
+      if (this.article.positionLat === '' || this.article.positionLng === '' || this.article.address === '') {
+        alert('주소가 선택되지 않았습니다!');
+        return;
       }
 
+      if (this.title === '') {
+        alert('제목이 입력되지 않았습니다!');
+        return;
+      }
+
+      // console.log(this.article.images[0])
+      // var params = new URLSearchParams();
+      // params.append('file', this.images);
+      // params.append('article', this.article);
+      // for (let i = 0; i < this.hashtagNames.length; ++i) {
+      //   let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
+      //   this.article.hashtags.push(obj);
+      // }
+
       // const imgs = new FormData();
-      // sonsole.log(typeof(this.article.images))
       const formData = new FormData();
-      // console.log(this.images);
-      // console.log(typeof(this.images));
-      // console.log(this.images[0]);
-      // console.log(this.images[1]);
 
       this.images.forEach((image) => formData.append('file[]', image));
       // formData.append("file", this.images);
