@@ -38,12 +38,12 @@
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
-    <v-btn to="`/articles/create`" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="/articles/create" replace style="background-color:white; margin-top:8px;">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <!-- </router-link> -->
     <!-- <router-link :to="`/articles/create`" style="textDecoration:none;"> -->
-    <v-btn to="`/articles/create`" replace style="background-color:white; margin-top:8px;">
+    <v-btn to="/articles/create" replace style="background-color:white; margin-top:8px;">
       <img width="40px" height="44px" src="@/assets/MOM_Icon.png" />
     </v-btn>
     <!-- </router-link> -->
