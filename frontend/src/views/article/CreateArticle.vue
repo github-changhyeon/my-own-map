@@ -16,7 +16,7 @@
       <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
     </div>
     <div class="center">
-      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 선택해 보세요." multiple chips>
+      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 입력해 보세요." multiple chips>
         <template v-slot:selection="data">
           <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
             <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
@@ -39,7 +39,7 @@
       <div>
         <v-carousel class="picture-size" v-if="imgs.length != 0">
           <v-carousel-item class="picture-size" v-for="(img, idx) in imgs" :key="idx" :src="img" append reverse-transition="fade-transition" transition="fade-transition" multiple="true">
-            <button @click="removeImage()" class="deleteButton">X</button>
+            <button @click="removeImage(idx)" class="deleteButton">X</button>
           </v-carousel-item>
         </v-carousel>
       </div>
@@ -114,9 +114,11 @@ export default {
     };
   },
   methods: {
-    removeImage(image) {
+    removeImage(idx) {
       // this.imgs = '';
-      this.imgs.splice(this.imgs.indexOf(image), 1);
+      console.log(idx, '이미지');
+      console.log(this.imgs, '이미지');
+      this.imgs.splice(idx, 1);
     },
     selectDate(e) {
       this.article.visitDate = e;
@@ -233,7 +235,8 @@ export default {
 }
 
 .picture-size {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   border: 1px solid white;
   display: block;
   margin-left: auto;

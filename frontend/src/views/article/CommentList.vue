@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div>
+      <h4 style="font-weight: bold ">댓글 ({{ items.length }}개)</h4>
+      <br />
+    </div>
     <v-card width="800" class="mx-auto">
       <template>
         <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
@@ -9,7 +13,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
-            <CommentCreate v-if="isModify[index]" :index="index" @create-comment="checkUpdateComment" />
+            <CommentCreate v-if="isModify[index]" :updateContent="item.content" :index="index" @create-comment="checkUpdateComment" />
           </v-list-item-content>
           <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"><v-icon small>mdi-pencil-outline</v-icon></v-btn>
           <v-btn x-small v-if="!isModify[index]" @click="checkDeleteComment(item)"><v-icon small>mdi-trash-can</v-icon></v-btn>
@@ -194,4 +198,7 @@ export default {
 .commentlist {
   border-bottom: 1px solid rgb(209, 209, 209);
 }
+/* h4:hover {
+  cursor: pointer;
+} */
 </style>

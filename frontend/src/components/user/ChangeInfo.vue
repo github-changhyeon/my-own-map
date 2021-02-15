@@ -19,7 +19,19 @@
               <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-account" @change="changeProfileFunc"></v-file-input>
             </v-list-item-action>
             <v-list-item-content>
-              <v-text-field label="닉네임" placeholder="Placeholder" v-model="userDto.username"></v-text-field>
+              <v-text-field label="닉네임" placeholder="닉네임을 입력해 주세요" v-model="userDto.username"></v-text-field>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-action>
+              <v-icon>mdi-message-draw</v-icon>
+            </v-list-item-action>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                <v-text-field label="상태 메세지" placeholder="메세지를 입력해 주세요" v-model="userDto.stateMsg"></v-text-field>
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -30,7 +42,7 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                <v-text-field label="이메일" placeholder="Placeholder" v-model="userDto.email" disabled></v-text-field>
+                <v-text-field label="이메일" placeholder="이메일은 변경할 수 없습니다" v-model="userDto.email" disabled></v-text-field>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -55,7 +67,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Change password" placeholder="Placeholder" v-model="userDto.password" type="password"></v-text-field>
+              <v-text-field label="새 비밀번호" placeholder="새 비밀번호를 입력해 주세요" v-model="userDto.password" type="password"></v-text-field>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -69,7 +81,7 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-text-field label="Confirm password" placeholder="Placeholder" v-model="passwordConfirm" type="password"></v-text-field>
+              <v-text-field label="새 비밀번호 확인" placeholder="새 비밀번호를 입력해 주세요" v-model="passwordConfirm" type="password"></v-text-field>
             </v-list-item-content>
           </v-list-item>
 
@@ -135,7 +147,7 @@ export default {
       this.isChangePassword = false;
     },
     deleteUserFunc() {
-      if (confirm('Do you really want to delete?')) {
+      if (confirm('탈퇴하실건가요?')) {
         deleteUser(
           (response) => {
             if (response.data.status) {
@@ -165,6 +177,7 @@ export default {
           if (response.data.status) {
             this.userDto = response.data.object;
             this.storePassword = this.userDto.password;
+            this.stateMsg = this.userDto.stateMsg;
             alert('정보수정에 성공했습니다.');
           } else {
             alert('회원 정보 수정을 할 수 없습니다.');
@@ -181,6 +194,7 @@ export default {
     return {
       profileImageUrl: '',
       profileImage: {},
+      stateMsg: '',
       storePassword: '',
       passwordConfirm: '',
       uid: '',

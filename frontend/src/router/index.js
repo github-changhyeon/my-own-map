@@ -14,6 +14,7 @@ import UpdateArticle from '@/views/article/UpdateArticle';
 // User
 import MyPage from '@/views/user/MyPage';
 import Join from '@/views/user/Join';
+import Follow from '@/components/user/Follow';
 import History from '@/views/user/History';
 
 // SNS
@@ -108,6 +109,12 @@ const routes = [
     path: '/share',
     name: 'KakaoSharing',
     component: KakaoSharing,
+    props: true,
+  },
+  {
+    path: '/followlist',
+    name: 'Follow',
+    component: Follow,
     props: true,
   },
 ];

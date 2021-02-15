@@ -18,4 +18,5 @@ public interface ArticleDao extends JpaRepository<ArticleDto, String> {
 //	int update(int articleNo, ArticleDto articleDto);
 	List<ArticleDto> findTop10ByUserDtoAndIsPrivateOrderByUpdateTimeDesc(UserDto userDto, boolean b);
 	List<ArticleDto> findAllByUserDtoAndIsPrivate(UserDto userDto, boolean b);
+	List<ArticleDto> findAllByIsPrivate(boolean b);
 }

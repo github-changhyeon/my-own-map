@@ -3,18 +3,10 @@
     <v-avatar>
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
     </v-avatar>
-    <button v-if="!isSameUser" @click="goToMap">지도보기</button>
+    <v-btn v-if="!isSameUser" @click="goToMap">지도보기</v-btn>
     <div>
-      <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow"
-        >mdi-account-plus</v-icon
-      >
-      <v-icon v-if="!isSameUser && isFollow" @click="checkFollow"
-        >mdi-account-minus</v-icon
-      >
-      <!-- <v-icon @click="dofolldoFollow(
-        this.uid, config,
-        (response) => {
-          ow">mdi-account-minus</v-icon> -->
+      <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
+      <v-icon v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
     </div>
     <div @click="goToFollowerList">
       팔로워
@@ -22,7 +14,6 @@
       <div style="margin-left:20px;">
         {{ followerList.length }}
       </div>
-      <!-- <Follow :users="followerList" /> -->
     </div>
 
     <br />
@@ -32,7 +23,6 @@
       <div style="margin-left:20px;">
         {{ followingList.length }}
       </div>
-      <!-- <Follow :users="followingList" /> -->
     </div>
   </div>
 </template>
@@ -51,8 +41,8 @@ export default {
     // Follow,
   },
   props: {
-    followerList: Array,
-    followingList: Array,
+    // followerList: Array,
+    // followingList: Array,
     profile: Object,
     isSameUser: Boolean,
   },
@@ -72,9 +62,6 @@ export default {
         },
         (error) => {
           console.log(error);
-          // console.log(this.uid);
-          // console.log(config);
-          // console.log('isfollow에러');
         }
       );
     },
@@ -84,6 +71,8 @@ export default {
       myImg: '',
       uid: 0,
       isFollow: true,
+      followerList: [],
+      followingList: [],
       //   followingList: [
       //     {
       //       id: 1,
@@ -135,8 +124,12 @@ export default {
       };
       return config;
     },
-    goToFollowingList() {},
-    goToFollowerList() {},
+    goToFollowingList() {
+      this.$router.push({ name: 'Follow', params: { follow: this.followingList } });
+    },
+    goToFollowerList() {
+      this.$router.push({ name: 'Follow', params: { follow: this.followerList } });
+    },
     goToMap() {
       this.$router.push({
         name: constants.URL_TYPE.HOME.MAIN,
@@ -219,9 +212,6 @@ export default {
       },
       (error) => {
         console.log(error);
-        // console.log(this.uid);
-        // console.log(config);
-        // console.log('isfollow에러');
       }
     );
   },
