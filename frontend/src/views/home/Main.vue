@@ -26,7 +26,7 @@
         background-color="white"
         :search-input.sync="searchTitle"
         @change="clickSearchTitleBar"
-        label="Title을 검색해주세요"
+        label="제목을 검색해주세요"
         style="position: fixed; top: 10px; z-index: 2"
       ></v-autocomplete>
     </v-row>
@@ -110,22 +110,19 @@
 
     <!-- </div> -->
 
-    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 200px; z-index: 2">리스트 view</v-btn>
+    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 200px; z-index: 2" depressed><v-icon>mdi-view-list</v-icon></v-btn>
 
     <Navigation />
   </div>
 </template>
 
 <script>
-// import constants from '../../lib/constants';
-// import { login } from '@/api/user.js';
 import { getArticles, getUserHashtags, getUserPublicHashtags, getPublicArticles, myFavorite } from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
 import Navigation from '@/components/Navigation.vue';
 import KakaoSharing from '@/components/sns/KakaoSharing.vue';
-// import Vue from 'vue';
 
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 // const fullStarHtml = '<button type="button" tabindex="-1" aria-label="Rating 1 of 5" class="v-icon notranslate v-icon--link mdi mdi-star theme--light orange--text" style="font-size: 20px"></button>';
@@ -145,8 +142,8 @@ const FAVORITE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/1
 //   'https://i4b107.p.ssafy.io/images/markers/followMarker.jpg';
 // const FAVORITE_IMAGE_SRC =
 //   'https://i4b107.p.ssafy.io/images/markers/favoriteMarker.jpg';
-const MARKER_WIDTH = 40;
-const MARKER_HEIGHT = 40;
+const MARKER_WIDTH = 50;
+const MARKER_HEIGHT = 50;
 
 export default {
   components: {

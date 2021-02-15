@@ -5,7 +5,7 @@
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserPicture style="margin-top:30px;" />
+      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUid="uid" />
       <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
@@ -22,7 +22,8 @@
     <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
-    <ChangeInfo :propsUid="uid" />
+    <router-link to="/changeinfo" class="changeInfobutton"><v-icon v-if="isSameUser">mdi-cog</v-icon></router-link>
+    <!-- <ChangeInfo :propsUid="uid" /> -->
     <Navigation />
   </div>
 </template>
@@ -34,7 +35,7 @@ import jwt_decode from 'jwt-decode';
 import UserInfo from '@/components/user/UserInfo';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
-import ChangeInfo from '@/components/user/ChangeInfo.vue';
+// import ChangeInfo from '@/components/user/ChangeInfo.vue';
 import UserPicture from '@/components/user/UserPicture.vue';
 
 // //NewsFeed
@@ -60,7 +61,7 @@ export default {
     // PublicNewsFeed,
     // PrivateNewsFeed,
     // FavoriteNewsFeed,
-    ChangeInfo,
+    // ChangeInfo,
     UserPicture,
   },
   data() {
@@ -69,7 +70,7 @@ export default {
       userDto: {},
       tokenData: '',
       isSameUser: true,
-      isOpen: '',
+      isOpen: 0,
       uid: '',
       followingList: [],
       followerList: [],
@@ -79,8 +80,6 @@ export default {
     logout() {
       localStorage.removeItem('jwt');
       // location.reload();
-      // this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
-      // this.$router.go()
       this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
     },
   },
@@ -107,7 +106,6 @@ export default {
         this.uid,
         (response) => {
           this.followingList = response.data.object;
-          // this.$emit('followingList', this.followingList);
         },
         (error) => {
           console.log(error);
@@ -120,7 +118,6 @@ export default {
         (response) => {
           this.followerList = response.data.object;
           console.log(this.followerList);
-          // this.$emit('followerList', this.followerList);
         },
         (error) => {
           console.log(error);
@@ -146,14 +143,12 @@ export default {
     } else {
       console.log('본인이아님');
       this.isSameUser = false;
-      console.log(this.$route.params);
       this.userDto = this.$route.params;
     }
     findFollowing(
       this.uid,
       (response) => {
         this.followingList = response.data.object;
-        // this.$emit('followingList', this.followingList);
       },
       (error) => {
         console.log(error);
@@ -166,7 +161,6 @@ export default {
       (response) => {
         this.followerList = response.data.object;
         console.log(this.followerList);
-        // this.$emit('followerList', this.followerList);
       },
       (error) => {
         console.log(error);
@@ -176,4 +170,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.changeInfobutton {
+  float: right;
+  margin-bottom: 70px;
+  margin-right: 20px;
+  text-decoration: none;
+}
+</style>

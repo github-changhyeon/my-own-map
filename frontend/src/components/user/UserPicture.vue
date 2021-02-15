@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div>
-      <img class="profileImage" :src="profileImageUrl" />
-    </div>
-    <v-file-input class="addbutton" v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-plus" @change="changeProfileFunc"></v-file-input>
+    <img class="profileImage" :src="profileImageUrl" />
+    <v-file-input v-if="isSameUser" class="addbutton" v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-plus" @change="changeProfileFunc"></v-file-input>
   </div>
 </template>
 
 <script>
-import { getUserInfo } from '@/api/user.js';
+// import { getUserInfo } from '@/api/user.js';
+// import jwt_decode from 'jwt-decode';
 
 export default {
   name: 'UserPicture',
   components: {},
-  props: ['propsUid'],
+  props: ['isSameUser', 'propsUid'],
   data: function() {
     return {
-      profileImageUrl: '@/assets/basic_user.png',
+      profileImageUrl: 'https://user-images.githubusercontent.com/68372599/107969212-d0284180-6ff2-11eb-80c0-b13c581eccf1.png',
       profileImage: {},
       uid: '',
+      tokenData: '',
       userDto: {},
     };
   },
@@ -29,24 +29,8 @@ export default {
     },
   },
   computed: {},
-  watch: {},
   created() {
     this.uid = this.propsUid;
-    getUserInfo(
-      this.uid,
-      (response) => {
-        if (response.data.status) {
-          this.userDto = response.data.object;
-          this.storePassword = this.userDto.password;
-        } else {
-          alert('유저 정보를 받아올 수 없습니다.');
-        }
-      },
-      (error) => {
-        console.log(error);
-        alert('서버 에러');
-      }
-    );
   },
 };
 </script>

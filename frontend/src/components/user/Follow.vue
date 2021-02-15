@@ -1,11 +1,13 @@
 <template>
   <div>
     <div>
-      <div v-for="(user, idx) in users" :key="idx">
+      <div v-for="(user, idx) in follow" :key="idx">
         <v-avatar>
           <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="" />
         </v-avatar>
-        hi<span>{{ user.username }} </span>
+        <span>{{ user.username }} </span>
+        <br />
+        <!-- <span>{{ user.email }} </span> -->
       </div>
     </div>
   </div>
@@ -27,10 +29,14 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      follow: null,
+    };
   },
   created() {
     console.log(this.users, 'follow.vue의 콘솔');
+    console.log(this.$route.params.follow);
+    this.follow = this.$route.params.follow;
   },
 };
 </script>

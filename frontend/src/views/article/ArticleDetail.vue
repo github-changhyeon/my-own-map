@@ -13,15 +13,15 @@
         <KakaoSharing :article="article" style="position: fixed; display:flex; right:10px; top: 10px; z-index: 2" />
         <Favorite :article="article" style="position: fixed; display:flex; right:70px; top: 25px; z-index: 2" />
       </div>
+
       <div class="total-contents">
         <div>
           <label for="title"></label>
-          <span class="article-title"
-            ><b>{{ article.title }}</b></span
-          >
+          <span class="article-title">
+            <b>{{ article.title }}</b>
+          </span>
         </div>
         <div>
-          <!-- 사진 -->
           <v-carousel class="image">
             <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
           </v-carousel>
@@ -29,24 +29,6 @@
         <div>
           <v-rating style="margin-left:50px;" v-model="this.article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" readonly large> </v-rating>
         </div>
-        <!-- <div>
-          <label for="title"><strong>작성자</strong> | </label>
-          {{ this.$route.query.user }}
-        </div> -->
-        <!-- <div>
-          <label for="title"><strong>수정일자</strong> | </label>
-          {{ this.$route.query.updated_at | moment('YYYY-MM-DD h:mm:ss a') }}
-        </div> -->
-        <!-- <v-col md="4" offset-md="4">
-          <v-combobox v-model="{{article.hashtags}}" :items="items" multiple chips>
-            <template v-slot:selection="data">
-              <v-chip :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
-                <v-avatar class="accent white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
-                {{ data.item }}
-              </v-chip>
-            </template>
-          </v-combobox>
-        </v-col> -->
         <div style="margin-top:10px;">
           <!-- hashtags -->
           <v-icon>mdi-pound</v-icon>
@@ -54,7 +36,8 @@
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-calendar</v-icon>
-          {{ article.regiTime | moment('YYYY-MM-DD') }}
+          <!-- {{ article.regiTime | moment('YYYY-MM-DD') }} -->
+          {{ article.regiTime.split('T')[0] }}
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-map-marker</v-icon>
@@ -363,8 +346,10 @@ ul {
 
 .total-contents {
   width: 500px;
+  display: block;
   margin: 0 auto;
 }
+
 .content {
   width: 45%;
 }

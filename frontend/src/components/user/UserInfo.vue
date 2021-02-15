@@ -3,18 +3,16 @@
     <!-- <v-avatar>
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
     </v-avatar> -->
-    <button v-if="!isSameUser" @click="goToMap">지도보기</button>
-    <div>
-      <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
-      <v-icon v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
-      <!-- <v-icon @click="dofolldoFollow(
-        this.uid, config,
-        (response) => {
-          ow">mdi-account-minus</v-icon> -->
+    <div class="map-follow-button">
+      <v-btn style="margin-right: 20px;" class="mapbutton" color="primary" v-if="!isSameUser" @click="goToMap">지도 보기</v-btn>
+      <div>
+        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
+        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
+      </div>
     </div>
     <div class="word-spacing" style="margin-left:50px">
       <div @click="goToFollowerList">
-        팔로워
+        <span style="font-weight:bold;">팔로워</span>
         <br />
         <div style="margin-left:20px;">
           {{ followerList.length }}
@@ -24,7 +22,7 @@
 
       <br />
       <div @click="goToFollowingList" style="margin-right:50px;">
-        팔로우
+        <span style="font-weight:bold;">팔로우</span>
         <br />
         <div style="margin-left:20px;">
           {{ followingList.length }}
@@ -46,8 +44,8 @@ export default {
     // Follow,
   },
   props: {
-    followerList: Array,
-    followingList: Array,
+    // followerList: Array,
+    // followingList: Array,
     profile: Object,
     isSameUser: Boolean,
   },
@@ -67,9 +65,6 @@ export default {
         },
         (error) => {
           console.log(error);
-          // console.log(this.uid);
-          // console.log(config);
-          // console.log('isfollow에러');
         }
       );
     },
@@ -79,6 +74,8 @@ export default {
       myImg: '',
       uid: 0,
       isFollow: true,
+      followerList: [],
+      followingList: [],
       //   followingList: [
       //     {
       //       id: 1,
@@ -130,8 +127,12 @@ export default {
       };
       return config;
     },
-    goToFollowingList() {},
-    goToFollowerList() {},
+    goToFollowingList() {
+      this.$router.push({ name: 'Follow', params: { follow: this.followingList } });
+    },
+    goToFollowerList() {
+      this.$router.push({ name: 'Follow', params: { follow: this.followerList } });
+    },
     goToMap() {
       this.$router.push({ name: constants.URL_TYPE.HOME.MAIN, params: { uid: this.uid } });
     },
@@ -191,9 +192,6 @@ export default {
       },
       (error) => {
         console.log(error);
-        // console.log(this.uid);
-        // console.log(config);
-        // console.log('isfollow에러');
       }
     );
   },
@@ -207,6 +205,16 @@ export default {
   padding-top: 25px;
   padding-bottom: 25px;
 } */
+
+.map-follow-button {
+  text-align: right;
+  clear: both;
+}
+
+.mapbutton {
+  border-radius: 10px;
+  font-weight: bold;
+}
 
 .word-spacing {
   display: flex;
