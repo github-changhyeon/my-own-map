@@ -95,16 +95,16 @@ public class UserController {
 	@Autowired
 	private ProfileImageDao profileImageDao;
 
-	
 //	@ApiOperation(value = "이메일 중복 확인", response = List.class)
 //	@PostMapping("/checkDuplicatedEmail")
 //	public ResponseEntity<BasicResponse> checkDuplicatedEmail(@RequestParam(value = "email", required = false) String email){
 //		final BasicResponse result = new BasicResponse();
+//		userDao.findByEmail(email);
 //		result.status = true;
 //		result.message = "success";
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //	}
-	
+
 	// 나의 메인페이지
 	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
 	@GetMapping("/{uid}/recentArticles")
@@ -186,20 +186,20 @@ public class UserController {
 		result.object = hashtags;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	// 공개된 해쉬태그 만들기!!!!!
 	@ApiOperation(value = "해당 유저의 공개된 해쉬태그를 모두 반환한다.", response = List.class)
 	@GetMapping("/{uid}/userPublicHashtags")
 	public ResponseEntity<BasicResponse> retrievePublicHashtags(@PathVariable String uid) {
-		
+
 		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
 		List<UserHashtag> list = userHashtagDao.findAllByUserDtoAndPublicCntGreaterThan(userOpt.get(), 0);
-		
+
 		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
 		for (int i = 0; i < list.size(); i++) {
 			hashtags.add(list.get(i).getHashtagDto());
 		}
-		
+
 		final BasicResponse result = new BasicResponse();
 		result.status = true;
 		result.message = "success";
@@ -458,7 +458,7 @@ public class UserController {
 				ProfileImageDto profileImageDto = new ProfileImageDto();
 				profileImageDto.setUserDto(userDto);
 				profileImageDto.setProfileImage(uuidFilename);
-				if(tmpProfileImageDto != null) {
+				if (tmpProfileImageDto != null) {
 					profileImageDto.setId(tmpProfileImageDto.getId());
 				}
 				profileImageDao.save(profileImageDto);
