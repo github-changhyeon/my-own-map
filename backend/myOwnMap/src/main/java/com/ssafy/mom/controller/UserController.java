@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -94,6 +95,16 @@ public class UserController {
 	@Autowired
 	private ProfileImageDao profileImageDao;
 
+	
+//	@ApiOperation(value = "이메일 중복 확인", response = List.class)
+//	@PostMapping("/checkDuplicatedEmail")
+//	public ResponseEntity<BasicResponse> checkDuplicatedEmail(@RequestParam(value = "email", required = false) String email){
+//		final BasicResponse result = new BasicResponse();
+//		result.status = true;
+//		result.message = "success";
+//		return new ResponseEntity<>(result, HttpStatus.OK);
+//	}
+	
 	// 나의 메인페이지
 	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
 	@GetMapping("/{uid}/recentArticles")
