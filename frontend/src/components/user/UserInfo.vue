@@ -40,6 +40,7 @@
 <script>
 import constants from '@/lib/constants.js';
 import { notifyFollowing } from '@/api/fcm.js';
+import jwt_decode from 'jwt-decode';
 
 // import Follow from '@/components/user/Follow';
 import { doFollow, findFollower, findFollowing, isFollow } from '@/api/user.js';
@@ -151,7 +152,8 @@ export default {
           this.followerList = response.data.object.body.object;
           this.isFollow = !this.isFollow;
           let body = {
-            uid: this.uid,
+            // uid: this.uid,
+            uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'follow',
           };
           notifyFollowing(
