@@ -34,7 +34,7 @@
 import jwt_decode from 'jwt-decode';
 
 import { login } from '@/api/user.js';
-import NaverLogin from '@/components/user/NaverLogin';
+// import NaverLogin from '@/components/user/NaverLogin';
 import { registFcmToken } from '@/api/fcm.js';
 
 import constants from '@/lib/constants.js';
@@ -98,9 +98,7 @@ export default {
                   // ...
                 } else {
                   // Show permission request UI
-                  console.log(
-                    'No registration token available. Request permission to generate one.'
-                  );
+                  console.log('No registration token available. Request permission to generate one.');
                   // ...
                 }
               });
