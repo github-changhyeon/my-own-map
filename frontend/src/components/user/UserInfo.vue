@@ -1,27 +1,32 @@
 <template>
   <div class="userinfo">
-    <v-avatar>
+    <!-- <v-avatar>
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-    </v-avatar>
-    <v-btn v-if="!isSameUser" @click="goToMap">지도보기</v-btn>
-    <div>
-      <v-icon v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
-      <v-icon v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
-    </div>
-    <div @click="goToFollowerList">
-      팔로워
-      <br />
-      <div style="margin-left:20px;">
-        {{ followerList.length }}
+    </v-avatar> -->
+    <div class="map-follow-button">
+      <v-btn style="margin-right: 20px;" class="mapbutton" color="primary" v-if="!isSameUser" @click="goToMap">지도 보기</v-btn>
+      <div>
+        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
+        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>\
       </div>
     </div>
+    <div class="word-spacing" style="margin-left:50px">
+      <div @click="goToFollowerList">
+        <span style="font-weight:bold;">팔로워</span>
+        <br />
+        <div style="margin-left:20px;">
+          {{ followerList.length }}
+        </div>
+        <!-- <Follow :users="followerList" /> -->
+      </div>
 
-    <br />
-    <div @click="goToFollowingList">
-      팔로우
       <br />
-      <div style="margin-left:20px;">
-        {{ followingList.length }}
+      <div @click="goToFollowingList" style="margin-right:50px;">
+        <span style="font-weight:bold;">팔로우</span>
+        <br />
+        <div style="margin-left:20px;">
+          {{ followingList.length }}
+        </div>
       </div>
     </div>
   </div>
@@ -219,10 +224,27 @@ export default {
 </script>
 
 <style scoped>
-.userinfo {
+/* .userinfo {
   display: flex;
   justify-content: space-around;
   padding-top: 25px;
+  padding-bottom: 25px;
+} */
+
+.map-follow-button {
+  text-align: right;
+  clear: both;
+}
+
+.mapbutton {
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.word-spacing {
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 10px;
   padding-bottom: 25px;
 }
 </style>

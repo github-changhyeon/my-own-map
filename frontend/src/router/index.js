@@ -15,6 +15,7 @@ import UpdateArticle from '@/views/article/UpdateArticle';
 import MyPage from '@/views/user/MyPage';
 import Join from '@/views/user/Join';
 import Follow from '@/components/user/Follow';
+import ChangeInfo from '@/components/user/ChangeInfo';
 import History from '@/views/user/History';
 
 // SNS
@@ -115,6 +116,12 @@ const routes = [
     path: '/followlist',
     name: 'Follow',
     component: Follow,
+    props: true,
+  },
+  {
+    path: '/changeinfo',
+    name: 'ChangeInfo',
+    component: ChangeInfo,
     props: true,
   },
 ];
