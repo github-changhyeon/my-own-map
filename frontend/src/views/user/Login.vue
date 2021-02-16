@@ -3,6 +3,7 @@
     <v-app class="center">
       <main class="center" style="margin-top:50px; width:350px;">
         <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
+        <my-own-map class="mx-auto" />
         <div class="titlebar">
           회원이 아니신가요?
           <router-link to="/join"><a href="">회원가입 하기</a></router-link>
@@ -36,7 +37,6 @@ import jwt_decode from 'jwt-decode';
 import { login } from '@/api/user.js';
 // import NaverLogin from '@/components/user/NaverLogin';
 import { registFcmToken } from '@/api/fcm.js';
-
 import constants from '@/lib/constants.js';
 import {
   // deleteToken,
@@ -44,10 +44,12 @@ import {
   requestPermission,
   getToken,
 } from '@/api/notification.js';
+import MyOwnMap from '../../components/MyOwnMap.vue';
 
 export default {
   name: 'Login',
   components: {
+    MyOwnMap,
     // NaverLogin,
   },
   data() {
