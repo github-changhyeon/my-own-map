@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.ssafy.mom.config.jwt.JwtService;
 import com.ssafy.mom.dao.ArticleDao;
 import com.ssafy.mom.dao.CommentDao;
+import com.ssafy.mom.dao.ProfileImageDao;
 import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.model.ArticleDto;
 import com.ssafy.mom.model.BasicResponse;
@@ -59,6 +59,9 @@ public class CommentController {
 	CommentDao commentDao;
 
 	@Autowired
+	ProfileImageDao profileImageDao;
+
+	@Autowired
 	JwtService jwtService;
 
 	// create
@@ -67,9 +70,9 @@ public class CommentController {
 	public Object createComment(
 			@RequestBody @ApiParam(value = "댓글 작성시 필요한 정보(댓글내용, 유저id, 게시글no).", required = true) Map<String, String> dtoMap) {
 		final BasicResponse result = new BasicResponse();
-		int uid =Integer.parseInt(dtoMap.get("uid"));
+		int uid = Integer.parseInt(dtoMap.get("uid"));
 		System.out.println(uid + "uid");
-		
+
 		int articleNo = Integer.parseInt(dtoMap.get("articleNo"));
 		System.out.println(articleNo + "articleNo");
 		Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
@@ -110,10 +113,18 @@ public class CommentController {
 		if (commentEntities.size() == 0) {
 			result.message = "댓글이 없습니다";
 			result.status = true;
-			result.object = new ArrayList<CommentDto> ();
+			result.object = new ArrayList<CommentDto>();
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} // 있다면
 		else {
+            for (int i = 0; i < commentEntities.size(); ++i) {
+                if (profileImageDao.findByUserDto(commentEntities.get(i).getUserDto()) != null) {
+                    commentEntities.get(i).getUserDto().setProfileImagePath(
+                            profileImageDao.findByUserDto(commentEntities.get(i).getUserDto()).getProfileImage());
+                } else {
+                    commentEntities.get(i).getUserDto().setProfileImagePath("DefaultProfileImage.png");
+                }
+            }
 			result.message = "댓글 불러오기 성공";
 			result.status = true;
 			result.object = commentEntities;
@@ -127,9 +138,8 @@ public class CommentController {
 	@PutMapping
 	@ApiOperation(value = "해당 게시글 수정")
 	public Object updateComment(
-			@RequestBody @ApiParam(value = "댓글 수정 시 필요한 정보(댓글번호 ,댓글내용,jwt).", required = true) CommentDto comment
-			,HttpServletRequest request
-			) {
+			@RequestBody @ApiParam(value = "댓글 수정 시 필요한 정보(댓글번호 ,댓글내용,jwt).", required = true) CommentDto comment,
+			HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		Optional<CommentDto> commentEntity = commentDao.findById(comment.getCommentNo());
 		int myUid = jwtService.getUserUid();
@@ -158,9 +168,8 @@ public class CommentController {
 	// delete
 	@DeleteMapping("/{commentNo}")
 	@ApiOperation(value = "해당 댓글 삭제")
-	public Object deleteComment(@PathVariable @ApiParam(value = "댓글 삭제 시 필요한 정보(댓글번호, jwt) ") int commentNo
-			,HttpServletRequest request
-			) {
+	public Object deleteComment(@PathVariable @ApiParam(value = "댓글 삭제 시 필요한 정보(댓글번호, jwt) ") int commentNo,
+			HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
 		Optional<CommentDto> commentEntity = commentDao.findById(commentNo);
 		int myUid = jwtService.getUserUid();
@@ -176,7 +185,7 @@ public class CommentController {
 			result.status = false;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
-		//있다면 삭제
+		// 있다면 삭제
 		commentDao.delete(commentEntity.get());
 		result.message = "댓글 삭제 성공";
 		result.status = true;
