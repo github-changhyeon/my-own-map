@@ -157,10 +157,10 @@ export default {
       // var params = new URLSearchParams();
       // params.append('file', this.images);
       // params.append('article', this.article);
-      // for (let i = 0; i < this.hashtagNames.length; ++i) {
-      //   let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
-      //   this.article.hashtags.push(obj);
-      // }
+      for (let i = 0; i < this.hashtagNames.length; ++i) {
+        let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
+        this.article.hashtags.push(obj);
+      }
 
       // const imgs = new FormData();
       const formData = new FormData();
