@@ -422,23 +422,27 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/findByUid/{uid}")
-	@ApiOperation(value = "회원번호로 찾기")
-	public Object retrieveUserByUid(@PathVariable String uid) {
-		final BasicResponse result = new BasicResponse();
-		Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
-		if (!findUser.isPresent()) {
-			result.status = false;
-			result.message = FAIL;
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		} else {
-			findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
-			result.status = true;
-			result.message = SUCCESS;
-			result.object = findUser;
-			return new ResponseEntity<>(result, HttpStatus.OK);
-		}
-	}
+    @GetMapping("/findByUid/{uid}")
+    @ApiOperation(value = "회원번호로 찾기")
+    public Object retrieveUserByUid(@PathVariable String uid) {
+        final BasicResponse result = new BasicResponse();
+        Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
+        if (!findUser.isPresent()) {
+            result.status = false;
+            result.message = FAIL;
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        } else {
+            if(profileImageDao.findByUserDto(findUser.get()) != null) {
+                findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
+            }else {
+                findUser.get().setProfileImagePath("DefaultProfileImage");
+            }
+            result.status = true;
+            result.message = SUCCESS;
+            result.object = findUser;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+    }
 
 	@PutMapping
 	@ApiOperation(value = "회원정보 수정")

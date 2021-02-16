@@ -10,11 +10,11 @@
         <v-btn icon size="30" style="position: fixed; display:flex; top: 25px; z-index: 2" @click="goBack">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div style="position: fixed; display:flex;top: 25px; z-index: 2; vertical-align: middle;">
-          <v-avatar>
+        <div style="position: fixed; display:flex; top: 25px; left: 50px; z-index: 2; vertical-align: middle;">
+          <!-- <v-avatar>
             {{ article.userDto.profileImagePath }}
-          </v-avatar>
-          <span @click="goToMyPage(article.userDto.uid)">
+          </v-avatar> -->
+          <span class="hover" @click="goToMyPage(article.userDto.uid)">
             {{ article.userDto.username }}
           </span>
         </div>
@@ -362,7 +362,9 @@ ul {
   padding-top: 180px;
   font-weight: bold;
 }
-
+.hover {
+  cursor: pointer;
+}
 strong {
   color: rgb(38, 95, 202);
 }
@@ -389,6 +391,7 @@ strong {
 .loading span:nth-child(7) {
   animation-delay: 0.6s;
 }
+
 @keyframes loading {
   0% {
     transform: scale(1);
