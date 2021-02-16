@@ -5,7 +5,7 @@
       <div style="width:170px; height:35px;" id="menu_wrap_search" class="bg_white">
         <div class="option">
           <div>
-            <v-form style="position:fixed;" @submit.prevent="searchPlaces">
+            <v-form @submit.prevent="searchPlaces">
               <input type="text" placeholder="장소명, 주소로 검색" id="keyword" size="17" />
               <button style=" border:none; outline:none" type="submit"><v-icon style="margin-left:10px;">mdi-magnify</v-icon></button>
             </v-form>
