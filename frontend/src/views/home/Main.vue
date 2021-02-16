@@ -1,27 +1,19 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small light @click="hashtagDrawer = !hashtagDrawer" style="position:fixed; top: 100px; right:370px; z-index: 2">
+      <v-btn class="ma-2" fab x-small light @click="hashtagDrawer = !hashtagDrawer" style="position:fixed; top: 60px; z-index: 2">
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right:370px; z-index: 2">
+      <v-btn class="ma-2" fab x-small light @click="followDrawer = !followDrawer" style="position: fixed; top: 20px; z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end">
-      <KakaoSharing
-        :filteredHashtagSwitches="userHashtagSwitches"
-        :isShowFavorites="isShowFavorites"
-        :articles="articles"
-        fab
-        small
-        dark
-        style="position: fixed; top: 150px; right:370px; z-index: 2"
-      />
+      <KakaoSharing :filteredHashtagSwitches="userHashtagSwitches" :isShowFavorites="isShowFavorites" :articles="articles" fab x-small dark style="position: fixed; top: 100px; z-index: 2" />
     </v-row>
 
     <v-row justify="center">
@@ -120,11 +112,11 @@
       </div>
     </v-navigation-drawer>
 
-    <div id="map" style="height: 100vh; z-index: 1"></div>
+    <div id="map" style="height: 100vh; width:810px; z-index: 1"></div>
 
     <!-- </div> -->
 
-    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 200px; z-index: 2" depressed><v-icon>mdi-view-list</v-icon></v-btn>
+    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 100px; z-index: 2" depressed><v-icon>mdi-view-list</v-icon></v-btn>
 
     <Navigation />
   </div>

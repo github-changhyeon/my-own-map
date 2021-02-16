@@ -29,7 +29,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-btn @click="goToMain" style="position: fixed; bottom: 200px; z-index: 2" depressed><v-icon>mdi-map-search-outline</v-icon></v-btn>
+    <v-btn @click="goToMain" style="position: fixed; bottom: 100px; z-index: 2" depressed><v-icon>mdi-map-search-outline</v-icon></v-btn>
 
     <Navigation />
   </div>
