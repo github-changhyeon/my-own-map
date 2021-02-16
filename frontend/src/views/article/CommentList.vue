@@ -8,10 +8,10 @@
       <template>
         <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
           <v-list-item-avatar>
-            <v-img :src="item.avatar"></v-img>
-            <!-- {{ item.userDto.username }} -->
+            <v-img :src="item.userDto.profileImagePath"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
+            {{ item.userDto.username }}
             <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
             <CommentCreate v-if="isModify[index]" :updateContent="item.content" :index="index" @create-comment="checkUpdateComment" />
           </v-list-item-content>
@@ -25,12 +25,7 @@
 </template>
 
 <script>
-import {
-  getComment,
-  createComment,
-  deleteComment,
-  updateComment,
-} from '@/api/comment.js';
+import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
 import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';
