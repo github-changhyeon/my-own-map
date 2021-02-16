@@ -7,19 +7,31 @@
   >
     <!-- 버튼을 router link로 해보자! -->
 
-    <v-btn :to="`/main/${this.uid}`" replace style="background-color:white; margin-top:8px;">
+    <v-btn
+      :to="`/main/${this.uid}`"
+      replace
+      style="background-color:white; margin-top:8px;"
+    >
       <v-icon>mdi-home</v-icon>
     </v-btn>
 
-    <v-btn to="/newsfeed" replace style="background-color:white; margin-top:8px;">
+    <v-btn
+      to="/newsfeed"
+      replace
+      style="background-color:white; margin-top:8px;"
+    >
       <v-icon>mdi-newspaper-variant</v-icon>
     </v-btn>
 
-    <v-btn to="/articles/create" replace style="background-color:white; margin-top:8px;">
+    <v-btn
+      to="/articles/create"
+      replace
+      style="background-color:white; margin-top:8px;"
+    >
       <v-icon>mdi-plus</v-icon>
     </v-btn>
 
-    <v-btn to="/history" style="background-color:white; margin-top:8px;">
+    <v-btn @click="goToHistory" style="background-color:white; margin-top:8px;">
       <v-badge :content="messages" :value="messages" color="red" overlap>
         <v-icon>
           mdi-bell
@@ -27,7 +39,11 @@
       </v-badge>
     </v-btn>
 
-    <v-btn :to="`/users/${this.uid}`" replace style="background-color:white; margin-top:8px;">
+    <v-btn
+      :to="`/users/${this.uid}`"
+      replace
+      style="background-color:white; margin-top:8px;"
+    >
       <v-icon>mdi-account</v-icon>
     </v-btn>
   </v-bottom-navigation>
@@ -36,6 +52,9 @@
 <script>
 import jwt_decode from 'jwt-decode';
 import { getUserInfo } from '@/api/user.js';
+import { setZero } from '@/api/fcm.js';
+import constants from '@/lib/constants.js';
+
 export default {
   data: () => ({
     value: 0,
@@ -47,7 +66,27 @@ export default {
   // watch: {
 
   // },
-  methods: {},
+  methods: {
+    goToHistory() {
+      if (this.uid > 0) {
+        setZero(
+          (success) => {
+            if (success.data.status) {
+              console.log('zero 만들기 성공');
+            } else {
+              console.log('zero 만들기 실패');
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('서버 에러');
+          }
+        );
+      }
+
+      this.$router.push({ name: constants.URL_TYPE.USER.HISTORY });
+    },
+  },
   created() {
     const token = localStorage.getItem('jwt');
     if (token !== null && token !== undefined) {

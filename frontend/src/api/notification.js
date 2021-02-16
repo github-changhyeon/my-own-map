@@ -35,8 +35,17 @@ function receiveMessage() {
     let options = {
       body: payload.notification.body,
     };
+    navigator.serviceWorker.register('/firebase-messaging-sw.js');
 
-    new Notification(title, options);
+    // new Notification(title, options);
+    navigator.serviceWorker.ready
+      .then(function(registration) {
+        console.log(registration, '레지레지');
+        registration.showNotification(title, options);
+      })
+      .catch((error) => {
+        console.log(error, '에러입메');
+      });
     // ...
   });
   // [END messaging_receive_message]
