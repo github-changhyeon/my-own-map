@@ -30,8 +30,8 @@ public class FCMService {
     	
     	Message message = Message.builder()
                 .setToken(notificationRequest.getToken())
-//                .setNotification(new Notification(notificationRequest.getTitle(), notificationRequest.getMessage()))
-                .setAndroidConfig(AndroidConfig.builder().setNotification(AndroidNotification.builder().setTitle(notificationRequest.getTitle()).setBody(notificationRequest.getMessage()).build()).build())
+                .setNotification(new Notification(notificationRequest.getTitle(), notificationRequest.getMessage()))
+//                .setAndroidConfig(AndroidConfig.builder().setNotification(AndroidNotification.builder().setTitle(notificationRequest.getTitle()).setBody(notificationRequest.getMessage()).build()).build())
                 .build();
 
         String response = FirebaseMessaging.getInstance().sendAsync(message).get();
