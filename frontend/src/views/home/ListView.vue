@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-bottom:50px;">
     <v-container>
       <v-row v-if="articles.length > 0">
         <v-col v-for="(article, i) in articles" :key="i" cols="6">
@@ -12,7 +12,7 @@
             ></v-img>
 
             <v-card-title @click="goToDetail(article)">
-              {{ article.title }}
+              <span style="width:300px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ article.title }}</span>
             </v-card-title>
 
             <v-card-subtitle style="padding-bottom: 0">
