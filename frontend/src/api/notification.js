@@ -36,7 +36,12 @@ function receiveMessage() {
       body: payload.notification.body,
     };
 
-    new Notification(title, options);
+    try {
+      new Notification(title, options);
+    } catch (e) {
+      console.log(e);
+    }
+
     // ...
   });
   // [END messaging_receive_message]
