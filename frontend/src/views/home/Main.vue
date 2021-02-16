@@ -1,19 +1,27 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab small light @click="hashtagDrawer = !hashtagDrawer" style="position: fixed; top: 100px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="hashtagDrawer = !hashtagDrawer" style="position:fixed; top: 100px; right:370px; z-index: 2">
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; z-index: 2">
+      <v-btn class="ma-2" fab small light @click="followDrawer = !followDrawer" style="position: fixed; top: 50px; right:370px; z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end">
-      <KakaoSharing :filteredHashtagSwitches="userHashtagSwitches" :isShowFavorites="isShowFavorites" :articles="articles" fab small dark style="position: fixed; top: 150px; z-index: 2" />
+      <KakaoSharing
+        :filteredHashtagSwitches="userHashtagSwitches"
+        :isShowFavorites="isShowFavorites"
+        :articles="articles"
+        fab
+        small
+        dark
+        style="position: fixed; top: 150px; right:370px; z-index: 2"
+      />
     </v-row>
 
     <v-row justify="center">
