@@ -52,8 +52,14 @@
           filled
           :search-input.sync="searchHashtag"
           @change="searchHashtag = ''"
-          label="Filled"
-        ></v-autocomplete>
+          label="검색어를 입력해주세요"
+        >
+          <template slot="no-data">
+            <div class="center ml-2" style="font-size:0.8em">
+              검색 후보가 존재하지 않아요 :(
+            </div>
+          </template></v-autocomplete
+        >
       </v-list-item>
       <v-list-item>
         <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
@@ -94,8 +100,14 @@
           filled
           :search-input.sync="searchFollowUser"
           @change="searchFollowUser = ''"
-          label="Filled"
-        ></v-autocomplete>
+          label="검색어를 입력해주세요"
+        >
+          <template slot="no-data">
+            <div class="center ml-2" style="font-size:0.8em">
+              검색 후보가 존재하지 않아요 :(
+            </div>
+          </template></v-autocomplete
+        >
       </v-list-item>
 
       <div v-if="selectedFollowUserNames.length == 0">
