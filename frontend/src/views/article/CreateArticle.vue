@@ -116,9 +116,8 @@ export default {
   methods: {
     removeImage(idx) {
       // this.imgs = '';
-      console.log(idx, '이미지');
-      console.log(this.imgs, '이미지');
       this.imgs.splice(idx, 1);
+      this.images.splice(idx, 1);
     },
     selectDate(e) {
       this.article.visitDate = e;
@@ -166,6 +165,7 @@ export default {
       const formData = new FormData();
 
       this.images.forEach((image) => formData.append('file[]', image));
+      console.log(this.images, '이미지 몇개등록인가요');
       // formData.append("file", this.images);
       formData.append('article', new Blob([JSON.stringify(this.article)], { type: 'application/json' }));
       // console.log("file",formData.get("file"));

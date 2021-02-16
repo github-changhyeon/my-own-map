@@ -4,7 +4,7 @@
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUid="uid" />
+      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUserDto="userDto" />
       <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
@@ -42,7 +42,7 @@ import UserPicture from '@/components/user/UserPicture.vue';
 // import PrivateNewsFeed from '@/components/sns/PrivateNewsFeed.vue';
 // import FavoriteNewsFeed from '@/components/sns/FavoriteNewsFeed.vue';
 
-// import { getUserInfo } from '@/api/user.js';
+import { getUserInfo } from '@/api/user.js';
 // import { findFollower, findFollowing } from '@/api/user.js';
 import { deleteFcmToken } from '@/api/fcm.js';
 import {
@@ -161,6 +161,22 @@ export default {
       this.isSameUser = false;
       this.userDto = this.$route.params;
     }
+    getUserInfo(
+      this.uid,
+      (response) => {
+        if (response.data.status) {
+          this.userDto = response.data.object;
+          console.log(this.userDto, 'mypage의 getuserinfo');
+          this.storePassword = this.userDto.password;
+        } else {
+          alert('유저 정보를 받아올 수 없습니다.');
+        }
+      },
+      (error) => {
+        console.log(error);
+        alert('서버 에러');
+      }
+    );
     // findFollowing(
     //   this.uid,
     //   (response) => {

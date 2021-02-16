@@ -422,22 +422,27 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/findByUid/{uid}")
-	@ApiOperation(value = "회원번호로 찾기")
-	public Object retrieveUserByUid(@PathVariable String uid) {
-		final BasicResponse result = new BasicResponse();
-		Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
-		if (!findUser.isPresent()) {
-			result.status = false;
-			result.message = FAIL;
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-		} else {
-			result.status = true;
-			result.message = SUCCESS;
-			result.object = findUser;
-			return new ResponseEntity<>(result, HttpStatus.OK);
-		}
-	}
+    @GetMapping("/findByUid/{uid}")
+    @ApiOperation(value = "회원번호로 찾기")
+    public Object retrieveUserByUid(@PathVariable String uid) {
+        final BasicResponse result = new BasicResponse();
+        Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
+        if (!findUser.isPresent()) {
+            result.status = false;
+            result.message = FAIL;
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        } else {
+            if(profileImageDao.findByUserDto(findUser.get()) != null) {
+                findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
+            }else {
+                findUser.get().setProfileImagePath("DefaultProfileImage");
+            }
+            result.status = true;
+            result.message = SUCCESS;
+            result.object = findUser;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+    }
 
 	@PutMapping
 	@ApiOperation(value = "회원정보 수정")
@@ -464,7 +469,7 @@ public class UserController {
 
 				String uuidFilename = uuid + dTime + file.getOriginalFilename();
 
-				Path filePath = Paths.get(fileRealPath + "profileImages/" + uid + uuidFilename);
+				Path filePath = Paths.get(fileRealPath + "profileImages/" + uuidFilename);
 
 				try {
 					Files.write(filePath, file.getBytes());
@@ -483,6 +488,7 @@ public class UserController {
 					profileImageDto.setId(tmpProfileImageDto.getId());
 				}
 				profileImageDao.save(profileImageDto);
+				userDto.setProfileImagePath(profileImageDto.getProfileImage());
 				// -------------- 이미지 저장 end
 			}
 			// ---------------------
