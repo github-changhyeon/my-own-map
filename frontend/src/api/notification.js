@@ -21,31 +21,31 @@ function getMessagingObject() {
   // [END messaging_get_messaging_object]
 }
 
-function receiveMessage() {
-  // const messaging = firebase.messaging();
-  // [START messaging_receive_message]
-  // Handle incoming messages. Called when:
-  // - a message is received while the app has focus
-  // - the user clicks on an app notification created by a service worker
-  //   `messaging.onBackgroundMessage` handler.
-  messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
+// function receiveMessage() {
+//   // const messaging = firebase.messaging();
+//   // [START messaging_receive_message]
+//   // Handle incoming messages. Called when:
+//   // - a message is received while the app has focus
+//   // - the user clicks on an app notification created by a service worker
+//   //   `messaging.onBackgroundMessage` handler.
+//   messaging.onMessage((payload) => {
+//     console.log('Message received. ', payload);
 
-    let title = payload.notification.title;
-    let options = {
-      body: payload.notification.body,
-    };
+//     let title = payload.notification.title;
+//     let options = {
+//       body: payload.notification.body,
+//     };
 
-    try {
-      new Notification(title, options);
-    } catch (e) {
-      console.log(e);
-    }
+//     try {
+//       new Notification(title, options);
+//     } catch (e) {
+//       console.log(e);
+//     }
 
-    // ...
-  });
-  // [END messaging_receive_message]
-}
+//     // ...
+//   });
+//   // [END messaging_receive_message]
+// }
 
 function getToken(success) {
   // const messaging = firebase.messaging();
@@ -86,7 +86,7 @@ function deleteToken(success) {
 
 export {
   getMessagingObject,
-  receiveMessage,
+  // receiveMessage,
   getToken,
   requestPermission,
   deleteToken,

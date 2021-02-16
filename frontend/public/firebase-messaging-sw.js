@@ -31,3 +31,14 @@ messaging.setBackgroundMessageHandler((payload) => {
 
   return self.registration.showNotification(title, options);
 });
+
+messaging.onMessage((payload) => {
+  console.log('Message received. ', payload);
+
+  let title = payload.notification.title;
+  let options = {
+    body: payload.notification.body,
+  };
+
+  return self.registration.showNotification(title, options);
+});

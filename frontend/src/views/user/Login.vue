@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app class="center">
-      <main class="center" style="margin-top:50px; width:350px;">
+      <main class="center" style="margin-top: 50px; width: 350px">
         <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
         <div class="titlebar">
           회원이 아니신가요?
@@ -9,16 +9,31 @@
         </div>
         <!-- <v-form v-model="valid" ref="form"> -->
         <v-form ref="form">
-          <div class="InfoName">
-            이메일
-          </div>
-          <v-text-field style="padding-top:0px;" name="email" type="email" placeholder="이메일을 입력해 주세요." v-model="loginForm.email"></v-text-field>
-          <div class="InfoName">
-            비밀번호
-          </div>
-          <v-text-field style="padding-top:0px;" name="password" type="password" placeholder="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
+          <div class="InfoName">이메일</div>
+          <v-text-field
+            style="padding-top: 0px"
+            name="email"
+            type="email"
+            placeholder="이메일을 입력해 주세요."
+            v-model="loginForm.email"
+          ></v-text-field>
+          <div class="InfoName">비밀번호</div>
+          <v-text-field
+            style="padding-top: 0px"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해 주세요."
+            v-model="loginForm.password"
+            min="8"
+          ></v-text-field>
           <v-layout justify-space-between>
-            <v-btn @click="checkLogin()" color="primary" height="50" class="loginbar">로그인 하기</v-btn>
+            <v-btn
+              @click="checkLogin()"
+              color="primary"
+              height="50"
+              class="loginbar"
+              >로그인 하기</v-btn
+            >
           </v-layout>
           <!-- <NaverLogin /> -->
           <div class="findPassword">
@@ -40,7 +55,7 @@ import { registFcmToken } from '@/api/fcm.js';
 import constants from '@/lib/constants.js';
 import {
   // deleteToken,
-  receiveMessage,
+  // receiveMessage,
   requestPermission,
   getToken,
 } from '@/api/notification.js';
@@ -98,13 +113,15 @@ export default {
                   // ...
                 } else {
                   // Show permission request UI
-                  console.log('No registration token available. Request permission to generate one.');
+                  console.log(
+                    'No registration token available. Request permission to generate one.'
+                  );
                   // ...
                 }
               });
               // TODO(developer): Retrieve a registration token for use with FCM.
               // ...
-              receiveMessage();
+              // receiveMessage();
             } else {
               console.log('Unable to get permission to notify.');
             }
