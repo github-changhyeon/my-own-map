@@ -121,8 +121,12 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			if(tmpImages.size() != 0) {
+				for (int j = 0; j < tmpImages.size(); j++) {
+					tmpImagePaths.add(tmpImages.get(j).getPostImage());
+				}
+			}else {
+				tmpImagePaths.add("DefaultProfileImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
 //			articles.get(i).setUid(userOpt.get().getUid());
@@ -153,8 +157,13 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			if(tmpImages.size() != 0)
+			{
+				for (int j = 0; j < tmpImages.size(); j++) {
+					tmpImagePaths.add(tmpImages.get(j).getPostImage());
+				}
+			}else {
+				tmpImagePaths.add("DefaultProfileImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
 //			articles.get(i).setUid(userOpt.get().getUid());
@@ -229,8 +238,12 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			if(tmpImages.size() != 0) {
+				for (int j = 0; j < tmpImages.size(); j++) {
+					tmpImagePaths.add(tmpImages.get(j).getPostImage());
+				}
+			}else {
+				tmpImagePaths.add("DefaultProfileImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
 			articles.get(i).setUserDto(userOpt.get());
@@ -263,8 +276,12 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			if(tmpImages.size() != 0) {
+				for (int j = 0; j < tmpImages.size(); j++) {
+					tmpImagePaths.add(tmpImages.get(j).getPostImage());
+				}
+			}else {
+				tmpImagePaths.add("DefaultArticleImage");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
 			articles.get(i).setUserDto(userOpt.get());
@@ -307,8 +324,12 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			if(tmpImages.size() != 0) {
+				for (int j = 0; j < tmpImages.size(); j++) {
+					tmpImagePaths.add(tmpImages.get(j).getPostImage());
+				}
+			}else {
+				tmpImagePaths.add("DefaultArticleImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
 			articles.get(i).setUserDto(userOpt.get());
