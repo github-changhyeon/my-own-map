@@ -432,6 +432,7 @@ public class UserController {
 			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		} else {
+			findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
 			result.status = true;
 			result.message = SUCCESS;
 			result.object = findUser;
@@ -464,7 +465,7 @@ public class UserController {
 
 				String uuidFilename = uuid + dTime + file.getOriginalFilename();
 
-				Path filePath = Paths.get(fileRealPath + "profileImages/" + uid + uuidFilename);
+				Path filePath = Paths.get(fileRealPath + "profileImages/" + uuidFilename);
 
 				try {
 					Files.write(filePath, file.getBytes());
@@ -483,6 +484,7 @@ public class UserController {
 					profileImageDto.setId(tmpProfileImageDto.getId());
 				}
 				profileImageDao.save(profileImageDto);
+				userDto.setProfileImagePath(profileImageDto.getProfileImage());
 				// -------------- 이미지 저장 end
 			}
 			// ---------------------
