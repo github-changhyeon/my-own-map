@@ -2,9 +2,16 @@
   <div>
     <v-card v-if="histories.length > 0" width="800" class="mx-auto">
       <v-list>
-        <v-list-group sub-group :value="true" v-for="(historiesOfOneDay, i) in histories" :key="i">
+        <v-list-group
+          sub-group
+          :value="true"
+          v-for="(historiesOfOneDay, i) in histories"
+          :key="i"
+        >
           <template v-slot:activator>
-            <v-list-item-title>{{ historiesOfOneDay[0].regiTime.substring(0, 10) }}</v-list-item-title>
+            <v-list-item-title>{{
+              historiesOfOneDay[0].regiTime.substring(0, 10)
+            }}</v-list-item-title>
           </template>
 
           <!-- aaa -->
@@ -28,7 +35,11 @@
                     {{ history.userFrom.username }}
                   </button>
                   님이
-                  <button @click="goToArticleDetail(history.articleDto.articleNo)">{{ history.articleDto.articleNo }}번 게시글</button>을 좋아합니다.
+                  <button
+                    @click="goToArticleDetail(history.articleDto.articleNo)"
+                  >
+                    {{ history.articleDto.articleNo }}번 게시글</button
+                  >을 좋아합니다.
                 </div>
               </v-list-item-content>
               <v-list-item-content v-if="history.state === 'COMMENT'">
@@ -37,7 +48,11 @@
                     {{ history.userFrom.username }}
                   </button>
                   님이
-                  <button @click="goToArticleDetail(history.articleDto.articleNo)">{{ history.articleDto.articleNo }}번 게시글</button>에 댓글을 달았습니다.
+                  <button
+                    @click="goToArticleDetail(history.articleDto.articleNo)"
+                  >
+                    {{ history.articleDto.articleNo }}번 게시글</button
+                  >에 댓글을 달았습니다.
                 </div>
               </v-list-item-content>
             </v-list-item>
@@ -51,7 +66,7 @@
 
 <script>
 import jwt_decode from 'jwt-decode';
-import { setZero, getHistory } from '@/api/fcm.js';
+import { getHistory } from '@/api/fcm.js';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
 
@@ -69,19 +84,19 @@ export default {
       this.uid = jwt_decode(token).uid;
     }
     if (this.uid > 0) {
-      setZero(
-        (success) => {
-          if (success.data.status) {
-            console.log('zero 만들기 성공');
-          } else {
-            console.log('zero 만들기 실패');
-          }
-        },
-        (error) => {
-          console.log(error);
-          alert('서버 에러');
-        }
-      );
+      // setZero(
+      //   (success) => {
+      //     if (success.data.status) {
+      //       console.log('zero 만들기 성공');
+      //     } else {
+      //       console.log('zero 만들기 실패');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     alert('서버 에러');
+      //   }
+      // );
       getHistory(
         (success) => {
           if (success.data.status) {
@@ -92,7 +107,10 @@ export default {
               let tempArr = new Array();
               tempArr.push(tempHistories[0]);
               for (let i = 1; i < tempHistories.length; ++i) {
-                if (tempHistories[i].regiTime.substring(0, 10) !== tempArr[0].regiTime.substring(0, 10)) {
+                if (
+                  tempHistories[i].regiTime.substring(0, 10) !==
+                  tempArr[0].regiTime.substring(0, 10)
+                ) {
                   this.histories.push(tempArr);
                   tempArr = new Array();
                   tempArr.push(tempHistories[i]);
