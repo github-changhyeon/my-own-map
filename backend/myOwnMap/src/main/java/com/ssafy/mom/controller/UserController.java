@@ -435,7 +435,7 @@ public class UserController {
             if(profileImageDao.findByUserDto(findUser.get()) != null) {
                 findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
             }else {
-                findUser.get().setProfileImagePath("DefaultProfileImage");
+                findUser.get().setProfileImagePath("DefaultProfileImage.png");
             }
             result.status = true;
             result.message = SUCCESS;
