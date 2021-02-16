@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col v-for="(article, i) in articles" :key="i" cols="6">
-        <v-card class="mx-auto" max-width="344">
+        <v-card class="card-size">
           <v-img
             @click="goToDetail(article)"
             :src="article.imagePaths.length === 0 ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg' : 'https://i4b107.p.ssafy.io/images/uploads/' + article.imagePaths[0]"
@@ -10,7 +10,9 @@
             height="150px"
           ></v-img>
 
-          <v-card-title @click="goToDetail(article)"> {{ article.title }} </v-card-title>
+          <v-card-title @click="goToDetail(article)"
+            ><span style="width:300px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"> {{ article.title }}</span>
+          </v-card-title>
 
           <v-card-subtitle style="padding-bottom: 0">
             <v-rating center v-model="article.evaluation" readonly background-color="orange lighten-3" color="orange" dense half-increments size="20"></v-rating>
@@ -77,3 +79,16 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.card-size {
+  max-width: 344px;
+  max-height: 270px;
+  margin: 0 auto;
+}
+
+.card-title {
+  display: block;
+  text-overflow: ellipsis;
+}
+</style>

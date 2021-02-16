@@ -7,7 +7,7 @@
       <v-btn style="margin-right: 20px;" class="mapbutton" color="primary" v-if="!isSameUser" @click="goToMap">지도 보기</v-btn>
       <div>
         <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
-        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>\
+        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
       </div>
     </div>
     <div class="word-spacing" style="margin-left:50px">

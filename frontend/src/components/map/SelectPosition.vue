@@ -5,9 +5,9 @@
       <div style="width:170px; height:35px;" id="menu_wrap_search" class="bg_white">
         <div class="option">
           <div>
-            <v-form @submit.prevent="searchPlaces">
+            <v-form style="position:fixed;" @submit.prevent="searchPlaces">
               <input type="text" placeholder="장소명, 주소로 검색" id="keyword" size="17" />
-              <button type="submit"><v-icon>mdi-magnify</v-icon></button>
+              <button style=" border:none; outline:none" type="submit"><v-icon style="margin-left:10px;">mdi-magnify</v-icon></button>
             </v-form>
           </div>
         </div>
@@ -398,7 +398,7 @@ export default {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 250px;
+  width: 100px;
   margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
@@ -410,9 +410,9 @@ export default {
 #menu_wrap_search {
   position: absolute;
   top: 0;
-  left: 42.5px;
+  left: 38.5px;
   bottom: 0;
-  width: 250px;
+  width: 200px;
   height: 36px;
   margin: 10px 0 30px 10px;
   padding: 5px;
@@ -428,7 +428,7 @@ export default {
   left: 0;
   bottom: 0;
   width: 250px;
-  height: 350px;
+  height: 250px;
   margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
@@ -442,7 +442,7 @@ export default {
   position: absolute;
   left: 65.5px;
   text-align: center;
-  bottom: 30px;
+  bottom: 130px;
   width: 120px;
   height: 30px;
   margin: 10px 0 30px 10px;
