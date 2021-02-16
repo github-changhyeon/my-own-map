@@ -16,7 +16,15 @@
           <div class="InfoName">
             비밀번호
           </div>
-          <v-text-field style="padding-top:0px;" name="password" type="password" placeholder="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
+          <v-text-field
+            @keypress.enter="checkLogin()"
+            style="padding-top:0px;"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해 주세요."
+            v-model="loginForm.password"
+            min="8"
+          ></v-text-field>
           <v-layout justify-space-between>
             <v-btn @click="checkLogin()" color="primary" height="50" class="loginbar">로그인 하기</v-btn>
           </v-layout>
