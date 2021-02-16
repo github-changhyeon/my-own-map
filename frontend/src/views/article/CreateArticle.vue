@@ -148,7 +148,7 @@ export default {
         return;
       }
 
-      if (this.title === '') {
+      if (this.article.title === '') {
         alert('제목이 입력되지 않았습니다!');
         return;
       }
