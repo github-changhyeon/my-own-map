@@ -6,12 +6,21 @@
 <template>
   <v-card>
     <v-app>
-      <div class="detail-main">
-        <v-btn icon color="black" style="position: fixed; display:flex; top: 10px; z-index: 2" @click="goBack">
+      <div class="detail-main" style="vertical-align:middle;">
+        <v-btn icon size="30" style="position: fixed; display:flex; top: 25px; z-index: 2" @click="goBack">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <KakaoSharing :article="article" style="position: fixed; display:flex; right:10px; top: 10px; z-index: 2" />
-        <Favorite :article="article" style="position: fixed; display:flex; right:70px; top: 25px; z-index: 2" />
+        <div style="position: fixed; display:flex;top: 25px; z-index: 2; vertical-align: middle;">
+          <v-avatar>
+            {{ article.userDto.profileImagePath }}
+          </v-avatar>
+          <span @click="goToMyPage(article.userDto.uid)">
+            {{ article.userDto.username }}
+          </span>
+        </div>
+
+        <Favorite :article="article" style="position: fixed; display:flex; right:60px; top: 25px; z-index: 2" />
+        <KakaoSharing :article="article" size="30" style="position: fixed; display:flex; right:10px; top: 13px; z-index: 2" />
       </div>
 
       <div class="total-contents">
@@ -53,14 +62,17 @@
 
       <div class="buttons" v-if="isOwnArticle">
         <!-- <div class="buttons"  > -->
-        <v-btn fab small @click="checkDelete" variant="danger" class="deletebutton">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
         <v-btn fab small @click="goToUpdateArticle" variant="outline-primary" class="updatebutton">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
+        <v-btn fab small @click="checkDelete" variant="danger" class="deletebutton">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+        <v-btn fab small @click="findRoute" style="margin-right:10px;">
+          <v-icon>mdi-map</v-icon>
+        </v-btn>
       </div>
-      <div class="buttons">
+      <div class="buttons" v-if="!isOwnArticle">
         <v-btn fab small @click="findRoute" style="margin-right:10px;">
           <v-icon>mdi-map</v-icon>
         </v-btn>
@@ -123,18 +135,18 @@ export default {
         imagePaths: null,
       },
       items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-        },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+        // },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+        // },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+        // },
+        // {
+        //   src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+        // },
       ],
     };
   },
@@ -169,6 +181,10 @@ export default {
         name: constants.URL_TYPE.ARTICLE.UPDATEARTICLE,
         params: { articleNo: this.article.articleNo, article: this.article },
       });
+    },
+
+    goToMyPage(uid) {
+      this.$router.push({ name: constants.URL_TYPE.USER.MYPAGE, params: { uid: uid } });
     },
 
     checkDelete() {
@@ -334,10 +350,10 @@ ul {
 }
 
 .detail-main {
-  height: 100px;
-  /* background-image: url(https://extmovie.com/files/attach/images/135/864/625/039/d45f2adb0da9e2490177d26540c2c83d.gif); */
+  height: 90px;
+  align-content: center;
   background-size: cover;
-  filter: grayscale(100%);
+  filter: grayscale(0%);
 }
 
 .main-title {
