@@ -15,7 +15,7 @@ export default {
   props: ['isSameUser', 'propsUserDto'],
   data: function() {
     return {
-      profileImageUrl: '@/assets/profileImages/05e65b22-f8d2-4845-98d3-642c6744b18920210216162202대전캠1.jpg',
+      profileImageUrl: 'basic_user.png',
       // profileImageUrl: 'https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif',
       profileImage: {},
       uid: '',
