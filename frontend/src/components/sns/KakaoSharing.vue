@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-btn v-if="this.article !== undefined" icon @click="share" class="ma-2" fab small light>
+    <v-btn v-if="this.article !== undefined" icon @click="share" class="ma-2" fab small x-light>
       <v-icon>mdi-share-variant</v-icon>
     </v-btn>
-    <v-btn v-else @click="share" class="ma-2" fab small light>
+    <v-btn v-else @click="share" class="ma-2" fab x-small light>
       <v-icon>mdi-share-variant</v-icon>
     </v-btn>
   </div>
