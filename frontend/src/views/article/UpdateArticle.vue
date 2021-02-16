@@ -117,7 +117,6 @@
     </div>
     <div class="center">
       <v-rating v-model="article.evaluation" background-color="grey lighten-1" color="blue" half-increments length="5" size="45"></v-rating>
-      <!-- <StarRating :increment="0.5" :show-rating="false" :clearable="true" :star-size="45" v-model="article.evaluation" /> -->
     </div>
     <div>
       <button class="upload" @click="updatePost()">등록</button>
@@ -147,7 +146,6 @@ export default {
   name: 'UpdateArticle',
   components: {
     SelectPosition,
-    // StarRating,
     CreateArticleNav,
     DatePicker,
     Navigation,
