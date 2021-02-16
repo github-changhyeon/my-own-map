@@ -89,8 +89,13 @@ public class ArticleController {
 			ArticleDto articleDto = list.get(i);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleDto);
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			for (int j = 0; j < tmpImages.size(); j++) {
-				tmpImagePaths.add(tmpImages.get(j).getPostImage());
+			// TODO: 전체 공개게시물 default image
+			if(tmpImages.size() != 0) {
+				for (int j = 0; j < tmpImages.size(); j++) {
+					tmpImagePaths.add(tmpImages.get(j).getPostImage());
+				}
+			}else {
+				tmpImagePaths.add("DefaultArticleImage.png");
 			}
 			articleDto.setImagePaths(tmpImagePaths);
 		}
@@ -239,8 +244,13 @@ public class ArticleController {
 		
 		List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleOpt.get());
 		ArrayList<String> tmpImagePaths = new ArrayList<>();
-		for (int i = 0; i < tmpImages.size(); i++) {
-			tmpImagePaths.add(tmpImages.get(i).getPostImage());
+		//TODO: 이미지가 있을때와 없을때 구분 완료 // 게시글
+		if(tmpImages.size() != 0) {
+			for (int i = 0; i < tmpImages.size(); i++) {
+				tmpImagePaths.add(tmpImages.get(i).getPostImage());
+			}
+		}else {
+			tmpImagePaths.add("DefaultArticleImage.png");
 		}
 		articleOpt.get().setImagePaths(tmpImagePaths);
 
