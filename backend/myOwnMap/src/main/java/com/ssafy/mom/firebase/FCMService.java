@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -28,7 +30,8 @@ public class FCMService {
     	
     	Message message = Message.builder()
                 .setToken(notificationRequest.getToken())
-                .setNotification(new Notification(notificationRequest.getTitle(), notificationRequest.getMessage()))
+//                .setNotification(new Notification(notificationRequest.getTitle(), notificationRequest.getMessage()))
+                .setAndroidConfig(AndroidConfig.builder().setNotification(AndroidNotification.builder().setTitle(notificationRequest.getTitle()).setBody(notificationRequest.getMessage()).build()).build())
                 .build();
 
         String response = FirebaseMessaging.getInstance().sendAsync(message).get();
