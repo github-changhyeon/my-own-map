@@ -5,6 +5,10 @@
 <!-- 휴대폰 화면으로 잘 뜨는지 확인 -->
 <template>
   <v-card>
+    <img src="https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif" alt="" />
+    <img src="@/assets/MOM_Icon.png" alt="" />
+    <img :src="testImage1" />
+    <img :src="testImage2" />
     <v-app>
       <div class="detail-main" style="vertical-align:middle;">
         <v-btn icon size="30" style="position: fixed; display:flex; top: 25px; z-index: 2" @click="goBack">
@@ -114,6 +118,8 @@ export default {
     const index = this.$route.query.id;
     const Articles = this.$route.query;
     return {
+      testImage1: 'https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif',
+      testImage2: '@/assets/MOM_Icon.png',
       id: index,
       Articles: Articles,
       content: 'sample',

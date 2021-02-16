@@ -432,6 +432,11 @@ public class UserController {
 			result.message = FAIL;
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		} else {
+			if(profileImageDao.findByUserDto(findUser.get()) != null) {
+				findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
+			}else {
+				findUser.get().setProfileImagePath("DefaultProfileImage");
+			}
 			result.status = true;
 			result.message = SUCCESS;
 			result.object = findUser;
@@ -462,7 +467,7 @@ public class UserController {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
 				String dTime = formatter.format(systemTime);
 
-				String uuidFilename = uuid + dTime + file.getOriginalFilename();
+				String uuidFilename = ""+uid + uuid + dTime + file.getOriginalFilename();
 
 				Path filePath = Paths.get(fileRealPath + "profileImages/" + uid + uuidFilename);
 

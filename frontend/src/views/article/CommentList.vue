@@ -77,6 +77,7 @@ export default {
         (response) => {
           if (response.data.status) {
             this.items = response.data.object;
+            console.log(this.items, '커맨트디티오!');
             this.isModify = [];
             for (let i = 0; i < this.items.length; i++) {
               this.isModify.push(false);

@@ -119,6 +119,9 @@ export default {
       console.log(idx, '이미지');
       console.log(this.imgs, '이미지');
       this.imgs.splice(idx, 1);
+      this.images.splice(idx, 1);
+      console.log(this.imgs, 'imgs remove');
+      console.log(this.images, 'images remove');
     },
     selectDate(e) {
       this.article.visitDate = e;
@@ -179,6 +182,8 @@ export default {
         (response) => {
           // console.log(response.data);
           if (response.data.status) {
+            console.log(this.imgs, 'imgs remove');
+            console.log(this.images, 'images remove');
             alert('작성 성공');
             this.$router.push({
               name: constants.URL_TYPE.HOME.MAIN,
