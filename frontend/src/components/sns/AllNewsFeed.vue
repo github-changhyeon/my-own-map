@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="6">
+      <v-col cols="9">
         <v-text-field
           v-model="searchData"
           label="제목, 내용을 검색해주세요"

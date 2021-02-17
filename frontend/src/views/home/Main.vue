@@ -212,8 +212,10 @@
 
     <v-btn
       @click="goToFilteredDataList"
-      style="position: fixed; bottom: 100px; z-index: 2"
+      style="position: fixed; bottom: 100px; z-index: 2;"
       depressed
+      light
+      small
       ><v-icon>mdi-view-list</v-icon></v-btn
     >
 

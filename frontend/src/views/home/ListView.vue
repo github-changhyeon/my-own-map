@@ -12,7 +12,7 @@
       </v-tabs>
     </v-card>
     <v-row justify="center" style="padding-top: 20px;">
-      <v-col cols="6">
+      <v-col cols="8">
         <v-text-field
           v-model="searchData"
           label="제목, 내용을 검색해주세요"
@@ -95,7 +95,9 @@
       @click="goToMain"
       style="position: fixed; bottom: 100px; z-index: 2"
       depressed
-      ><v-icon>mdi-map-search-outline</v-icon></v-btn
+      small
+      color="blue"
+      ><v-icon color="white">mdi-map-search-outline</v-icon></v-btn
     >
 
     <Navigation />
