@@ -310,7 +310,7 @@ public class ArticleController {
 				userHashtag.setPublicCnt(userHashtag.getPublicCnt() - 1);
 			}
 		}		
-		
+		articleHashtagDao.deleteByArticleDto(articleOpt.get());
 
 		// article-hashtag-user hashtag묶음
 		// 모든 해쉬태그 정보 반환
