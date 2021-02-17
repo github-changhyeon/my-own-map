@@ -74,8 +74,14 @@
           filled
           :search-input.sync="searchHashtag"
           @change="searchHashtag = ''"
-          label="Filled"
-        ></v-autocomplete>
+          label="검색어를 입력해주세요"
+        >
+          <template slot="no-data">
+            <div class="center ml-2" style="font-size:0.8em">
+              검색 후보가 존재하지 않아요 :(
+            </div>
+          </template></v-autocomplete
+        >
       </v-list-item>
       <v-list-item>
         <v-switch
@@ -142,8 +148,14 @@
           filled
           :search-input.sync="searchFollowUser"
           @change="searchFollowUser = ''"
-          label="Filled"
-        ></v-autocomplete>
+          label="검색어를 입력해주세요"
+        >
+          <template slot="no-data">
+            <div class="center ml-2" style="font-size:0.8em">
+              검색 후보가 존재하지 않아요 :(
+            </div>
+          </template></v-autocomplete
+        >
       </v-list-item>
 
       <div v-if="selectedFollowUserNames.length == 0">
@@ -1177,20 +1189,20 @@ export default {
       for (starCnt; starCnt < Math.floor(evaluation / 2); ++starCnt) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
-        rating.className = 'mdi mdi-star theme--light orange--text';
+        rating.className = 'mdi mdi-star theme--light primary--text';
         ratingDiv.appendChild(rating);
       }
       if (evaluation % 2 == 1) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
-        rating.className = 'mdi mdi-star-half-full theme--light orange--text';
+        rating.className = 'mdi mdi-star-half-full theme--light primary--text';
         ratingDiv.appendChild(rating);
         starCnt += 1;
       }
       for (starCnt; starCnt < 5; ++starCnt) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
-        rating.className = 'mdi mdi-star-outline theme--light orange--text';
+        rating.className = 'mdi mdi-star-outline theme--light primary--text';
         ratingDiv.appendChild(rating);
       }
       descDiv.appendChild(ratingDiv);

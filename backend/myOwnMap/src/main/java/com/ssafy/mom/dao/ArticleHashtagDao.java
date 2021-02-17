@@ -27,5 +27,7 @@ public interface ArticleHashtagDao extends JpaRepository<ArticleHashtag, String>
 	long findAllByHashtagNo(@Param("hashtagNo") int hashtagNo);
 //	List<Integer> findHashtagNoByUserDto(UserDto userDto);
 
+	ArticleHashtag findByArticleDtoAndHashtagDto(ArticleDto articleDto, HashtagDto alreadyExist);
+
 	 
 }

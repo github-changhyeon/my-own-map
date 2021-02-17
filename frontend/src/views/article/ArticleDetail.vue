@@ -31,7 +31,7 @@
           </span>
         </div>
         <div style="text-align: center; max-width:500px; width: 100%">
-          <v-carousel>
+          <v-carousel v-if="hasImages">
             <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
           </v-carousel>
           <div>
@@ -45,8 +45,8 @@
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-calendar</v-icon>
-          <!-- {{ article.regiTime | moment('YYYY-MM-DD') }} -->
-          {{ article.regiTime.split('T')[0] }}
+          <!-- {{ article.regiTime.split('T')[0] }} -->
+          {{ article.visitDate }}
         </div>
         <div style="margin-top:10px;">
           <v-icon>mdi-map-marker</v-icon>
@@ -120,6 +120,7 @@ export default {
       comments: 'sample',
       commentId: Number,
       isOwnArticle: false,
+      hasImages: false,
       article: {
         address: '',
         articleNo: 0,
@@ -230,6 +231,9 @@ export default {
           this.items.push({
             src: '@/assets/upload/' + this.article.imagePaths[i],
           });
+        }
+        if (this.article.imagePaths[0] !== 'DefaultArticleImage.png') {
+          this.hasImages = true;
         }
       },
       (error) => {

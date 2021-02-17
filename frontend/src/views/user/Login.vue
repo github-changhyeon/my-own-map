@@ -3,6 +3,7 @@
     <v-app class="center">
       <main class="center" style="margin-top:50px; width:350px;">
         <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
+        <my-own-map class="mx-auto" />
         <div class="titlebar">
           회원이 아니신가요?
           <router-link to="/join"><a href="">회원가입 하기</a></router-link>
@@ -16,7 +17,15 @@
           <div class="InfoName">
             비밀번호
           </div>
-          <v-text-field style="padding-top:0px;" name="password" type="password" placeholder="비밀번호를 입력해 주세요." v-model="loginForm.password" min="8"></v-text-field>
+          <v-text-field
+            @keypress.enter="checkLogin()"
+            style="padding-top:0px;"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해 주세요."
+            v-model="loginForm.password"
+            min="8"
+          ></v-text-field>
           <v-layout justify-space-between>
             <v-btn @click="checkLogin()" color="primary" height="50" class="loginbar">로그인 하기</v-btn>
           </v-layout>
@@ -36,7 +45,6 @@ import jwt_decode from 'jwt-decode';
 import { login } from '@/api/user.js';
 // import NaverLogin from '@/components/user/NaverLogin';
 import { registFcmToken } from '@/api/fcm.js';
-
 import constants from '@/lib/constants.js';
 import {
   // deleteToken,
@@ -44,10 +52,12 @@ import {
   requestPermission,
   getToken,
 } from '@/api/notification.js';
+import MyOwnMap from '../../components/MyOwnMap.vue';
 
 export default {
   name: 'Login',
   components: {
+    MyOwnMap,
     // NaverLogin,
   },
   data() {

@@ -16,7 +16,7 @@
       <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
     </div>
     <div class="center">
-      <v-combobox v-model="hashtagNames" :items="items" label="해쉬태그를 입력해 보세요." multiple chips>
+      <v-combobox v-model="hashtagNames" :items="items" label="해시태그를 입력해 보세요." multiple chips>
         <template v-slot:selection="data">
           <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
             <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
@@ -97,7 +97,6 @@ export default {
       hashtagNames: [],
       imgs: [],
       images: [],
-      rate: 0,
       date: '',
       article: {
         positionLat: '',
@@ -156,10 +155,10 @@ export default {
       // var params = new URLSearchParams();
       // params.append('file', this.images);
       // params.append('article', this.article);
-      // for (let i = 0; i < this.hashtagNames.length; ++i) {
-      //   let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
-      //   this.article.hashtags.push(obj);
-      // }
+      for (let i = 0; i < this.hashtagNames.length; ++i) {
+        let obj = { hashtagNo: 0, hashtagName: this.hashtagNames[i] };
+        this.article.hashtags.push(obj);
+      }
 
       // const imgs = new FormData();
       const formData = new FormData();
@@ -214,9 +213,9 @@ export default {
           for (let i = 0; i < tempHashtagObjs.length; ++i) {
             this.items.push(tempHashtagObjs[i].hashtagName);
           }
-          // alert('해쉬태그 받기 성공');
+          // alert('해시태그 받기 성공');
         } else {
-          alert('해쉬태그 받기 실패');
+          alert('해시태그 받기 실패');
         }
       },
       (error) => {
