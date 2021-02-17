@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import jwt_decode from 'jwt-decode';
 import { doFavorite, isFavorite } from '@/api/user.js';
 import { notifyAction } from '@/api/fcm.js';
 export default {

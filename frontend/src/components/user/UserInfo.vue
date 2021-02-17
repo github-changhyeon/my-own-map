@@ -52,7 +52,6 @@
 <script>
 import constants from '@/lib/constants.js';
 import { notifyAction } from '@/api/fcm.js';
-import jwt_decode from 'jwt-decode';
 
 // import Follow from '@/components/user/Follow';
 import { doFollow, findFollower, findFollowing, isFollow } from '@/api/user.js';
