@@ -18,12 +18,19 @@
           <template>
             <v-list-item v-for="(history, j) in historiesOfOneDay" :key="i + j">
               <v-list-item-avatar>
-                <v-img :src="history.userFrom.avatar"></v-img>
+                <v-img
+                  :src="
+                    require(`@/assets/profileImages/${history.userFrom.profileImagePath}`)
+                  "
+                ></v-img>
                 <!-- {{ item.userDto.username }} -->
               </v-list-item-avatar>
               <v-list-item-content v-if="history.state === 'FOLLOW'">
                 <div>
-                  <button @click="goToUserPage(history.userFrom.uid)">
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToUserPage(history.userFrom.uid)"
+                  >
                     {{ history.userFrom.username }}
                   </button>
                   님이 당신을 팔로우합니다.
@@ -31,11 +38,15 @@
               </v-list-item-content>
               <v-list-item-content v-if="history.state === 'LIKE'">
                 <div>
-                  <button @click="goToUserPage(history.userFrom.uid)">
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToUserPage(history.userFrom.uid)"
+                  >
                     {{ history.userFrom.username }}
                   </button>
                   님이
                   <button
+                    style="color:#ff1f96"
                     @click="goToArticleDetail(history.articleDto.articleNo)"
                   >
                     {{ history.articleDto.articleNo }}번 게시글</button
@@ -44,11 +55,15 @@
               </v-list-item-content>
               <v-list-item-content v-if="history.state === 'COMMENT'">
                 <div>
-                  <button @click="goToUserPage(history.userFrom.uid)">
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToUserPage(history.userFrom.uid)"
+                  >
                     {{ history.userFrom.username }}
                   </button>
                   님이
                   <button
+                    style="color:#ff1f96"
                     @click="goToArticleDetail(history.articleDto.articleNo)"
                   >
                     {{ history.articleDto.articleNo }}번 게시글</button
@@ -152,38 +167,37 @@ export default {
     return {
       uid: 0,
       histories: [
-        [
-          {
-            userFrom: { username: 'aa' },
-            articleDto: {},
-            state: 'FOLLOW',
-            regiTime: '2021-04-05-11',
-          },
-          {
-            userFrom: {},
-            articleDto: {},
-            state: 'FOLLOW',
-            regiTime: '2021-04-05-11',
-          },
-        ],
-        // [{ userFrom: {}, state: 'FOLLOW', regiTime: '2021-04-05-11' }],
-
-        [
-          {
-            userFrom: {},
-            articleDto: {},
-            state: 'LIKE',
-            regiTime: '2021-04-05-12',
-          },
-        ],
-        [
-          {
-            userFrom: {},
-            articleDto: {},
-            state: 'COMMENT',
-            regiTime: '2021-04-05-13',
-          },
-        ],
+        // [
+        //   {
+        //     userFrom: { username: 'aa' },
+        //     articleDto: {},
+        //     state: 'FOLLOW',
+        //     regiTime: '2021-04-05-11',
+        //   },
+        //   {
+        //     userFrom: {},
+        //     articleDto: {},
+        //     state: 'FOLLOW',
+        //     regiTime: '2021-04-05-11',
+        //   },
+        // ],
+        // // [{ userFrom: {}, state: 'FOLLOW', regiTime: '2021-04-05-11' }],
+        // [
+        //   {
+        //     userFrom: {},
+        //     articleDto: {},
+        //     state: 'LIKE',
+        //     regiTime: '2021-04-05-12',
+        //   },
+        // ],
+        // [
+        //   {
+        //     userFrom: {},
+        //     articleDto: {},
+        //     state: 'COMMENT',
+        //     regiTime: '2021-04-05-13',
+        //   },
+        // ],
       ],
     };
   },

@@ -1,8 +1,23 @@
 <template>
   <v-container>
+    <v-row justify="center">
+      <v-col cols="6">
+        <v-text-field
+          v-model="searchData"
+          label="제목, 내용을 검색해주세요"
+          outlined
+          dense
+          background-color="white"
+          @keypress.enter="searchFunc"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+
     <v-row>
       <v-col v-for="(article, i) in listData" :key="i" cols="6">
-        <v-card class="card-size">
+        <!-- <v-card class="card-size">  -->
+
+        <v-card class="mx-auto" max-width="344">
           <v-img
             @click="goToDetail(article)"
             :src="
@@ -52,12 +67,18 @@
       </v-col>
     </v-row>
 
-    <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+    <infinite-loading ref="inf" @infinite="infiniteHandler" spinner="waveDots">
       <div
         slot="no-more"
         style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
       >
         목록의 끝입니다
+      </div>
+      <div
+        slot="no-results"
+        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+      >
+        데이터가 없습니다
       </div>
     </infinite-loading>
   </v-container>
@@ -81,6 +102,7 @@ export default {
       (response) => {
         if (response.data.status) {
           this.articles = response.data.object;
+          this.backupArticles = this.articles;
         } else {
           console.log('모든 유저의 게시글을 받아올 수 없습니다.');
         }
@@ -92,6 +114,27 @@ export default {
     );
   },
   methods: {
+    searchFunc() {
+      this.startIdx = 0;
+      this.listData = [];
+      let tempList = [];
+      for (let i = 0; i < this.backupArticles.length; ++i) {
+        if (
+          this.backupArticles[i].title.includes(this.searchData) ||
+          this.backupArticles[i].contents.includes(this.searchData)
+        ) {
+          tempList.push(this.backupArticles[i]);
+        }
+      }
+      // alert(tempList.length);
+      this.articles = tempList;
+      // this.listData.push(this.articles[0]);
+      // this.listData.push(this.articles[1]);
+      // this.listData.push(this.articles[2]);
+      // this.listData.push(this.articles[3]);
+      this.$refs.inf.stateChanger.reset();
+      this.searchData = '';
+    },
     goToDetail(article) {
       this.$router.push({
         name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
@@ -128,6 +171,8 @@ export default {
   },
   data() {
     return {
+      searchData: '',
+      backupArticles: [],
       startIdx: 0,
       listData: [],
       articles: [

@@ -21,7 +21,7 @@ public class FCMService {
                 .setToken(notificationRequest.getToken())
                 .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
                         .setNotification(new WebpushNotification(notificationRequest.getTitle(),
-                                notificationRequest.getMessage()))
+                                notificationRequest.getMessage(), "https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png"))
                         .build())
                 .build();
 

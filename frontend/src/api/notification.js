@@ -34,6 +34,7 @@ function receiveMessage() {
     let title = payload.notification.title;
     let options = {
       body: payload.notification.body,
+      icon: payload.notification.icon,
     };
     navigator.serviceWorker.register('/firebase-messaging-sw.js');
 
