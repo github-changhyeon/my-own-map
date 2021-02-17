@@ -12,20 +12,18 @@
       </v-tabs>
     </v-card>
     <v-row justify="center" style="padding-top: 20px;">
-      <v-col cols="6">
+      <v-col cols="8">
         <v-text-field
           v-model="searchData"
-          label="Outlined"
+          label="제목, 내용을 검색해주세요"
           outlined
           dense
           background-color="white"
           @keypress.enter="searchFunc"
-          style="inline-block"
         ></v-text-field>
-        <v-btn @click="searchFunc">검색</v-btn>
       </v-col>
     </v-row>
-    <v-container style="padding-top: 20px;">
+    <v-container style="padding-top: 10px;">
       <v-row v-if="listData.length > 0">
         <v-col v-for="(article, i) in listData" :key="i" cols="6">
           <v-card class="mx-auto" max-width="344">
@@ -78,12 +76,18 @@
       </v-row>
     </v-container>
 
-    <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+    <infinite-loading ref="inf" @infinite="infiniteHandler" spinner="waveDots">
       <div
         slot="no-more"
         style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
       >
         목록의 끝입니다
+      </div>
+      <div
+        slot="no-results"
+        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+      >
+        데이터가 없습니다
       </div>
     </infinite-loading>
 
@@ -91,7 +95,9 @@
       @click="goToMain"
       style="position: fixed; bottom: 100px; z-index: 2"
       depressed
-      ><v-icon>mdi-map-search-outline</v-icon></v-btn
+      small
+      color="blue"
+      ><v-icon color="white">mdi-map-search-outline</v-icon></v-btn
     >
 
     <Navigation />
@@ -101,7 +107,6 @@
 // import FollowNewsFeed from '@/components/sns/FollowNewsFeed';
 import Navigation from '@/components/Navigation.vue';
 import constants from '@/lib/constants.js';
-import jwt_decode from 'jwt-decode';
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
@@ -112,6 +117,7 @@ export default {
       sessionStorage.getItem('filteredList') !== undefined
     ) {
       this.articles = JSON.parse(sessionStorage.getItem('filteredList'));
+      this.backupArticles = this.articles;
       sessionStorage.removeItem('filteredList');
     }
     if (
@@ -119,6 +125,7 @@ export default {
       this.$route.params.filteredData !== undefined
     ) {
       this.articles = this.$route.params.filteredData;
+      this.backupArticles = this.articles;
     }
     console.log(this.articles);
   },
@@ -132,12 +139,31 @@ export default {
       articles: [],
       startIdx: 0,
       listData: [],
+      backupArticles: [],
       searchData: '',
     };
   },
   methods: {
     searchFunc() {
-      alert('search');
+      this.startIdx = 0;
+      this.listData = [];
+      let tempList = [];
+      for (let i = 0; i < this.backupArticles.length; ++i) {
+        if (
+          this.backupArticles[i].title.includes(this.searchData) ||
+          this.backupArticles[i].contents.includes(this.searchData)
+        ) {
+          tempList.push(this.backupArticles[i]);
+        }
+      }
+      // alert(tempList.length);
+      this.articles = tempList;
+      // this.listData.push(this.articles[0]);
+      // this.listData.push(this.articles[1]);
+      // this.listData.push(this.articles[2]);
+      // this.listData.push(this.articles[3]);
+      this.$refs.inf.stateChanger.reset();
+      this.searchData = '';
     },
     infiniteHandler($state) {
       const EACH_LEN = 6;
@@ -175,12 +201,7 @@ export default {
       });
     },
     goToMain() {
-      const token = localStorage.getItem('jwt');
-      let uid = jwt_decode(token).uid;
-      this.$router.replace({
-        name: constants.URL_TYPE.HOME.MAIN,
-        params: { uid: uid },
-      });
+      this.$router.go(-1);
     },
   },
 };
