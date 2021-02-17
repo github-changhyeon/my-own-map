@@ -2,13 +2,30 @@
   <div style="margin-bottom:50px;">
     <v-card>
       <v-tabs centered>
-        <v-tab @click="isAll = true" style="width: 50vw"
+        <v-tab
+          @click="isAll = true"
+          style="width: 50vw"
+          background-color="white"
           >필터링된 데이터 보기</v-tab
         >
         <!-- <v-tab @click="isAll = false" style="width: 50vw">팔로우</v-tab> -->
       </v-tabs>
     </v-card>
-    <v-container style="padding-top: 70px;">
+    <v-row justify="center" style="padding-top: 20px;">
+      <v-col cols="6">
+        <v-text-field
+          v-model="searchData"
+          label="Outlined"
+          outlined
+          dense
+          background-color="white"
+          @keypress.enter="searchFunc"
+          style="inline-block"
+        ></v-text-field>
+        <v-btn @click="searchFunc">검색</v-btn>
+      </v-col>
+    </v-row>
+    <v-container style="padding-top: 20px;">
       <v-row v-if="listData.length > 0">
         <v-col v-for="(article, i) in listData" :key="i" cols="6">
           <v-card class="mx-auto" max-width="344">
@@ -115,9 +132,13 @@ export default {
       articles: [],
       startIdx: 0,
       listData: [],
+      searchData: '',
     };
   },
   methods: {
+    searchFunc() {
+      alert('search');
+    },
     infiniteHandler($state) {
       const EACH_LEN = 6;
 
