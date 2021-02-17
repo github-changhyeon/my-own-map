@@ -179,6 +179,13 @@
       </v-list-item>
 
       <div v-if="selectedFollowUserNames.length == 0">
+        <v-list-item v-if="isSameUser">
+          <v-switch
+            @click="clickShowFavoriteSwitch(isShowFavorites)"
+            v-model="isShowFavorites"
+            label="스크랩한 게시물 보기"
+          ></v-switch>
+        </v-list-item>
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch
@@ -245,9 +252,9 @@ const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 //   '<button type="button" tabindex="-1" aria-label="Rating 5 of 5" class="v-icon notranslate v-icon--link mdi mdi-star-outline theme--light orange--text " style="font-size: 20px"></button>';
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107975557-a1629900-6ffb-11eb-9e1b-f43cd584c842.png';
-// const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107975970-38c7ec00-6ffc-11eb-95b4-2bd28dd32c15.png';
 const PUBLIC_IMAGE_SRC =
-  'https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png';
+  'https://user-images.githubusercontent.com/68572067/107975970-38c7ec00-6ffc-11eb-95b4-2bd28dd32c15.png';
+// const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png';
 
 const PRIVATE_IMAGE_SRC =
   'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
@@ -1137,7 +1144,8 @@ export default {
     },
     setHashtagMarkers() {
       let queryData = JSON.parse(this.$route.query.jsonQueryData);
-      console.log(queryData, '쿼리');
+      // console.log(queryData.length, '쿼리 길이');
+      // console.log(this.fullHashtagNames.length, '풀해쉬택 길이');
       let cnt = 0;
       for (let i = 0; i < this.fullHashtagNames.length; ++i) {
         // if(queryData.length >= i){
