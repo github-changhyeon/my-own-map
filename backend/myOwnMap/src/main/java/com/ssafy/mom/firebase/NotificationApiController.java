@@ -22,6 +22,7 @@ import com.ssafy.mom.config.jwt.JwtService;
 import com.ssafy.mom.dao.ArticleDao;
 import com.ssafy.mom.dao.FavoriteDao;
 import com.ssafy.mom.dao.HistoryDao;
+import com.ssafy.mom.dao.ProfileImageDao;
 import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.dao.UserFollowDao;
 import com.ssafy.mom.model.ArticleDto;
@@ -62,6 +63,9 @@ public class NotificationApiController {
 	
 	@Autowired
 	HistoryDao historyDao;
+	
+	@Autowired
+	ProfileImageDao profileImageDao;
 
 	private final NotificationService notificationService;
 
@@ -90,6 +94,15 @@ public class NotificationApiController {
 			return new ResponseEntity<>(result,HttpStatus.OK);
 		}
 		List<History> historyList = historyDao.findAllByUserToOrderByRegiTimeDesc(user.get());
+		for(int i = 0; i < historyList.size(); ++i) {
+			
+			 if (profileImageDao.findByUserDto(historyList.get(i).getUserFrom()) != null) {
+				 historyList.get(i).getUserFrom().setProfileImagePath(profileImageDao.findByUserDto(historyList.get(i).getUserFrom()).getProfileImage());
+             } else {
+            	 historyList.get(i).getUserFrom().setProfileImagePath("DefaultProfileImage.png");
+             }
+			
+			}
 		System.out.println(historyList.toString()+" /fcm/history-리스트 잘 가져옴?");
 		result.status = true;
 		result.message = "토큰 생성완료";
