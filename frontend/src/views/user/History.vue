@@ -19,9 +19,7 @@
             <v-list-item v-for="(history, j) in historiesOfOneDay" :key="i + j">
               <v-list-item-avatar>
                 <v-img
-                  :src="
-                    require(`@/assets/images/profileImages/${history.userFrom.profileImagePath}`)
-                  "
+                  :src="`https://i4b107.p.ssafy.io/images/profileImages/${historiesOfOneDay[j].userFrom.profileImagePath}`"
                 ></v-img>
                 <!-- {{ item.userDto.username }} -->
               </v-list-item-avatar>

@@ -13,9 +13,7 @@
         >
           <v-list-item-avatar>
             <v-img
-              :src="
-                require(`@/assets/images/profileImages/${item.userDto.profileImagePath}`)
-              "
+              :src="`https://i4b107.p.ssafy.io/images/profileImages/${items[index].userDto.profileImagePath}`"
             ></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
