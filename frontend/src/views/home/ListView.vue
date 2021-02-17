@@ -2,27 +2,24 @@
   <div style="margin-bottom:50px;">
     <v-card>
       <v-tabs centered>
-        <v-tab
-          @click="isAll = true"
-          style="width: 50vw"
-          background-color="white"
-          >필터링된 데이터 보기</v-tab
-        >
+        <v-tab @click="isAll = true" style="width: 50vw" background-color="white">필터링된 데이터 보기</v-tab>
         <!-- <v-tab @click="isAll = false" style="width: 50vw">팔로우</v-tab> -->
       </v-tabs>
     </v-card>
     <v-row justify="center" style="padding-top: 20px;">
       <v-col cols="6">
-        <v-text-field
-          v-model="searchData"
-          label="Outlined"
-          outlined
-          dense
-          background-color="white"
-          @keypress.enter="searchFunc"
-          style="inline-block"
-        ></v-text-field>
-        <v-btn @click="searchFunc">검색</v-btn>
+        <v-text-field v-model="searchData" label="Outlined" outlined dense background-color="white" @keypress.enter="searchFunc" style="inline-block"
+          ><template v-slot:append>
+            <v-btn @click="searchFunc">검색</v-btn>
+          </template>
+        </v-text-field>
+        <!-- <v-text-field label="Label" color="primary" v-model="input" @keypress.enter="show">
+          <template v-slot:append>
+            <v-btn depressed tile color="primary" class="ma-0" @click="show">
+              show
+            </v-btn>
+          </template>
+        </v-text-field> -->
       </v-col>
     </v-row>
     <v-container style="padding-top: 20px;">
@@ -31,47 +28,24 @@
           <v-card class="mx-auto" max-width="344">
             <v-img
               @click="goToDetail(article)"
-              :src="
-                article.imagePaths.length === 0
-                  ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'
-                  : 'https://i4b107.p.ssafy.io/images/uploads/' +
-                    article.imagePaths[0]
-              "
+              :src="article.imagePaths.length === 0 ? 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg' : 'https://i4b107.p.ssafy.io/images/uploads/' + article.imagePaths[0]"
               width="100%"
               height="150px"
             ></v-img>
 
             <v-card-title @click="goToDetail(article)">
-              <span
-                style="width:300px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
-                >{{ article.title }}</span
-              >
+              <span style="width:300px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ article.title }}</span>
             </v-card-title>
 
             <v-card-subtitle style="padding-bottom: 0">
-              <v-rating
-                center
-                v-model="article.evaluation"
-                readonly
-                background-color="orange lighten-3"
-                color="orange"
-                dense
-                half-increments
-                size="20"
-              ></v-rating>
+              <v-rating center v-model="article.evaluation" readonly background-color="orange lighten-3" color="orange" dense half-increments size="20"></v-rating>
             </v-card-subtitle>
             <v-card-actions>
               <h5>작성자</h5>
 
               <v-spacer></v-spacer>
 
-              <v-btn
-                color="orange lighten-2"
-                @click="goToMyPage(article.userDto.uid)"
-                text
-              >
-                {{ article.userDto.username }}</v-btn
-              >
+              <v-btn color="orange lighten-2" @click="goToMyPage(article.userDto.uid)" text> {{ article.userDto.username }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -79,20 +53,17 @@
     </v-container>
 
     <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
-      <div
-        slot="no-more"
-        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
-      >
+      <div slot="no-more" style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;">
         목록의 끝입니다
       </div>
+      <template slot="no-data">
+        <div class="center ml-2" style="font-size:0.8em">
+          검색 후보가 존재하지 않아요 :(
+        </div>
+      </template>
     </infinite-loading>
 
-    <v-btn
-      @click="goToMain"
-      style="position: fixed; bottom: 100px; z-index: 2"
-      depressed
-      ><v-icon>mdi-map-search-outline</v-icon></v-btn
-    >
+    <v-btn @click="goToMain" style="position: fixed; bottom: 100px; z-index: 2" depressed><v-icon>mdi-map-search-outline</v-icon></v-btn>
 
     <Navigation />
   </div>
@@ -107,17 +78,11 @@ import InfiniteLoading from 'vue-infinite-loading';
 export default {
   name: 'ListView',
   created() {
-    if (
-      sessionStorage.getItem('filteredList') !== null &&
-      sessionStorage.getItem('filteredList') !== undefined
-    ) {
+    if (sessionStorage.getItem('filteredList') !== null && sessionStorage.getItem('filteredList') !== undefined) {
       this.articles = JSON.parse(sessionStorage.getItem('filteredList'));
       sessionStorage.removeItem('filteredList');
     }
-    if (
-      this.$route.params.filteredData !== null &&
-      this.$route.params.filteredData !== undefined
-    ) {
+    if (this.$route.params.filteredData !== null && this.$route.params.filteredData !== undefined) {
       this.articles = this.$route.params.filteredData;
     }
     console.log(this.articles);
