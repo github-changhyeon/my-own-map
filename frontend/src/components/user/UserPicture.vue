@@ -2,9 +2,7 @@
   <div>
     <img
       class="profileImage"
-      :src="
-        require(`https://i4b107.p.ssafy.io/images/profileImages/${profileImageUrl}`)
-      "
+      :src="require(`@/assets/profileImages/${profileImageUrl}`)"
     />
     <v-file-input
       v-if="isSameUser"

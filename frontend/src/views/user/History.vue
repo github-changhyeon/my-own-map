@@ -20,7 +20,7 @@
               <v-list-item-avatar>
                 <v-img
                   :src="
-                    require(`https://i4b107.p.ssafy.io/images/profileImages/${history.userFrom.profileImagePath}`)
+                    require(`@/assets/images/profileImages/${history.userFrom.profileImagePath}`)
                   "
                 ></v-img>
                 <!-- {{ item.userDto.username }} -->
