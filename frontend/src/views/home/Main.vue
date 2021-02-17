@@ -726,20 +726,20 @@ export default {
       for (starCnt; starCnt < Math.floor(evaluation / 2); ++starCnt) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
-        rating.className = 'mdi mdi-star theme--light orange--text';
+        rating.className = 'mdi mdi-star theme--light primary--text';
         ratingDiv.appendChild(rating);
       }
       if (evaluation % 2 == 1) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
-        rating.className = 'mdi mdi-star-half-full theme--light orange--text';
+        rating.className = 'mdi mdi-star-half-full theme--light primary--text';
         ratingDiv.appendChild(rating);
         starCnt += 1;
       }
       for (starCnt; starCnt < 5; ++starCnt) {
         rating = document.createElement('icon');
         rating.style.fontSize = '20px';
-        rating.className = 'mdi mdi-star-outline theme--light orange--text';
+        rating.className = 'mdi mdi-star-outline theme--light primary--text';
         ratingDiv.appendChild(rating);
       }
       descDiv.appendChild(ratingDiv);
