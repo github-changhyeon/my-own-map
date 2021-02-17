@@ -58,7 +58,6 @@ export default {
   name: 'Login',
   components: {
     MyOwnMap,
-    // NaverLogin,
   },
   data() {
     return {
