@@ -8,10 +8,10 @@
       <template>
         <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
           <v-list-item-avatar>
-            <v-img :src="item.avatar"></v-img>
-            <!-- {{ item.userDto.username }} -->
+            <v-img :src="require(`@/assets/profileImages/${item.userDto.profileImagePath}`)"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
+            {{ item.userDto.username }}
             <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
             <CommentCreate v-if="isModify[index]" :updateContent="item.content" :index="index" @create-comment="checkUpdateComment" />
           </v-list-item-content>
@@ -25,12 +25,7 @@
 </template>
 
 <script>
-import {
-  getComment,
-  createComment,
-  deleteComment,
-  updateComment,
-} from '@/api/comment.js';
+import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
 import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';
@@ -45,14 +40,14 @@ export default {
       isModify: [],
       commentDto: {},
       items: [
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          content: '밤까지 코딩 굳입니다.',
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          content: '참 아름다운 곳이군요',
-        },
+        // {
+        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+        //   content: '밤까지 코딩 굳입니다.',
+        // },
+        // {
+        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        //   content: '참 아름다운 곳이군요',
+        // },
       ],
       comment: {
         uid: 0,
@@ -87,6 +82,7 @@ export default {
               this.isModify.push(false);
             }
             console.log(response.data.object, 'getcomment의 items');
+            console.log(response, 'getcomment의 msg');
             console.log('댓글 가져오기 성공.');
           } else {
             console.log('실패');

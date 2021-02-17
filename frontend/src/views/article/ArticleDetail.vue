@@ -6,32 +6,51 @@
 <template>
   <v-card>
     <v-app>
-      <div class="detail-main">
+      <div class="detail-main" style="vertical-align: middle">
         <v-btn
           icon
-          color="black"
-          style="position: fixed; display: flex; top: 10px; z-index: 2"
+          size="30"
+          style="position: fixed; display: flex; top: 25px; z-index: 2"
           @click="goBack"
         >
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <KakaoSharing
-          :article="article"
+        <div
           style="
             position: fixed;
             display: flex;
-            right: 10px;
-            top: 10px;
+            top: 25px;
+            left: 50px;
             z-index: 2;
+            vertical-align: middle;
           "
-        />
+        >
+          <!-- <v-avatar>
+            {{ article.userDto.profileImagePath }}
+          </v-avatar> -->
+          <span class="hover" @click="goToMyPage(article.userDto.uid)">
+            {{ article.userDto.username }}
+          </span>
+        </div>
+
         <Favorite
           :article="article"
           style="
             position: fixed;
             display: flex;
-            right: 70px;
+            right: 60px;
             top: 25px;
+            z-index: 2;
+          "
+        />
+        <KakaoSharing
+          :article="article"
+          size="30"
+          style="
+            position: fixed;
+            display: flex;
+            right: 10px;
+            top: 13px;
             z-index: 2;
           "
         />
@@ -45,7 +64,7 @@
           </span>
         </div>
         <div style="text-align: center; max-width: 500px; width: 100%">
-          <v-carousel>
+          <v-carousel v-if="hasImages">
             <v-carousel-item
               v-for="(item, i) in items"
               :key="i"
@@ -82,8 +101,8 @@
         </div>
         <div style="margin-top: 10px">
           <v-icon>mdi-calendar</v-icon>
-          <!-- {{ article.regiTime | moment('YYYY-MM-DD') }} -->
-          {{ article.regiTime.split('T')[0] }}
+          <!-- {{ article.regiTime.split('T')[0] }} -->
+          {{ article.visitDate }}
         </div>
         <div style="margin-top: 10px">
           <v-icon>mdi-map-marker</v-icon>
@@ -102,23 +121,26 @@
         <v-btn
           fab
           small
-          @click="checkDelete"
-          variant="danger"
-          class="deletebutton"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-        <v-btn
-          fab
-          small
           @click="goToUpdateArticle"
           variant="outline-primary"
           class="updatebutton"
         >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
+        <v-btn
+          fab
+          small
+          @click="checkDelete"
+          variant="danger"
+          class="deletebutton"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+        <v-btn fab small @click="findRoute" style="margin-right: 10px">
+          <v-icon>mdi-map</v-icon>
+        </v-btn>
       </div>
-      <div class="buttons">
+      <div class="buttons" v-if="!isOwnArticle">
         <v-btn fab small @click="findRoute" style="margin-right: 10px">
           <v-icon>mdi-map</v-icon>
         </v-btn>
@@ -170,6 +192,7 @@ export default {
       comments: 'sample',
       commentId: Number,
       isOwnArticle: false,
+      hasImages: false,
       article: {
         address: '',
         articleNo: 0,
@@ -219,6 +242,13 @@ export default {
       this.$router.push({
         name: constants.URL_TYPE.ARTICLE.UPDATEARTICLE,
         params: { articleNo: this.article.articleNo, article: this.article },
+      });
+    },
+
+    goToMyPage(uid) {
+      this.$router.push({
+        name: constants.URL_TYPE.USER.MYPAGE,
+        params: { uid: uid },
       });
     },
 
@@ -277,6 +307,9 @@ export default {
           this.items.push({
             src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
           });
+        }
+        if (this.article.imagePaths[0] !== 'DefaultArticleImage.png') {
+          this.hasImages = true;
         }
       },
       (error) => {
@@ -397,10 +430,10 @@ ul {
 }
 
 .detail-main {
-  height: 100px;
-  /* background-image: url(https://extmovie.com/files/attach/images/135/864/625/039/d45f2adb0da9e2490177d26540c2c83d.gif); */
+  height: 90px;
+  align-content: center;
   background-size: cover;
-  filter: grayscale(100%);
+  filter: grayscale(0%);
 }
 
 .main-title {
@@ -409,7 +442,9 @@ ul {
   padding-top: 180px;
   font-weight: bold;
 }
-
+.hover {
+  cursor: pointer;
+}
 strong {
   color: rgb(38, 95, 202);
 }
@@ -436,6 +471,7 @@ strong {
 .loading span:nth-child(7) {
   animation-delay: 0.6s;
 }
+
 @keyframes loading {
   0% {
     transform: scale(1);

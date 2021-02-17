@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-card>
-      <v-tabs centered style="position: fixed; top: 0px; z-index: 2">
-        <v-tab @click="isAll = true" style="width: 50vw">전체 게시글 보기</v-tab>
+      <v-tabs centered>
+        <v-tab @click="isAll = true" style="width: 50vw"
+          >전체 게시글 보기</v-tab
+        >
         <!-- <v-tab @click="isAll = false" style="width: 50vw">팔로우</v-tab> -->
       </v-tabs>
     </v-card>
-    <AllNewsFeed v-if="isAll" style="padding-top: 70px; margin-bottom:50px;" />
+    <AllNewsFeed v-if="isAll" style="padding-top: 20px; margin-bottom:50px;" />
     <!-- <FollowNewsFeed v-if="!isAll" style="padding-top: 70px; margin-bottom:50px;" /> -->
     <Navigation />
   </div>

@@ -1,36 +1,70 @@
 <template>
   <div>
-    <img class="profileImage" :src="profileImageUrl" />
+    <img class="profileImage" :src="require(`@/assets/profileImages/${profileImageUrl}`)" />
     <v-file-input v-if="isSameUser" class="addbutton" v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-plus" @change="changeProfileFunc"></v-file-input>
   </div>
 </template>
 
 <script>
-// import { getUserInfo } from '@/api/user.js';
+import { updateUser } from '@/api/user.js';
 // import jwt_decode from 'jwt-decode';
 
 export default {
   name: 'UserPicture',
   components: {},
-  props: ['isSameUser', 'propsUid'],
+  props: ['isSameUser', 'propsUserDto'],
   data: function() {
     return {
-      profileImageUrl: 'https://user-images.githubusercontent.com/68372599/107969212-d0284180-6ff2-11eb-80c0-b13c581eccf1.png',
+      profileImageUrl: 'basic_user.png',
+      // profileImageUrl: 'https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif',
       profileImage: {},
       uid: '',
       tokenData: '',
       userDto: {},
     };
   },
+  watch: {
+    propsUserDto: function(val) {
+      console.log('watch');
+      this.userDto = val;
+      this.profileImageUrl = this.userDto.profileImagePath;
+    },
+    profileImageUrl: function(val) {
+      this.profileImageUrl = val;
+      console.log(this.profileImageUrl, 'watch 중');
+    },
+  },
   methods: {
     changeProfileFunc(e) {
-      console.log(e);
+      console.log(e, typeof e, '이미지 e');
       this.profileImageUrl = URL.createObjectURL(this.profileImage);
+      console.log(this.profileImageUrl, '이미지url');
+      const formData = new FormData();
+      formData.append('file', e);
+      this.userDto = this.propsUserDto;
+      formData.append('user', new Blob([JSON.stringify(this.userDto)], { type: 'application/json' }));
+      console.log('여기들어왔나');
+      console.log(this.userDto, '들어왓나');
+      updateUser(
+        formData,
+        (response) => {
+          if (response.data.status) {
+            console.log(response.data.object, '성공');
+            this.profileImageUrl = '@/assets/profileImages/' + response.data.object.profileImagePath;
+          } else {
+            alert('실패');
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
   computed: {},
   created() {
-    this.uid = this.propsUid;
+    console.log(this.userDto, 'userpicture created userdto');
+    console.log(this.propsUserDto, 'userpicture created userdto');
   },
 };
 </script>

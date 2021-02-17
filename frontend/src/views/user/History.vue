@@ -2,21 +2,35 @@
   <div>
     <v-card v-if="histories.length > 0" width="800" class="mx-auto">
       <v-list>
-        <v-list-group sub-group :value="true" v-for="(historiesOfOneDay, i) in histories" :key="i">
+        <v-list-group
+          sub-group
+          :value="true"
+          v-for="(historiesOfOneDay, i) in histories"
+          :key="i"
+        >
           <template v-slot:activator>
-            <v-list-item-title>{{ historiesOfOneDay[0].regiTime.substring(0, 10) }}</v-list-item-title>
+            <v-list-item-title>{{
+              historiesOfOneDay[0].regiTime.substring(0, 10)
+            }}</v-list-item-title>
           </template>
 
           <!-- aaa -->
           <template>
             <v-list-item v-for="(history, j) in historiesOfOneDay" :key="i + j">
               <v-list-item-avatar>
-                <v-img :src="history.userFrom.avatar"></v-img>
+                <v-img
+                  :src="
+                    require(`@/assets/profileImages/${history.userFrom.profileImagePath}`)
+                  "
+                ></v-img>
                 <!-- {{ item.userDto.username }} -->
               </v-list-item-avatar>
               <v-list-item-content v-if="history.state === 'FOLLOW'">
                 <div>
-                  <button @click="goToUserPage(history.userFrom.uid)">
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToUserPage(history.userFrom.uid)"
+                  >
                     {{ history.userFrom.username }}
                   </button>
                   님이 당신을 팔로우합니다.
@@ -24,20 +38,36 @@
               </v-list-item-content>
               <v-list-item-content v-if="history.state === 'LIKE'">
                 <div>
-                  <button @click="goToUserPage(history.userFrom.uid)">
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToUserPage(history.userFrom.uid)"
+                  >
                     {{ history.userFrom.username }}
                   </button>
                   님이
-                  <button @click="goToArticleDetail(history.articleDto.articleNo)">{{ history.articleDto.articleNo }}번 게시글</button>을 좋아합니다.
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToArticleDetail(history.articleDto.articleNo)"
+                  >
+                    {{ history.articleDto.articleNo }}번 게시글</button
+                  >을 좋아합니다.
                 </div>
               </v-list-item-content>
               <v-list-item-content v-if="history.state === 'COMMENT'">
                 <div>
-                  <button @click="goToUserPage(history.userFrom.uid)">
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToUserPage(history.userFrom.uid)"
+                  >
                     {{ history.userFrom.username }}
                   </button>
                   님이
-                  <button @click="goToArticleDetail(history.articleDto.articleNo)">{{ history.articleDto.articleNo }}번 게시글</button>에 댓글을 달았습니다.
+                  <button
+                    style="color:#ff1f96"
+                    @click="goToArticleDetail(history.articleDto.articleNo)"
+                  >
+                    {{ history.articleDto.articleNo }}번 게시글</button
+                  >에 댓글을 달았습니다.
                 </div>
               </v-list-item-content>
             </v-list-item>
@@ -51,7 +81,7 @@
 
 <script>
 import jwt_decode from 'jwt-decode';
-import { setZero, getHistory } from '@/api/fcm.js';
+import { getHistory } from '@/api/fcm.js';
 import constants from '@/lib/constants.js';
 import Navigation from '@/components/Navigation.vue';
 
@@ -69,19 +99,19 @@ export default {
       this.uid = jwt_decode(token).uid;
     }
     if (this.uid > 0) {
-      setZero(
-        (success) => {
-          if (success.data.status) {
-            console.log('zero 만들기 성공');
-          } else {
-            console.log('zero 만들기 실패');
-          }
-        },
-        (error) => {
-          console.log(error);
-          alert('서버 에러');
-        }
-      );
+      // setZero(
+      //   (success) => {
+      //     if (success.data.status) {
+      //       console.log('zero 만들기 성공');
+      //     } else {
+      //       console.log('zero 만들기 실패');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     alert('서버 에러');
+      //   }
+      // );
       getHistory(
         (success) => {
           if (success.data.status) {
@@ -92,7 +122,10 @@ export default {
               let tempArr = new Array();
               tempArr.push(tempHistories[0]);
               for (let i = 1; i < tempHistories.length; ++i) {
-                if (tempHistories[i].regiTime.substring(0, 10) !== tempArr[0].regiTime.substring(0, 10)) {
+                if (
+                  tempHistories[i].regiTime.substring(0, 10) !==
+                  tempArr[0].regiTime.substring(0, 10)
+                ) {
                   this.histories.push(tempArr);
                   tempArr = new Array();
                   tempArr.push(tempHistories[i]);
@@ -134,38 +167,37 @@ export default {
     return {
       uid: 0,
       histories: [
-        [
-          {
-            userFrom: { username: 'aa' },
-            articleDto: {},
-            state: 'FOLLOW',
-            regiTime: '2021-04-05-11',
-          },
-          {
-            userFrom: {},
-            articleDto: {},
-            state: 'FOLLOW',
-            regiTime: '2021-04-05-11',
-          },
-        ],
-        // [{ userFrom: {}, state: 'FOLLOW', regiTime: '2021-04-05-11' }],
-
-        [
-          {
-            userFrom: {},
-            articleDto: {},
-            state: 'LIKE',
-            regiTime: '2021-04-05-12',
-          },
-        ],
-        [
-          {
-            userFrom: {},
-            articleDto: {},
-            state: 'COMMENT',
-            regiTime: '2021-04-05-13',
-          },
-        ],
+        // [
+        //   {
+        //     userFrom: { username: 'aa' },
+        //     articleDto: {},
+        //     state: 'FOLLOW',
+        //     regiTime: '2021-04-05-11',
+        //   },
+        //   {
+        //     userFrom: {},
+        //     articleDto: {},
+        //     state: 'FOLLOW',
+        //     regiTime: '2021-04-05-11',
+        //   },
+        // ],
+        // // [{ userFrom: {}, state: 'FOLLOW', regiTime: '2021-04-05-11' }],
+        // [
+        //   {
+        //     userFrom: {},
+        //     articleDto: {},
+        //     state: 'LIKE',
+        //     regiTime: '2021-04-05-12',
+        //   },
+        // ],
+        // [
+        //   {
+        //     userFrom: {},
+        //     articleDto: {},
+        //     state: 'COMMENT',
+        //     regiTime: '2021-04-05-13',
+        //   },
+        // ],
       ],
     };
   },

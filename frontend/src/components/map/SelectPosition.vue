@@ -2,12 +2,12 @@
   <div>
     <div class="map_wrap">
       <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-      <div style="width:170px; height:35px;" id="menu_wrap_search" class="bg_white">
+      <div id="menu_wrap_search" class="bg_white">
         <div class="option">
           <div>
             <v-form @submit.prevent="searchPlaces">
-              <input type="text" placeholder="장소명, 주소로 검색" id="keyword" size="17" />
-              <button type="submit"><v-icon>mdi-magnify</v-icon></button>
+              <input type="text" placeholder="장소명, 주소로 검색" id="keyword" size="15" />
+              <button style=" border:none; outline:none" type="submit"><v-icon style="margin-left:20px;">mdi-magnify</v-icon></button>
             </v-form>
           </div>
         </div>
@@ -434,7 +434,7 @@ export default {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 250px;
+  width: 100px;
   margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
@@ -446,12 +446,12 @@ export default {
 #menu_wrap_search {
   position: absolute;
   top: 0;
-  left: 42.5px;
+  left: 38.5px;
   bottom: 0;
-  width: 250px;
-  height: 36px;
+  width: 180px;
+  height: 28px;
   margin: 10px 0 30px 10px;
-  padding: 5px;
+  padding: 3px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
   z-index: 1;
@@ -464,8 +464,8 @@ export default {
   left: 0;
   bottom: 0;
   width: 250px;
-  height: 350px;
-  margin: 10px 0 30px 10px;
+  height: 250px;
+  margin: 0px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
@@ -478,7 +478,7 @@ export default {
   position: absolute;
   left: 65.5px;
   text-align: center;
-  bottom: 30px;
+  bottom: 130px;
   width: 120px;
   height: 30px;
   margin: 10px 0 30px 10px;

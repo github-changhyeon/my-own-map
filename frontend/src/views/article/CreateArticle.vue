@@ -41,7 +41,7 @@
       <v-combobox
         v-model="hashtagNames"
         :items="items"
-        label="해쉬태그를 입력해 보세요."
+        label="해시태그를 입력해 보세요."
         multiple
         chips
       >
@@ -172,7 +172,6 @@ export default {
       hashtagNames: [],
       imgs: [],
       images: [],
-      rate: 0,
       date: '',
       article: {
         positionLat: '',
@@ -191,9 +190,8 @@ export default {
   methods: {
     removeImage(idx) {
       // this.imgs = '';
-      console.log(idx, '이미지');
-      console.log(this.imgs, '이미지');
       this.imgs.splice(idx, 1);
+      this.images.splice(idx, 1);
     },
     selectDate(e) {
       this.article.visitDate = e;
@@ -227,7 +225,7 @@ export default {
         return;
       }
 
-      if (this.title === '') {
+      if (this.article.title === '') {
         alert('제목이 입력되지 않았습니다!');
         return;
       }
@@ -245,6 +243,7 @@ export default {
       const formData = new FormData();
 
       this.images.forEach((image) => formData.append('file[]', image));
+      console.log(this.images, '이미지 몇개등록인가요');
       // formData.append("file", this.images);
       formData.append(
         'article',
@@ -296,9 +295,9 @@ export default {
           for (let i = 0; i < tempHashtagObjs.length; ++i) {
             this.items.push(tempHashtagObjs[i].hashtagName);
           }
-          // alert('해쉬태그 받기 성공');
+          // alert('해시태그 받기 성공');
         } else {
-          alert('해쉬태그 받기 실패');
+          alert('해시태그 받기 실패');
         }
       },
       (error) => {

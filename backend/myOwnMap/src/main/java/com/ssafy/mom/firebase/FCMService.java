@@ -30,8 +30,10 @@ public class FCMService {
     	
     	Message message = Message.builder()
                 .setToken(notificationRequest.getToken())
-                .setNotification(new Notification(notificationRequest.getTitle(), notificationRequest.getMessage()))
-//                .setAndroidConfig(AndroidConfig.builder().setNotification(AndroidNotification.builder().setTitle(notificationRequest.getTitle()).setBody(notificationRequest.getMessage()).build()).build())
+                .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
+                        .setNotification(new WebpushNotification(notificationRequest.getTitle(),
+                                notificationRequest.getMessage(), "https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png"))
+                        .build())
                 .build();
 
         String response = FirebaseMessaging.getInstance().sendAsync(message).get();

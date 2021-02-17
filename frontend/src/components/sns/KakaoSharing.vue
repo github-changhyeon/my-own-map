@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-btn @click="share" class="ma-2" fab small light>
+    <v-btn v-if="this.article !== undefined" icon @click="share" class="ma-2" fab small x-light>
+      <v-icon>mdi-share-variant</v-icon>
+    </v-btn>
+    <v-btn v-else @click="share" class="ma-2" fab x-small light>
       <v-icon>mdi-share-variant</v-icon>
     </v-btn>
   </div>
@@ -28,6 +31,7 @@ export default {
     return {
       tmpArticle: Object,
       baseUrl: '',
+      username: '',
     };
   },
   methods: {
@@ -54,11 +58,13 @@ export default {
       Kakao.Link.sendDefault({
         objectType: 'feed',
         content: {
+          title: this.articles[0].userDto.username + '님의 소중한 지도 기록🗺',
           // title: this.tmpArticle.title,
-          title: '',
+          // title: '',
           description: this.tmpArticle.contents,
           imageUrl: '',
-          // imageUrl: this.tmpArticle.imagePaths,
+          // TODO : 배포할때 주소 변경
+          // imageUrl: `@/assets/this.tmpArticle.imagePaths`,
           link: {
             // mobileWebUrl: 'https://i4b107.p.ssafy.io/',
             webUrl: this.baseUrl,

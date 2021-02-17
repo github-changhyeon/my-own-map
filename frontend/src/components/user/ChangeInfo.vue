@@ -1,16 +1,20 @@
 <template>
-  <v-row justify="center" style="margin-top:100px;">
-    <v-col cols="12" sm="8">
-      <v-card>
-        <v-card-title class="secondary darken-1">
-          <span class="headline white--text">정보 변경하기</span>
+  <div>
+    <v-btn icon color="black" style="position: fixed; display:flex; top: 10px; z-index: 2" @click="goBack">
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
+    <v-row justify="center" style="margin-top:50px;">
+      <v-col cols="12" sm="8">
+        <v-card>
+          <v-card-title class="secondary darken-1">
+            <span class="headline white--text">정보 변경하기</span>
 
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-divider inset></v-divider>
-        <v-list>
-          <v-list-item>
-            <!-- <v-list-item-action style="margin-right: 10px">
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-divider inset></v-divider>
+          <v-list>
+            <v-list-item>
+              <!-- <v-list-item-action style="margin-right: 10px">
               <v-avatar>
                 <img :src="profileImageUrl" />
               </v-avatar>
@@ -18,94 +22,91 @@
             <v-list-item-action style="margin-right: 10px">
               <v-file-input v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-account" @change="changeProfileFunc"></v-file-input>
             </v-list-item-action> -->
-            <v-list-item-action style="margin-top:0px;">
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-text-field label="닉네임" placeholder="닉네임을 입력해 주세요" v-model="userDto.username"></v-text-field>
-            </v-list-item-content>
-          </v-list-item>
+              <v-list-item-action style="margin-top:0px;">
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-text-field label="닉네임" placeholder="닉네임을 입력해 주세요" v-model="userDto.username"></v-text-field>
+              </v-list-item-content>
+            </v-list-item>
 
-          <v-list-item>
-            <v-list-item-action>
-              <v-icon>mdi-message-draw</v-icon>
-            </v-list-item-action>
+            <v-list-item>
+              <v-list-item-action>
+                <v-icon>mdi-message-draw</v-icon>
+              </v-list-item-action>
 
-            <v-list-item-content>
-              <v-list-item-title>
-                <v-text-field label="상태 메세지" placeholder="메세지를 입력해 주세요" v-model="userDto.stateMsg"></v-text-field>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-text-field label="상태 메세지" placeholder="메세지를 입력해 주세요" v-model="userDto.stateMsg"></v-text-field>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
 
-          <v-list-item>
-            <v-list-item-action>
-              <v-icon>mdi-email</v-icon>
-            </v-list-item-action>
+            <v-list-item>
+              <v-list-item-action>
+                <v-icon>mdi-email</v-icon>
+              </v-list-item-action>
 
-            <v-list-item-content>
-              <v-list-item-title>
-                <v-text-field label="이메일" placeholder="이메일은 변경할 수 없습니다" v-model="userDto.email" disabled></v-text-field>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-text-field label="이메일" placeholder="이메일은 변경할 수 없습니다" v-model="userDto.email" disabled></v-text-field>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
 
-          <v-list-item v-if="!isChangePassword">
-            <v-list-item-action style="margin-top:0px;">
-              <v-icon>mdi-lock-outline</v-icon>
-            </v-list-item-action>
+            <v-list-item v-if="!isChangePassword">
+              <v-list-item-action style="margin-top:0px;">
+                <v-icon>mdi-lock-outline</v-icon>
+              </v-list-item-action>
 
-            <v-list-item-content>
-              <v-text-field label="비밀번호" placeholder="Placeholder" v-model="userDto.password" disabled type="password"></v-text-field>
-            </v-list-item-content>
+              <v-list-item-content>
+                <v-text-field label="비밀번호" placeholder="Placeholder" v-model="userDto.password" disabled type="password"></v-text-field>
+              </v-list-item-content>
 
-            <v-list-item-action>
-              <v-btn @click="changePasswordFunc">변경하기</v-btn>
-            </v-list-item-action>
-          </v-list-item>
+              <v-list-item-action>
+                <v-btn color="secondary" @click="changePasswordFunc">변경하기</v-btn>
+              </v-list-item-action>
+            </v-list-item>
 
-          <v-list-item v-if="isChangePassword">
-            <v-list-item-action>
-              <v-icon>mdi-lock-outline</v-icon>
-            </v-list-item-action>
+            <v-list-item v-if="isChangePassword">
+              <v-list-item-action>
+                <v-icon>mdi-lock-outline</v-icon>
+              </v-list-item-action>
 
-            <v-list-item-content>
-              <v-text-field label="새 비밀번호" placeholder="새 비밀번호를 입력해 주세요" v-model="userDto.password" type="password"></v-text-field>
-            </v-list-item-content>
+              <v-list-item-content>
+                <v-text-field label="새 비밀번호" placeholder="새 비밀번호를 입력해 주세요" v-model="userDto.password" type="password"></v-text-field>
+              </v-list-item-content>
 
-            <v-list-item-action>
-              <v-btn @click="cancelChangePassword">취소하기</v-btn>
-            </v-list-item-action>
-          </v-list-item>
+              <v-list-item-action>
+                <v-btn @click="cancelChangePassword">취소하기</v-btn>
+              </v-list-item-action>
+            </v-list-item>
 
-          <v-list-item v-if="isChangePassword">
-            <v-list-item-action>
-              <v-icon>mdi-lock-outline</v-icon>
-            </v-list-item-action>
+            <v-list-item v-if="isChangePassword">
+              <v-list-item-action>
+                <v-icon>mdi-lock-outline</v-icon>
+              </v-list-item-action>
 
-            <v-list-item-content>
-              <v-text-field label="새 비밀번호 확인" placeholder="새 비밀번호를 입력해 주세요" v-model="passwordConfirm" type="password"></v-text-field>
-            </v-list-item-content>
-          </v-list-item>
+              <v-list-item-content>
+                <v-text-field label="새 비밀번호 확인" placeholder="새 비밀번호를 입력해 주세요" v-model="passwordConfirm" type="password"></v-text-field>
+              </v-list-item-content>
+            </v-list-item>
 
-          <v-list-item style="justify-content: center">
             <v-list-item-action>
               <!-- <div> -->
-              <v-btn @click="updateUserFunc">
-                <span> 정보수정 </span>
+              <v-btn style="margin-left: 220px; font-weight:bold;" color="primary" @click="updateUserFunc">
+                정보수정
               </v-btn>
             </v-list-item-action>
-            <v-list-item-action>
-              <v-btn @click="deleteUserFunc">
-                <span> 회원탈퇴 </span>
-              </v-btn>
-              <!-- </div> -->
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-col>
-  </v-row>
+            <button class="deletebutton" @click="deleteUserFunc">
+              회원탈퇴
+            </button>
+            <!-- </div> -->
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -141,6 +142,10 @@ export default {
     );
   },
   methods: {
+    goBack() {
+      // 뒤로가기
+      this.$router.go(-1);
+    },
     // changeProfileFunc(e) {
     //   console.log(e);
     //   this.profileImageUrl = URL.createObjectURL(this.profileImage);
@@ -154,7 +159,7 @@ export default {
       this.isChangePassword = false;
     },
     deleteUserFunc() {
-      if (confirm('탈퇴하실건가요?')) {
+      if (confirm('탈퇴하시겠습니까??')) {
         deleteUser(
           (response) => {
             if (response.data.status) {
@@ -172,29 +177,31 @@ export default {
       }
     },
     updateUserFunc() {
-      let formData = new FormData();
-      formData.append('file', this.profileImage);
-      formData.append('user', new Blob([JSON.stringify(this.userDto)], { type: 'application/json' }));
-      console.log(new Blob([JSON.stringify(this.userDto)]));
-      console.log('file', formData.get('file'));
-      console.log('user', formData.get('user'));
-      updateUser(
-        formData,
-        (response) => {
-          if (response.data.status) {
-            this.userDto = response.data.object;
-            this.storePassword = this.userDto.password;
-            this.stateMsg = this.userDto.stateMsg;
-            alert('정보수정에 성공했습니다.');
-          } else {
-            alert('회원 정보 수정을 할 수 없습니다.');
+      if (confirm('수정하시겠습니까?')) {
+        let formData = new FormData();
+        formData.append('file', this.profileImage);
+        formData.append('user', new Blob([JSON.stringify(this.userDto)], { type: 'application/json' }));
+        console.log(new Blob([JSON.stringify(this.userDto)]));
+        console.log('file', formData.get('file'));
+        console.log('user', formData.get('user'));
+        updateUser(
+          formData,
+          (response) => {
+            if (response.data.status) {
+              this.userDto = response.data.object;
+              this.storePassword = this.userDto.password;
+              this.stateMsg = this.userDto.stateMsg;
+              alert('정보수정에 성공했습니다.');
+            } else {
+              alert('회원 정보 수정을 할 수 없습니다.');
+            }
+          },
+          (error) => {
+            alert('서버 에러');
+            console.log(error);
           }
-        },
-        (error) => {
-          alert('서버 에러');
-          console.log(error);
-        }
-      );
+        );
+      }
     },
   },
   data: function() {
@@ -211,3 +218,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.deletebutton {
+  margin-left: 460px;
+  color: red;
+  text-decoration-line: underline;
+  font-size: 14px;
+}
+</style>

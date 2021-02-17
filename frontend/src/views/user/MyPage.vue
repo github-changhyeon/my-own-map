@@ -1,13 +1,10 @@
 <template>
   <div>
     <div style="text-align:right;">
-      OO 님
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
-    <div>
-      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUid="uid" />
-      <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
-    </div>
+    <UserPicture :isSameUser="isSameUser" :propsUserDto="userDto" />
+    <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     <!-- <div>
       <TimeLine />
     </div> -->
@@ -23,6 +20,7 @@
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
     <router-link to="/changeinfo" class="changeInfobutton"><v-icon v-if="isSameUser">mdi-cog</v-icon></router-link>
+    <div class="bubbles-container"></div>
     <!-- <ChangeInfo :propsUid="uid" /> -->
     <Navigation />
   </div>
@@ -43,8 +41,8 @@ import UserPicture from '@/components/user/UserPicture.vue';
 // import PrivateNewsFeed from '@/components/sns/PrivateNewsFeed.vue';
 // import FavoriteNewsFeed from '@/components/sns/FavoriteNewsFeed.vue';
 
-// import { getUserInfo } from '@/api/user.js';
-import { findFollower, findFollowing } from '@/api/user.js';
+import { getUserInfo } from '@/api/user.js';
+// import { findFollower, findFollowing } from '@/api/user.js';
 import { deleteFcmToken } from '@/api/fcm.js';
 import {
   deleteToken,
@@ -112,12 +110,10 @@ export default {
       const token = localStorage.getItem('jwt');
       this.tokenData = jwt_decode(token);
       this.uid = this.$route.params.uid;
-
       // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
       if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
         console.log('본인입니다');
         this.isSameUser = true;
-
         // 팔로우버튼 자체를 on/off -> 팔로우버튼이 on -> isfollow -> +, -
         // 토큰 디코드해서 찍힌 uid or email로 article controller에 게시글 요청. 받아서 Userinfo components에 props,emit
       } else {
@@ -125,44 +121,37 @@ export default {
         this.isSameUser = false;
         this.userDto = this.$route.params;
       }
-      findFollowing(
-        this.uid,
-        (response) => {
-          this.followingList = response.data.object;
-        },
-        (error) => {
-          console.log(error);
-          console.log('findfollowing');
-        }
-      );
-
-      findFollower(
-        this.uid,
-        (response) => {
-          this.followerList = response.data.object;
-          console.log(this.followerList);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+      // findFollowing(
+      //   this.uid,
+      //   (response) => {
+      //     this.followingList = response.data.object;
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     console.log('findfollowing');
+      //   }
+      // );
+      // findFollower(
+      //   this.uid,
+      //   (response) => {
+      //     this.followerList = response.data.object;
+      //     console.log(this.followerList);
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //   }
+      // );
     },
   },
   created() {
-    // const uid = this.$route.params.uid
+    // const uid = this.$route.params.uid;
     const token = localStorage.getItem('jwt');
     this.tokenData = jwt_decode(token);
     this.uid = this.$route.params.uid;
     // 로그인된상태니까 -> 본인이 본인 페이지 올때는 토큰으로 내 정보를 찾아서 채워야되고
     // (params가 비어있으면) -> jwt로 디코드해서 email axios요청
-
     // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
     // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
-
-    console.log(this.$route.params.uid, '히스토리에서온 파람 uid');
-    console.log(this.tokenData.uid, 'jwt uid');
-
-    // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
     if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
       console.log('본인입니다');
       this.isSameUser = true;
@@ -171,27 +160,42 @@ export default {
       this.isSameUser = false;
       this.userDto = this.$route.params;
     }
-    findFollowing(
+    getUserInfo(
       this.uid,
       (response) => {
-        this.followingList = response.data.object;
+        if (response.data.status) {
+          this.userDto = response.data.object;
+          console.log(this.userDto, 'mypage의 getuserinfo');
+          this.storePassword = this.userDto.password;
+        } else {
+          alert('유저 정보를 받아올 수 없습니다.');
+        }
       },
       (error) => {
         console.log(error);
-        console.log('findfollowing');
+        alert('서버 에러');
       }
     );
-
-    findFollower(
-      this.uid,
-      (response) => {
-        this.followerList = response.data.object;
-        console.log(this.followerList);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    // findFollowing(
+    //   this.uid,
+    //   (response) => {
+    //     this.followingList = response.data.object;
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //     console.log('findfollowing');
+    //   }
+    // );
+    // findFollower(
+    //   this.uid,
+    //   (response) => {
+    //     this.followerList = response.data.object;
+    //     console.log(this.followerList);
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //   }
+    // );
   },
 };
 </script>
@@ -202,5 +206,222 @@ export default {
   margin-bottom: 70px;
   margin-right: 20px;
   text-decoration: none;
+}
+@import url('https://fonts.googleapis.com/css?family=Exo+2:900');
+h1 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 8.5vw;
+  color: white;
+  padding: 5rem 0;
+  text-shadow: 0px 4px 48px rgba(255, 255, 255, 0.2);
+}
+.container {
+  position: relative;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  background-image: linear-gradient(to bottom, #00c9ff 0%, #92fe9d 100%), url(https://images.unsplash.com/photo-1502726299822-6f583f972e02);
+  background-blend-mode: multiply;
+  background-size: cover;
+  overflow: hidden;
+}
+.bubbles-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  max-width: 15rem;
+  transform: translateX(-50%);
+  opacity: 0.75;
+  overflow: visible;
+}
+.bubbles {
+  width: 100%;
+  height: auto;
+}
+.bubbles circle {
+  stroke: white;
+  fill: none;
+}
+.bubbles > g > g:nth-of-type(3n) circle {
+  stroke: #87f5fb;
+}
+.bubbles > g > g:nth-of-type(4n) circle {
+  stroke: #8be8cb;
+}
+.bubbles-large {
+  overflow: visible;
+}
+.bubbles-large > g {
+  transform: translateY(2048px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.bubbles-large g:nth-of-type(1) {
+  animation: up 6.5s infinite;
+}
+.bubbles-large g:nth-of-type(1) g {
+  transform: translateX(350px);
+}
+.bubbles-large g:nth-of-type(1) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-large g:nth-of-type(2) {
+  animation: up 5.25s 250ms infinite;
+}
+.bubbles-large g:nth-of-type(2) g {
+  transform: translateX(450px);
+}
+.bubbles-large g:nth-of-type(2) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-large g:nth-of-type(3) {
+  animation: up 6s 750ms infinite;
+}
+.bubbles-large g:nth-of-type(3) g {
+  transform: translateX(700px);
+}
+.bubbles-large g:nth-of-type(3) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-large g:nth-of-type(4) {
+  animation: up 5.5s 1.5s infinite;
+}
+.bubbles-large g:nth-of-type(4) g {
+  transform: translateX(500px);
+}
+.bubbles-large g:nth-of-type(4) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-large g:nth-of-type(5) {
+  animation: up 6.5s 4s infinite;
+}
+.bubbles-large g:nth-of-type(5) g {
+  transform: translateX(675px);
+}
+.bubbles-large g:nth-of-type(5) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-small {
+  overflow: visible;
+}
+.bubbles-small > g {
+  transform: translateY(2048px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.bubbles-small g circle {
+  transform: scale(0);
+}
+.bubbles-small g:nth-of-type(1) {
+  animation: up 5.25s infinite;
+}
+.bubbles-small g:nth-of-type(1) g {
+  transform: translateX(350px);
+}
+.bubbles-small g:nth-of-type(1) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(2) {
+  animation: up 5.75s infinite;
+}
+.bubbles-small g:nth-of-type(2) g {
+  transform: translateX(750px);
+}
+.bubbles-small g:nth-of-type(2) circle {
+  animation: wobble 3s infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(3) {
+  animation: up 5.25s 250ms infinite;
+}
+.bubbles-small g:nth-of-type(3) g {
+  transform: translateX(350px);
+}
+.bubbles-small g:nth-of-type(3) circle {
+  animation: wobble 3s 250ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(4) {
+  animation: up 5.75s 325ms infinite;
+}
+.bubbles-small g:nth-of-type(4) g {
+  transform: translateX(180px);
+}
+.bubbles-small g:nth-of-type(4) circle {
+  animation: wobble 3s 325ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(5) {
+  animation: up 6s 125ms infinite;
+}
+.bubbles-small g:nth-of-type(5) g {
+  transform: translateX(350px);
+}
+.bubbles-small g:nth-of-type(5) circle {
+  animation: wobble 3s 250ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(6) {
+  animation: up 5.13s 250ms infinite;
+}
+.bubbles-small g:nth-of-type(6) g {
+  transform: translateX(650px);
+}
+.bubbles-small g:nth-of-type(6) circle {
+  animation: wobble 3s 125ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(7) {
+  animation: up 6.25s 350ms infinite;
+}
+.bubbles-small g:nth-of-type(7) g {
+  transform: translateX(480px);
+}
+.bubbles-small g:nth-of-type(7) circle {
+  animation: wobble 3s 325ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(8) {
+  animation: up 7s 200ms infinite;
+}
+.bubbles-small g:nth-of-type(8) g {
+  transform: translateX(330px);
+}
+.bubbles-small g:nth-of-type(8) circle {
+  animation: wobble 3s 325ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(9) {
+  animation: up 6.25s 233ms infinite;
+}
+.bubbles-small g:nth-of-type(9) g {
+  transform: translateX(230px);
+}
+.bubbles-small g:nth-of-type(9) circle {
+  animation: wobble 3s 275ms infinite ease-in-out;
+}
+.bubbles-small g:nth-of-type(10) {
+  animation: up 6s 900ms infinite;
+}
+.bubbles-small g:nth-of-type(10) g {
+  transform: translateX(730px);
+}
+.bubbles-small g:nth-of-type(10) circle {
+  animation: wobble 2s 905ms infinite ease-in-out;
+}
+@keyframes wobble {
+  33% {
+    transform: translateX(-50px);
+  }
+  66% {
+    transform: translateX(50px);
+  }
+}
+@keyframes up {
+  0% {
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-1024px);
+  }
 }
 </style>
