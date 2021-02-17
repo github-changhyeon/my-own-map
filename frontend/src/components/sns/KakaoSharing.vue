@@ -31,6 +31,7 @@ export default {
     return {
       tmpArticle: Object,
       baseUrl: '',
+      username: '',
     };
   },
   methods: {
@@ -55,11 +56,13 @@ export default {
       Kakao.Link.sendDefault({
         objectType: 'feed',
         content: {
+          title: this.articles[0].userDto.username + '님의 소중한 지도 기록🗺',
           // title: this.tmpArticle.title,
-          title: '',
+          // title: '',
           description: this.tmpArticle.contents,
           imageUrl: '',
-          // imageUrl: this.tmpArticle.imagePaths,
+          // TODO : 배포할때 주소 변경
+          // imageUrl: `@/assets/this.tmpArticle.imagePaths`,
           link: {
             // mobileWebUrl: 'https://i4b107.p.ssafy.io/',
             webUrl: this.baseUrl,

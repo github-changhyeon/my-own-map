@@ -46,8 +46,25 @@ function receiveMessage() {
       .catch((error) => {
         console.log(error, '에러입메');
       });
+
+    // let _window = window;
+
+    // if (
+    //   window.sessionStorage.getItem('history') === null ||
+    //   window.sessionStorage.getItem('history') === undefined
+    // ) {
+    //   window.sessionStorage.setItem('history', 'true');
+    // } else {
+    //   if (window.sessionStorage.getItem('history') === 'true') {
+    //     window.sessionStorage.setItem('history', 'false');
+    //   } else {
+    //     window.sessionStorage.setItem('history', 'true');
+    //   }
+    // }
+
     // ...
   });
+
   // [END messaging_receive_message]
 }
 
