@@ -1,19 +1,41 @@
 <template>
   <div>
     <v-row justify="end">
-      <v-btn class="ma-2" fab x-small light @click="hashtagDrawer = !hashtagDrawer" style="position:fixed; top: 60px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        x-small
+        light
+        @click="hashtagDrawer = !hashtagDrawer"
+        style="position:fixed; top: 60px; z-index: 2"
+      >
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab x-small light @click="followDrawer = !followDrawer" style="position: fixed; top: 20px; z-index: 2">
+      <v-btn
+        class="ma-2"
+        fab
+        x-small
+        light
+        @click="followDrawer = !followDrawer"
+        style="position: fixed; top: 20px; z-index: 2"
+      >
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
 
     <v-row justify="end">
-      <KakaoSharing :filteredHashtagSwitches="userHashtagSwitches" :isShowFavorites="isShowFavorites" :articles="articles" fab x-small dark style="position: fixed; top: 100px; z-index: 2" />
+      <KakaoSharing
+        :filteredHashtagSwitches="userHashtagSwitches"
+        :isShowFavorites="isShowFavorites"
+        :articles="articles"
+        fab
+        x-small
+        dark
+        style="position: fixed; top: 100px; z-index: 2"
+      />
     </v-row>
 
     <v-row justify="center">
@@ -62,25 +84,51 @@
         >
       </v-list-item>
       <v-list-item>
-        <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
+        <v-switch
+          @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)"
+          v-model="selectAllHashtagSwitch"
+          label="전체보기"
+        ></v-switch>
       </v-list-item>
       <v-list-item v-if="isSameUser">
-        <v-switch @click="clickShowFavoriteSwitch(isShowFavorites)" v-model="isShowFavorites" label="스크랩한 게시물 보기"></v-switch>
+        <v-switch
+          @click="clickShowFavoriteSwitch(isShowFavorites)"
+          v-model="isShowFavorites"
+          label="스크랩한 게시물 보기"
+        ></v-switch>
       </v-list-item>
       <div v-if="selectedHashtagNames.length == 0">
         <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch
-            @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)])"
-            v-model="userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]"
+            @click="
+              clickHashtagSwitch(
+                userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
+              )
+            "
+            v-model="
+              userHashtagSwitches[userHashtagMap.get(hashtag.hashtagName)]
+            "
             :label="hashtag.hashtagName"
           ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedHashtagNames.length > 0">
-        <v-list-item v-for="(hashtagName, i) in selectedHashtagNames" :key="i" link>
+        <v-list-item
+          v-for="(hashtagName, i) in selectedHashtagNames"
+          :key="i"
+          link
+        >
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickHashtagSwitch(userHashtagSwitches[userHashtagMap.get(hashtagName)])" v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]" :label="hashtagName"></v-switch>
+          <v-switch
+            @click="
+              clickHashtagSwitch(
+                userHashtagSwitches[userHashtagMap.get(hashtagName)]
+              )
+            "
+            v-model="userHashtagSwitches[userHashtagMap.get(hashtagName)]"
+            :label="hashtagName"
+          ></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -113,13 +161,27 @@
       <div v-if="selectedFollowUserNames.length == 0">
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUser.username))" v-model="followUserSwitches[followUserMap.get(followUser.username)]" :label="followUser.username"></v-switch>
+          <v-switch
+            @click="
+              clickFollowUserSwitch(followUserMap.get(followUser.username))
+            "
+            v-model="followUserSwitches[followUserMap.get(followUser.username)]"
+            :label="followUser.username"
+          ></v-switch>
         </v-list-item>
       </div>
       <div v-if="selectedFollowUserNames.length > 0">
-        <v-list-item v-for="(followUserName, i) in selectedFollowUserNames" :key="i" link>
+        <v-list-item
+          v-for="(followUserName, i) in selectedFollowUserNames"
+          :key="i"
+          link
+        >
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
-          <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUserName))" v-model="followUserSwitches[followUserMap.get(followUserName)]" :label="followUserName"></v-switch>
+          <v-switch
+            @click="clickFollowUserSwitch(followUserMap.get(followUserName))"
+            v-model="followUserSwitches[followUserMap.get(followUserName)]"
+            :label="followUserName"
+          ></v-switch>
         </v-list-item>
       </div>
     </v-navigation-drawer>
@@ -128,14 +190,25 @@
 
     <!-- </div> -->
 
-    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 100px; z-index: 2" depressed><v-icon>mdi-view-list</v-icon></v-btn>
+    <v-btn
+      @click="goToFilteredDataList"
+      style="position: fixed; bottom: 100px; z-index: 2"
+      depressed
+      ><v-icon>mdi-view-list</v-icon></v-btn
+    >
 
     <Navigation />
   </div>
 </template>
 
 <script>
-import { getArticles, getUserHashtags, getUserPublicHashtags, getPublicArticles, myFavorite } from '@/api/user.js';
+import {
+  getArticles,
+  getUserHashtags,
+  getUserPublicHashtags,
+  getPublicArticles,
+  myFavorite,
+} from '@/api/user.js';
 import { getFollowingUsers } from '@/api/tempFollow.js';
 import constants from '@/lib/constants';
 import jwt_decode from 'jwt-decode';
@@ -151,11 +224,15 @@ const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107975557-a1629900-6ffb-11eb-9e1b-f43cd584c842.png';
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107975970-38c7ec00-6ffc-11eb-95b4-2bd28dd32c15.png';
-const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png';
+const PUBLIC_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png';
 
-const PRIVATE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
-const FOLLOW_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
-const FAVORITE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175880-46d0a800-6a11-11eb-9c74-e61c393ba2f6.png';
+const PRIVATE_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
+const FOLLOW_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
+const FAVORITE_IMAGE_SRC =
+  'https://user-images.githubusercontent.com/20719987/107175880-46d0a800-6a11-11eb-9c74-e61c393ba2f6.png';
 //   const PUBLIC_IMAGE_SRC =
 //   'https://i4b107.p.ssafy.io/images/markers/publicMarker.jpg';
 // const PRIVATE_IMAGE_SRC =
@@ -184,6 +261,197 @@ export default {
     },
   },
   methods: {
+    promiseGetUserHashtags() {
+      return new Promise((resolve, reject) => {
+        getUserHashtags(
+          this.mapUid,
+          (response) => {
+            if (response.data.status) {
+              let fullHashtags = response.data.object;
+              for (let i = 0; i < fullHashtags.length; ++i) {
+                this.fullHashtagNames.push(fullHashtags[i].hashtagName);
+              }
+              if (this.isSameUser) {
+                this.userHashtags = fullHashtags;
+                // alert('hashtag list를 받았습니다.');
+
+                // alert(this.userHashtags.length);
+                for (let i = 0; i < this.userHashtags.length; ++i) {
+                  // alert(this.userHashtags[i].hashtagName);
+                  this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
+                  this.userHashtagNames.push(this.userHashtags[i].hashtagName);
+                  this.userHashtagSwitches.push(false);
+                }
+              }
+              return resolve();
+            } else {
+              alert('hashtag list 실패');
+              return reject();
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('hashtag list 받기에 실패했습니다.');
+            return reject();
+          }
+        );
+      });
+    },
+    promiseGetUserPublicHashtags() {
+      return new Promise((resolve, reject) => {
+        getUserPublicHashtags(
+          this.mapUid,
+          (response) => {
+            if (response.data.status) {
+              this.userHashtags = response.data.object;
+              // alert('hashtag list를 받았습니다.');
+
+              // alert(this.userHashtags.length);
+              for (let i = 0; i < this.userHashtags.length; ++i) {
+                // alert(this.userHashtags[i].hashtagName);
+                this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
+                this.userHashtagNames.push(this.userHashtags[i].hashtagName);
+                this.userHashtagSwitches.push(false);
+              }
+              return resolve();
+            } else {
+              alert('hashtag list 실패');
+              return reject();
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('hashtag list 받기에 실패했습니다.');
+            return reject();
+          }
+        );
+      });
+    },
+
+    promiseGetArticles() {
+      return new Promise((resolve, reject) => {
+        getArticles(
+          this.mapUid,
+          (response) => {
+            if (response.data.status) {
+              this.articles = response.data.object;
+              for (let i = 0; i < this.articles.length; ++i) {
+                if (!this.articles[i].private) {
+                  this.publicArticles.push(this.articles[i]);
+                }
+                if (this.isSameUser) {
+                  this.articleTitles.push(this.articles[i].title);
+                } else if (!this.articles[i].private) {
+                  this.articleTitles.push(this.articles[i].title);
+                }
+              }
+              window.kakao && window.kakao.maps
+                ? this.initMap()
+                : this.addScript();
+              // alert('article list를 받았습니다.');
+              resolve();
+            } else {
+              alert('article list 실패');
+              reject();
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('article list 받기에 실패했습니다.');
+            reject();
+          }
+        );
+      });
+    },
+
+    promiseGetFollowingUsers() {
+      return new Promise((resolve, reject) => {
+        getFollowingUsers(
+          this.mapUid,
+          (response) => {
+            // console.log(response);
+            if (response.data.status) {
+              this.followUsers = response.data.object;
+              for (let i = 0; i < this.followUsers.length; ++i) {
+                this.followUserMap.set(this.followUsers[i].username, i);
+                this.followUserNames.push(this.followUsers[i].username);
+                this.followUserSwitches.push(false);
+              }
+              return resolve();
+            } else {
+              console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+              return reject();
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+            return reject();
+          }
+        );
+      });
+    },
+
+    promiseGetMyFavorites() {
+      return new Promise((resolve, reject) => {
+        let _this = this;
+        myFavorite(
+          (response) => {
+            if (response.data.status) {
+              this.favoriteArticles = response.data.object;
+              console.log(this.favoriteArticles);
+              let favoriteImageSize = new kakao.maps.Size(
+                MARKER_WIDTH,
+                MARKER_HEIGHT
+              );
+              let favoriteMarkerImage = new kakao.maps.MarkerImage(
+                FAVORITE_IMAGE_SRC,
+                favoriteImageSize
+              );
+              for (let i = 0; i < this.favoriteArticles.length; ++i) {
+                let favoriteMarker = new kakao.maps.Marker({
+                  position: new window.kakao.maps.LatLng(
+                    this.favoriteArticles[i].positionLat,
+                    this.favoriteArticles[i].positionLng
+                  ),
+                  image: favoriteMarkerImage,
+                });
+                let overlay = new kakao.maps.CustomOverlay({
+                  map: this.map,
+                  position: favoriteMarker.getPosition(),
+                });
+                let wrapDiv = this.makeCustomizedOverlay(
+                  overlay,
+                  this.favoriteArticles[i]
+                );
+
+                overlay.setContent(wrapDiv);
+
+                kakao.maps.event.addListener(
+                  favoriteMarker,
+                  'click',
+                  function() {
+                    overlay.setMap(_this.map);
+                  }
+                );
+                overlay.setMap(null);
+                this.favoriteMarkers.push(favoriteMarker);
+              }
+              this.clusterer.addMarkers(this.favoriteMarkers);
+              return resolve();
+            } else {
+              console.log('스크랩 리스트를 받아올 수 없습니다.');
+              return reject();
+            }
+          },
+          (error) => {
+            console.log(error);
+            alert('서버 에러');
+            return reject();
+          }
+        );
+      });
+    },
     goToFilteredDataList() {
       let filteredData = [];
       let filteredArticleNoArr = [];
@@ -208,123 +476,170 @@ export default {
         }
         filteredData.push(this.followArticles[i]);
       }
+
+      let storedObj = {};
+
+      storedObj.isShowFavorites = this.isShowFavorites;
+      let followIdx = -1;
+      for (let i = 0; i < this.followUserSwitches.length; ++i) {
+        if (this.followUserSwitches[i]) {
+          followIdx = i;
+          break;
+        }
+      }
+      storedObj.followIdx = followIdx;
+      if (followIdx > -1) {
+        storedObj.followMarkers = this.followMarkers;
+      }
+      storedObj.hashtagSwitches = this.userHashtagSwitches;
+      sessionStorage.setItem('storedData', JSON.stringify(storedObj));
+
       this.$router.push({
         name: constants.URL_TYPE.HOME.FILTEREDLIST,
         params: { filteredData: filteredData },
       });
     },
+
     initPage() {
       this.initDatas();
-      let uid = this.$route.params.uid;
+      this.mapUid = this.$route.params.uid;
       const token = localStorage.getItem('jwt');
       let isToken = token !== undefined && token !== null;
-      if (isToken && Number(jwt_decode(token).uid) === Number(this.$route.params.uid)) {
+      if (
+        isToken &&
+        Number(jwt_decode(token).uid) === Number(this.$route.params.uid)
+      ) {
         this.isSameUser = true;
       }
 
-      getUserHashtags(
-        uid,
-        (response) => {
-          if (response.data.status) {
-            let fullHashtags = response.data.object;
-            for (let i = 0; i < fullHashtags.length; ++i) {
-              this.fullHashtagNames.push(fullHashtags[i].hashtagName);
-            }
-            if (this.isSameUser) {
-              this.userHashtags = fullHashtags;
-              // alert('hashtag list를 받았습니다.');
-
-              // alert(this.userHashtags.length);
-              for (let i = 0; i < this.userHashtags.length; ++i) {
-                // alert(this.userHashtags[i].hashtagName);
-                this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
-                this.userHashtagNames.push(this.userHashtags[i].hashtagName);
-                this.userHashtagSwitches.push(false);
-              }
-            }
-          } else {
-            alert('hashtag list 실패');
-          }
-        },
-        (error) => {
-          console.log(error);
-          alert('hashtag list 받기에 실패했습니다.');
-        }
-      );
-      if (!this.isSameUser) {
-        getUserPublicHashtags(
-          uid,
-          (response) => {
-            if (response.data.status) {
-              this.userHashtags = response.data.object;
-              // alert('hashtag list를 받았습니다.');
-
-              // alert(this.userHashtags.length);
-              for (let i = 0; i < this.userHashtags.length; ++i) {
-                // alert(this.userHashtags[i].hashtagName);
-                this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
-                this.userHashtagNames.push(this.userHashtags[i].hashtagName);
-                this.userHashtagSwitches.push(false);
-              }
-            } else {
-              alert('hashtag list 실패');
-            }
-          },
-          (error) => {
-            console.log(error);
-            alert('hashtag list 받기에 실패했습니다.');
-          }
-        );
+      if (this.isSameUser) {
+        this.promiseGetUserHashtags()
+          .then(this.promiseGetFollowingUsers())
+          .then(this.promiseGetArticles())
+          // .then(this.promiseGetMyFavorites())
+          .then(() => {
+            console.log('promise완료');
+          })
+          .catch(() => {
+            console.log('promise실패');
+          });
+      } else {
+        this.promiseGetUserHashtags()
+          .then(this.promiseGetFollowingUsers())
+          .then(this.promiseGetUserPublicHashtags())
+          .then(this.promiseGetArticles())
+          // .then(this.promiseGetMyFavorites())
+          .then(() => {
+            console.log('promise완료');
+          })
+          .catch(() => {
+            console.log('promise실패');
+          });
       }
+      // getUserHashtags(
+      //   uid,
+      //   (response) => {
+      //     if (response.data.status) {
+      //       let fullHashtags = response.data.object;
+      //       for (let i = 0; i < fullHashtags.length; ++i) {
+      //         this.fullHashtagNames.push(fullHashtags[i].hashtagName);
+      //       }
+      //       if (this.isSameUser) {
+      //         this.userHashtags = fullHashtags;
+      //         // alert('hashtag list를 받았습니다.');
 
-      getArticles(
-        uid,
-        (response) => {
-          if (response.data.status) {
-            this.articles = response.data.object;
-            for (let i = 0; i < this.articles.length; ++i) {
-              if (!this.articles[i].private) {
-                this.publicArticles.push(this.articles[i]);
-              }
-              if (this.isSameUser) {
-                this.articleTitles.push(this.articles[i].title);
-              } else if (!this.articles[i].private) {
-                this.articleTitles.push(this.articles[i].title);
-              }
-            }
-            window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
-            // alert('article list를 받았습니다.');
-          } else {
-            alert('article list 실패');
-          }
-        },
-        (error) => {
-          console.log(error);
-          alert('article list 받기에 실패했습니다.');
-        }
-      );
+      //         // alert(this.userHashtags.length);
+      //         for (let i = 0; i < this.userHashtags.length; ++i) {
+      //           // alert(this.userHashtags[i].hashtagName);
+      //           this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
+      //           this.userHashtagNames.push(this.userHashtags[i].hashtagName);
+      //           this.userHashtagSwitches.push(false);
+      //         }
+      //       }
+      //     } else {
+      //       alert('hashtag list 실패');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     alert('hashtag list 받기에 실패했습니다.');
+      //   }
+      // );
+      // if (!this.isSameUser) {
+      // getUserPublicHashtags(
+      //   uid,
+      //   (response) => {
+      //     if (response.data.status) {
+      //       this.userHashtags = response.data.object;
+      //       // alert('hashtag list를 받았습니다.');
+      //       // alert(this.userHashtags.length);
+      //       for (let i = 0; i < this.userHashtags.length; ++i) {
+      //         // alert(this.userHashtags[i].hashtagName);
+      //         this.userHashtagMap.set(this.userHashtags[i].hashtagName, i);
+      //         this.userHashtagNames.push(this.userHashtags[i].hashtagName);
+      //         this.userHashtagSwitches.push(false);
+      //       }
+      //     } else {
+      //       alert('hashtag list 실패');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     alert('hashtag list 받기에 실패했습니다.');
+      //   }
+      // );
+      // }
+
+      // getArticles(
+      //   uid,
+      //   (response) => {
+      //     if (response.data.status) {
+      //       this.articles = response.data.object;
+      //       for (let i = 0; i < this.articles.length; ++i) {
+      //         if (!this.articles[i].private) {
+      //           this.publicArticles.push(this.articles[i]);
+      //         }
+      //         if (this.isSameUser) {
+      //           this.articleTitles.push(this.articles[i].title);
+      //         } else if (!this.articles[i].private) {
+      //           this.articleTitles.push(this.articles[i].title);
+      //         }
+      //       }
+      //       window.kakao && window.kakao.maps
+      //         ? this.initMap()
+      //         : this.addScript();
+      //       // alert('article list를 받았습니다.');
+      //     } else {
+      //       alert('article list 실패');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     alert('article list 받기에 실패했습니다.');
+      //   }
+      // );
 
       // TODO : follow하는 유저들의 정보 받아오기
-      getFollowingUsers(
-        uid,
-        (response) => {
-          // console.log(response);
-          if (response.data.status) {
-            this.followUsers = response.data.object;
-            for (let i = 0; i < this.followUsers.length; ++i) {
-              this.followUserMap.set(this.followUsers[i].username, i);
-              this.followUserNames.push(this.followUsers[i].username);
-              this.followUserSwitches.push(false);
-            }
-          } else {
-            console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
-          }
-        },
-        (error) => {
-          console.log(error);
-          alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
-        }
-      );
+      // getFollowingUsers(
+      //   uid,
+      //   (response) => {
+      //     // console.log(response);
+      //     if (response.data.status) {
+      //       this.followUsers = response.data.object;
+      //       for (let i = 0; i < this.followUsers.length; ++i) {
+      //         this.followUserMap.set(this.followUsers[i].username, i);
+      //         this.followUserNames.push(this.followUsers[i].username);
+      //         this.followUserSwitches.push(false);
+      //       }
+      //     } else {
+      //       console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
+      //   }
+      // );
     },
     getMyFavoriteMarkers() {
       let _this = this;
@@ -333,18 +648,30 @@ export default {
           if (response.data.status) {
             this.favoriteArticles = response.data.object;
             console.log(this.favoriteArticles);
-            let favoriteImageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-            let favoriteMarkerImage = new kakao.maps.MarkerImage(FAVORITE_IMAGE_SRC, favoriteImageSize);
+            let favoriteImageSize = new kakao.maps.Size(
+              MARKER_WIDTH,
+              MARKER_HEIGHT
+            );
+            let favoriteMarkerImage = new kakao.maps.MarkerImage(
+              FAVORITE_IMAGE_SRC,
+              favoriteImageSize
+            );
             for (let i = 0; i < this.favoriteArticles.length; ++i) {
               let favoriteMarker = new kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(this.favoriteArticles[i].positionLat, this.favoriteArticles[i].positionLng),
+                position: new window.kakao.maps.LatLng(
+                  this.favoriteArticles[i].positionLat,
+                  this.favoriteArticles[i].positionLng
+                ),
                 image: favoriteMarkerImage,
               });
               let overlay = new kakao.maps.CustomOverlay({
                 map: this.map,
                 position: favoriteMarker.getPosition(),
               });
-              let wrapDiv = this.makeCustomizedOverlay(overlay, this.favoriteArticles[i]);
+              let wrapDiv = this.makeCustomizedOverlay(
+                overlay,
+                this.favoriteArticles[i]
+              );
 
               overlay.setContent(wrapDiv);
 
@@ -366,6 +693,7 @@ export default {
       );
     },
     initDatas() {
+      this.mapUid = '';
       this.fullHashtagNames = [];
       this.followArticles = [];
       this.favoriteArticles = [];
@@ -432,13 +760,22 @@ export default {
             this.followArticles = response.data.object;
             // 팔로우한 사람 게시글 받아와서 지도에 표시
             this.clusterer.removeMarkers(this.followMarkers);
-            let followImageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-            let followMarkerImage = new kakao.maps.MarkerImage(FOLLOW_IMAGE_SRC, followImageSize);
+            let followImageSize = new kakao.maps.Size(
+              MARKER_WIDTH,
+              MARKER_HEIGHT
+            );
+            let followMarkerImage = new kakao.maps.MarkerImage(
+              FOLLOW_IMAGE_SRC,
+              followImageSize
+            );
 
             this.followMarkers = [];
             for (let i = 0; i < this.followArticles.length; ++i) {
               let followMarker = new kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(this.followArticles[i].positionLat, this.followArticles[i].positionLng),
+                position: new window.kakao.maps.LatLng(
+                  this.followArticles[i].positionLat,
+                  this.followArticles[i].positionLng
+                ),
                 image: followMarkerImage,
               });
 
@@ -446,7 +783,10 @@ export default {
                 map: _this.map,
                 position: followMarker.getPosition(),
               });
-              let wrapDiv = _this.makeCustomizedOverlay(overlay, this.followArticles[i]);
+              let wrapDiv = _this.makeCustomizedOverlay(
+                overlay,
+                this.followArticles[i]
+              );
 
               overlay.setContent(wrapDiv);
 
@@ -483,6 +823,27 @@ export default {
     //   this.$router.push({ name: constants.URL_TYPE.ARTICLE.CREATEARTICLE });
     // },
     goToArticleDetail(article) {
+      let storedObj = {};
+      let centerPosition = {
+        positionLat: article.positionLat,
+        positionLng: article.positionLng,
+      };
+      storedObj.isShowFavorites = this.isShowFavorites;
+      storedObj.centerPosition = centerPosition;
+      let followIdx = -1;
+      for (let i = 0; i < this.followUserSwitches.length; ++i) {
+        if (this.followUserSwitches[i]) {
+          followIdx = i;
+          break;
+        }
+      }
+      storedObj.followIdx = followIdx;
+      if (followIdx > -1) {
+        storedObj.followMarkers = this.followMarkers;
+      }
+      storedObj.hashtagSwitches = this.userHashtagSwitches;
+      sessionStorage.setItem('storedData', JSON.stringify(storedObj));
+
       this.$router.push({
         name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
         params: { articleNo: article.articleNo, article: article },
@@ -628,12 +989,21 @@ export default {
       for (let i = 0; i < nowArticles.length; ++i) {
         let data = nowArticles[i];
         let imageSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT);
-        let markerImage = new kakao.maps.MarkerImage(PUBLIC_IMAGE_SRC, imageSize);
+        let markerImage = new kakao.maps.MarkerImage(
+          PUBLIC_IMAGE_SRC,
+          imageSize
+        );
         if (data.private) {
-          markerImage = new kakao.maps.MarkerImage(PRIVATE_IMAGE_SRC, imageSize);
+          markerImage = new kakao.maps.MarkerImage(
+            PRIVATE_IMAGE_SRC,
+            imageSize
+          );
         }
         let nowMarker = new kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(data.positionLat, data.positionLng),
+          position: new window.kakao.maps.LatLng(
+            data.positionLat,
+            data.positionLng
+          ),
           image: markerImage,
         });
 
@@ -656,20 +1026,113 @@ export default {
       }
 
       _this.clusterer.addMarkers(_this.kakaoMarkers);
-      if (this.$route.query.jsonQueryData !== undefined && this.$route.query.jsonQueryData !== null) {
+      if (
+        this.$route.query.jsonQueryData !== undefined &&
+        this.$route.query.jsonQueryData !== null
+      ) {
         this.setHashtagMarkers();
       }
-      if (this.isSameUser) {
-        this.getMyFavoriteMarkers();
+      if (!this.isSameUser) {
+        this.setMainUsingFilteredData();
       }
+      if (this.isSameUser) {
+        this.promiseGetMyFavorites()
+          .then(() => {
+            console.log('ok');
+            this.setMainUsingFilteredData();
+          })
+          .catch(() => {
+            console.log('not ok');
+          });
+      }
+    },
+    setMainUsingFilteredData() {
+      if (
+        sessionStorage.getItem('storedData') === null ||
+        sessionStorage.getItem('storedData') === undefined
+      ) {
+        return;
+      }
+
+      let storedObj = JSON.parse(sessionStorage.getItem('storedData'));
+      if (
+        storedObj.centerPosition !== null &&
+        storedObj.centerPosition !== undefined
+      ) {
+        this.map.setCenter(
+          new window.kakao.maps.LatLng(
+            storedObj.centerPosition.positionLat,
+            storedObj.centerPosition.positionLng
+          )
+        );
+        this.map.setLevel(4);
+      }
+
+      this.clearAll();
+
+      if (storedObj.isShowFavorites) {
+        this.isShowFavorites = storedObj.isShowFavorites;
+        this.clusterer.addMarkers(this.favoriteMarkers);
+      }
+      if (storedObj.followIdx > -1) {
+        this.followUserSwitches[storedObj.followIdx] = true;
+        this.followMarkers = storedObj.followMarkers;
+        this.clusterer.addMarkers(this.followMarkers);
+      }
+      let cnt = 0;
+      for (let i = 0; i < this.fullHashtagNames.length; ++i) {
+        // if(storedObj.hashtagSwitches.length >= i){
+        //   break;
+        // }
+        if (
+          storedObj.hashtagSwitches[i] &&
+          this.userHashtagNames.includes(this.fullHashtagNames[i])
+        ) {
+          this.userHashtagSwitches[
+            this.userHashtagMap.get(this.fullHashtagNames[i])
+          ] = true;
+          cnt += 1;
+        }
+      }
+      let paramArticles = this.articles;
+      if (!this.isSameUser) {
+        paramArticles = this.publicArticles;
+      }
+      if (cnt > 0) {
+        this.selectAllHashtagSwitch = false;
+      }
+      let currentMarkers = this.getCurrentMarkers(paramArticles);
+      this.clusterer.removeMarkers(this.kakaoMarkers);
+      this.clusterer.addMarkers(currentMarkers);
+      sessionStorage.removeItem('storedData');
+    },
+    clearAll() {
+      this.clusterer.clear();
+      this.isShowFavorites = false;
+      // this.favoriteMarkers = [];
+      for (let i = 0; i < this.userHashtagSwitches.length; ++i) {
+        this.userHashtagSwitches[i] = false;
+      }
+      for (let i = 0; i < this.followUserSwitches.length; ++i) {
+        this.followUserSwitches[i] = false;
+      }
+      this.followMarkers = [];
     },
     setHashtagMarkers() {
       let queryData = JSON.parse(this.$route.query.jsonQueryData);
       console.log(queryData, '쿼리');
       let cnt = 0;
       for (let i = 0; i < this.fullHashtagNames.length; ++i) {
-        if (queryData[i] && this.userHashtagNames.includes(this.fullHashtagNames[i])) {
-          this.userHashtagSwitches[this.userHashtagMap.get(this.fullHashtagNames[i])] = true;
+        // if(queryData.length >= i){
+        //   break;
+        // }
+        if (
+          queryData[i] &&
+          this.userHashtagNames.includes(this.fullHashtagNames[i])
+        ) {
+          this.userHashtagSwitches[
+            this.userHashtagMap.get(this.fullHashtagNames[i])
+          ] = true;
           cnt += 1;
         }
       }
@@ -746,10 +1209,11 @@ export default {
       let aTag = document.createElement('button');
       aTag.textContent = '게시물 보기';
       aTag.onclick = function() {
-        _this.$router.push({
-          name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
-          params: { articleNo: data.articleNo, article: data },
-        });
+        _this.goToArticleDetail(data);
+        // _this.$router.push({
+        //   name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
+        //   params: { articleNo: data.articleNo, article: data },
+        // });
       };
       descDiv.appendChild(aTag);
       bodyDiv.appendChild(imgDiv);
@@ -809,6 +1273,7 @@ export default {
       userHashtagMap: new Map(),
       userHashtagSwitches: [],
       articles: [],
+      mapUid: '',
     };
   },
 };

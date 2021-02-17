@@ -63,9 +63,11 @@ export default {
     messages: 0,
     // uid:jwt_decode(localStorage.getItem('jwt')),
   }),
-  // watch: {
-
-  // },
+  watch: {
+    // 'sessionStorage.history': function(a) {
+    //   alert(a);
+    // },
+  },
   methods: {
     goToHistory() {
       if (this.uid > 0) {
