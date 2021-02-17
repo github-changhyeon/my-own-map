@@ -1,8 +1,16 @@
 <template>
   <div style="margin-bottom:50px;">
-    <v-container>
-      <v-row v-if="articles.length > 0">
-        <v-col v-for="(article, i) in articles" :key="i" cols="6">
+    <v-card>
+      <v-tabs centered>
+        <v-tab @click="isAll = true" style="width: 50vw"
+          >필터링된 데이터 보기</v-tab
+        >
+        <!-- <v-tab @click="isAll = false" style="width: 50vw">팔로우</v-tab> -->
+      </v-tabs>
+    </v-card>
+    <v-container style="padding-top: 70px;">
+      <v-row v-if="listData.length > 0">
+        <v-col v-for="(article, i) in listData" :key="i" cols="6">
           <v-card class="mx-auto" max-width="344">
             <v-img
               @click="goToDetail(article)"
@@ -52,6 +60,16 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+      <div
+        slot="no-more"
+        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+      >
+        목록의 끝입니다
+      </div>
+    </infinite-loading>
+
     <v-btn
       @click="goToMain"
       style="position: fixed; bottom: 100px; z-index: 2"
@@ -67,6 +85,7 @@
 import Navigation from '@/components/Navigation.vue';
 import constants from '@/lib/constants.js';
 import jwt_decode from 'jwt-decode';
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: 'ListView',
@@ -89,13 +108,38 @@ export default {
   components: {
     // FollowNewsFeed,
     Navigation,
+    InfiniteLoading,
   },
   data() {
     return {
       articles: [],
+      startIdx: 0,
+      listData: [],
     };
   },
   methods: {
+    infiniteHandler($state) {
+      const EACH_LEN = 6;
+
+      setTimeout(() => {
+        let cnt = 0;
+        // let isEnd = false;
+        let list = [];
+        while (cnt++ < EACH_LEN && this.startIdx < this.articles.length) {
+          list.push(this.articles[this.startIdx++]);
+        }
+        if (list.length > 0) {
+          this.listData = this.listData.concat(list);
+          $state.loaded();
+          if (list.length / EACH_LEN < 1) {
+            $state.complete();
+          }
+        } else {
+          $state.complete();
+        }
+      }, 250);
+    },
+
     goToDetail(article) {
       sessionStorage.setItem('filteredList', JSON.stringify(this.articles));
       this.$router.push({
