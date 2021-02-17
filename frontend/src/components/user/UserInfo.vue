@@ -4,27 +4,44 @@
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
     </v-avatar> -->
     <div class="map-follow-button">
-      <v-btn style="margin-right: 20px;" class="mapbutton" color="primary" v-if="!isSameUser" @click="goToMap">지도 보기</v-btn>
+      <v-btn
+        style="margin-right: 20px"
+        class="mapbutton"
+        color="primary"
+        v-if="!isSameUser"
+        @click="goToMap"
+        >지도 보기</v-btn
+      >
       <div>
-        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && !isFollow" @click="checkFollow">mdi-account-plus</v-icon>
-        <v-icon style="margin-right: 150px; top:-30px;" v-if="!isSameUser && isFollow" @click="checkFollow">mdi-account-minus</v-icon>
+        <v-icon
+          style="margin-right: 150px; top: -30px"
+          v-if="!isSameUser && !isFollow"
+          @click="checkFollow"
+          >mdi-account-plus</v-icon
+        >
+        <v-icon
+          style="margin-right: 150px; top: -30px"
+          v-if="!isSameUser && isFollow"
+          @click="checkFollow"
+          >mdi-account-minus</v-icon
+        >
       </div>
     </div>
-    <div class="word-spacing" style="margin-left:50px">
+    <div class="word-spacing" style="margin-left: 50px">
       <div @click="goToFollowerList">
-        <span style="font-weight:bold;">팔로워</span>
+        <span style="font-weight: bold">팔로워</span>
         <br />
-        <div style="margin-left:20px;">
+        <div style="margin-left: 20px">
           {{ followerList.length }}
         </div>
         <!-- <Follow :users="followerList" /> -->
       </div>
 
       <br />
-      <div @click="goToFollowingList" style="margin-right:50px;">
-        <span style="font-weight:bold;">팔로우</span>
+      <div @click="goToFollowingList" style="margin-right: 50px">
+        <span style="font-weight: bold">팔로우</span>
         <br />
-        <div style="margin-left:20px;">
+        <div style="margin-left: 20px">
           {{ followingList.length }}
         </div>
       </div>
@@ -52,7 +69,7 @@ export default {
     isSameUser: Boolean,
   },
   watch: {
-    '$route.params.uid': function(uid) {
+    '$route.params.uid': function (uid) {
       const config = this.setToken();
       this.uid = uid;
 
@@ -120,7 +137,7 @@ export default {
     };
   },
   methods: {
-    setToken: function() {
+    setToken: function () {
       const token = localStorage.getItem('jwt');
       const config = {
         headers: {
@@ -130,10 +147,16 @@ export default {
       return config;
     },
     goToFollowingList() {
-      this.$router.push({ name: 'Follow', params: { follow: this.followingList } });
+      this.$router.push({
+        name: 'Follow',
+        params: { follow: this.followingList },
+      });
     },
     goToFollowerList() {
-      this.$router.push({ name: 'Follow', params: { follow: this.followerList } });
+      this.$router.push({
+        name: 'Follow',
+        params: { follow: this.followerList },
+      });
     },
     goToMap() {
       this.$router.push({
@@ -150,8 +173,8 @@ export default {
           this.followerList = response.data.object.body.object;
           this.isFollow = !this.isFollow;
           let body = {
-            // uid: this.uid,
-            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            uid: this.uid,
+            // uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'FOLLOW',
           };
 

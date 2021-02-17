@@ -2,7 +2,11 @@
   <div id="app">
     <v-app class="center">
       <main class="center" style="margin-top: 50px; width: 350px">
-        <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
+        <img
+          class="logo"
+          src="https://i4b107.p.ssafy.io/images/MOM_Logo.png"
+          alt=""
+        />
         <my-own-map class="mx-auto" />
         <div class="titlebar">
           회원이 아니신가요?

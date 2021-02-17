@@ -1,22 +1,45 @@
 <template>
   <div>
     <div>
-      <h4 style="font-weight: bold ">댓글 ({{ items.length }}개)</h4>
+      <h4 style="font-weight: bold">댓글 ({{ items.length }}개)</h4>
       <br />
     </div>
     <v-card width="800" class="mx-auto">
       <template>
-        <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
+        <v-list-item
+          class="commentlist"
+          v-for="(item, index) in items"
+          :key="index"
+        >
           <v-list-item-avatar>
-            <v-img :src="require(`@/assets/profileImages/${item.userDto.profileImagePath}`)"></v-img>
+            <v-img
+              :src="
+                require(`https://i4b107.p.ssafy.io/images/profileImages/${item.userDto.profileImagePath}`)
+              "
+            ></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             {{ item.userDto.username }}
-            <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
-            <CommentCreate v-if="isModify[index]" :updateContent="item.content" :index="index" @create-comment="checkUpdateComment" />
+            <v-list-item-title
+              v-if="!isModify[index]"
+              v-html="item.content"
+            ></v-list-item-title>
+            <CommentCreate
+              v-if="isModify[index]"
+              :updateContent="item.content"
+              :index="index"
+              @create-comment="checkUpdateComment"
+            />
           </v-list-item-content>
-          <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"><v-icon small>mdi-pencil-outline</v-icon></v-btn>
-          <v-btn x-small v-if="!isModify[index]" @click="checkDeleteComment(item)"><v-icon small>mdi-trash-can</v-icon></v-btn>
+          <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"
+            ><v-icon small>mdi-pencil-outline</v-icon></v-btn
+          >
+          <v-btn
+            x-small
+            v-if="!isModify[index]"
+            @click="checkDeleteComment(item)"
+            ><v-icon small>mdi-trash-can</v-icon></v-btn
+          >
         </v-list-item>
       </template>
     </v-card>
@@ -25,7 +48,12 @@
 </template>
 
 <script>
-import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
+import {
+  getComment,
+  createComment,
+  deleteComment,
+  updateComment,
+} from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
 import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';
@@ -62,7 +90,7 @@ export default {
     propsUid: Number,
   },
   methods: {
-    setToken: function() {
+    setToken: function () {
       const token = localStorage.getItem('jwt');
       const config = {
         headers: {
@@ -108,8 +136,8 @@ export default {
           console.log(response, '작성성공');
           this.checkGetComment();
           let body = {
-            // uid: this.propsUid,
-            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            uid: this.propsUid,
+            // uid: jwt_decode(localStorage.getItem('jwt')).uid,
             articleNo: this.articleNo,
             message: 'COMMENT',
           };

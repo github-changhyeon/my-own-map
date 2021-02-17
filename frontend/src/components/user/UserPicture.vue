@@ -1,7 +1,20 @@
 <template>
   <div>
-    <img class="profileImage" :src="require(`@/assets/profileImages/${profileImageUrl}`)" />
-    <v-file-input v-if="isSameUser" class="addbutton" v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-plus" @change="changeProfileFunc"></v-file-input>
+    <img
+      class="profileImage"
+      :src="
+        require(`https://i4b107.p.ssafy.io/images/profileImages/${profileImageUrl}`)
+      "
+    />
+    <v-file-input
+      v-if="isSameUser"
+      class="addbutton"
+      v-model="profileImage"
+      accept="image/*"
+      hide-input
+      prepend-icon="mdi-plus"
+      @change="changeProfileFunc"
+    ></v-file-input>
   </div>
 </template>
 
@@ -13,7 +26,7 @@ export default {
   name: 'UserPicture',
   components: {},
   props: ['isSameUser', 'propsUserDto'],
-  data: function() {
+  data: function () {
     return {
       profileImageUrl: 'basic_user.png',
       // profileImageUrl: 'https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif',
@@ -24,12 +37,12 @@ export default {
     };
   },
   watch: {
-    propsUserDto: function(val) {
+    propsUserDto: function (val) {
       console.log('watch');
       this.userDto = val;
       this.profileImageUrl = this.userDto.profileImagePath;
     },
-    profileImageUrl: function(val) {
+    profileImageUrl: function (val) {
       this.profileImageUrl = val;
       console.log(this.profileImageUrl, 'watch 중');
     },
@@ -42,7 +55,10 @@ export default {
       const formData = new FormData();
       formData.append('file', e);
       this.userDto = this.propsUserDto;
-      formData.append('user', new Blob([JSON.stringify(this.userDto)], { type: 'application/json' }));
+      formData.append(
+        'user',
+        new Blob([JSON.stringify(this.userDto)], { type: 'application/json' })
+      );
       console.log('여기들어왔나');
       console.log(this.userDto, '들어왓나');
       updateUser(
@@ -50,7 +66,9 @@ export default {
         (response) => {
           if (response.data.status) {
             console.log(response.data.object, '성공');
-            this.profileImageUrl = '@/assets/profileImages/' + response.data.object.profileImagePath;
+            this.profileImageUrl =
+              'https://i4b107.p.ssafy.io/images/profileImages/' +
+              response.data.object.profileImagePath;
           } else {
             alert('실패');
           }

@@ -20,7 +20,7 @@
               <v-list-item-avatar>
                 <v-img
                   :src="
-                    require(`@/assets/profileImages/${history.userFrom.profileImagePath}`)
+                    require(`https://i4b107.p.ssafy.io/images/profileImages/${history.userFrom.profileImagePath}`)
                   "
                 ></v-img>
                 <!-- {{ item.userDto.username }} -->
@@ -28,7 +28,7 @@
               <v-list-item-content v-if="history.state === 'FOLLOW'">
                 <div>
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToUserPage(history.userFrom.uid)"
                   >
                     {{ history.userFrom.username }}
@@ -39,14 +39,14 @@
               <v-list-item-content v-if="history.state === 'LIKE'">
                 <div>
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToUserPage(history.userFrom.uid)"
                   >
                     {{ history.userFrom.username }}
                   </button>
                   님이
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToArticleDetail(history.articleDto.articleNo)"
                   >
                     {{ history.articleDto.articleNo }}번 게시글</button
@@ -56,14 +56,14 @@
               <v-list-item-content v-if="history.state === 'COMMENT'">
                 <div>
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToUserPage(history.userFrom.uid)"
                   >
                     {{ history.userFrom.username }}
                   </button>
                   님이
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToArticleDetail(history.articleDto.articleNo)"
                   >
                     {{ history.articleDto.articleNo }}번 게시글</button
@@ -163,7 +163,7 @@ export default {
       });
     },
   },
-  data: function() {
+  data: function () {
     return {
       uid: 0,
       histories: [

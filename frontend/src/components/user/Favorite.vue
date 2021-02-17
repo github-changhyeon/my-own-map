@@ -1,8 +1,12 @@
 <template>
-  <div style="color: #FF70BC">
+  <div style="color: #ff70bc">
     <v-btn icon color="primary">
-      <v-icon size="30" v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
-      <v-icon size="30" v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
+      <v-icon size="30" v-if="isFavorited" @click="checkFavorited"
+        >mdi-heart</v-icon
+      >
+      <v-icon size="30" v-if="!isFavorited" @click="checkFavorited"
+        >mdi-heart-outline</v-icon
+      >
     </v-btn>
   </div>
 </template>
@@ -24,7 +28,7 @@ export default {
     };
   },
   methods: {
-    setToken: function() {
+    setToken: function () {
       const token = localStorage.getItem('jwt');
       const config = {
         headers: {
@@ -43,9 +47,9 @@ export default {
           console.log(response, '좋아요');
           this.isFavorited = !this.isFavorited;
           let body = {
-            // uid: this.article.userDto.uid,
+            uid: this.article.userDto.uid,
             articleNo: this.article.articleNo,
-            uid: jwt_decode(localStorage.getItem('jwt')).uid,
+            // uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'LIKE',
           };
           notifyAction(
