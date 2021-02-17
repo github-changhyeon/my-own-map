@@ -16,7 +16,7 @@
       <v-textarea outlined label="내용을 입력해 주세요." type="text" id="contents" v-model="article.contents"> </v-textarea>
     </div>
     <div class="center">
-      <v-combobox v-model="hashtagNames" :items="items" label="해시태그를 입력해 보세요." multiple chips>
+      <v-combobox v-model="selectedHashtagNames" :items="items" label="해시태그를 입력해 보세요." multiple chips>
         <template v-slot:selection="data">
           <v-chip color="secondary" :key="JSON.stringify(data.item)" v-bind="data.attrs" :input-value="data.selected" :disabled="data.disabled" @click:close="data.parent.selectItem(data.item)">
             <v-avatar class="primary white--text" left v-text="data.item.slice(0, 1).toUpperCase()"></v-avatar>
@@ -261,11 +261,14 @@ export default {
             this.selectedHashtagNames.push(this.article.hashtags[i].hashtagName);
             this.articleHashtagNames.push(this.article.hashtags[i].hashtagName);
           }
-          console.log(this.selectedHashtagNames, '된거같은데?>');
-          // for (let i = 0; i < this.article.hashtags.length; ++i) {
-          //   this.hashtagNames.push(this.article.hashtags[i].hashtagName);
-          // }
-          // console.log(this.hashtagNames);
+          for (let i = 0; i < this.article.hashtags.length; ++i) {
+            this.hashtagNames.push(this.article.hashtags[i].hashtagName);
+          }
+          console.log(this.hashtagNames);
+          console.log(this.selectedHashtagNames, '셀렉티드해시태그');
+          console.log(this.articleHashtagNames, '아티클해시태그');
+          // this.hashtagNames = this.articleHashtagNames;
+          console.log(this.hashtagNames, '해시태그');
         } else {
           alert('게시글 정보를 받아올 수 없습니다.');
         }
@@ -288,6 +291,8 @@ export default {
           for (let i = 0; i < tempHashtagObjs.length; ++i) {
             this.hashtagNames.push(tempHashtagObjs[i].hashtagName);
           }
+          // TODO: items가 필요없나?
+          this.items = this.hashtagNames;
           console.log(this.hashtagNames, '해시태그네임');
           console.log(this.items, '아이템즈');
           // alert('해시태그 받기 성공');
