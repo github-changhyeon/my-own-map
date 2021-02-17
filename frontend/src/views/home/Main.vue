@@ -151,7 +151,8 @@ const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175839-2e608d80-6a11-11eb-9bb4-e60529268553.png';
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107975557-a1629900-6ffb-11eb-9e1b-f43cd584c842.png';
 // const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107975970-38c7ec00-6ffc-11eb-95b4-2bd28dd32c15.png';
-const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png';
+// const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/68572067/107976751-6497a180-6ffd-11eb-8236-578438a23852.png';
+const PUBLIC_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/108171558-096dc800-713f-11eb-8b42-4192a53a2dfb.png';
 
 const PRIVATE_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175853-37e9f580-6a11-11eb-984f-f392d643b4db.png';
 const FOLLOW_IMAGE_SRC = 'https://user-images.githubusercontent.com/20719987/107175869-40dac700-6a11-11eb-840b-e7bd0be3f0b8.png';
@@ -665,7 +666,8 @@ export default {
     },
     setHashtagMarkers() {
       let queryData = JSON.parse(this.$route.query.jsonQueryData);
-      console.log(queryData, '쿼리');
+      // console.log(queryData.length, '쿼리 길이');
+      // console.log(this.fullHashtagNames.length, '풀해쉬택 길이');
       let cnt = 0;
       for (let i = 0; i < this.fullHashtagNames.length; ++i) {
         if (queryData[i] && this.userHashtagNames.includes(this.fullHashtagNames[i])) {
