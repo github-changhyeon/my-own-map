@@ -303,9 +303,7 @@ public class UserController {
 //			result.message = "본인이 아닙니다";
 //			return new ResponseEntity<>(result, HttpStatus.OK);
 //		}
-		System.out.println("before");
 		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
-		System.out.println(uid + " " + userOpt.get() + "laksejfoashiefoaisehfoi");
 		result.status = true;
 		result.message = "success";
 		List<ArticleDto> articles = articleDao.findAllByUserDtoAndIsPrivate(userOpt.get(), true);
@@ -380,7 +378,6 @@ public class UserController {
 	@ApiOperation(value = "회원가입")
 	public Object join(@RequestBody UserDto user) {
 		final BasicResponse result = new BasicResponse();
-		System.out.println("user: " + user);
 		user.setRole("ROLE_USER");
 		user.setStateMsg("상태 메세지");
 		userDao.save(user);
@@ -446,11 +443,9 @@ public class UserController {
 	@ApiOperation(value = "회원정보 수정")
 	public Object updateUser(@RequestPart(value = "file", required = false) MultipartFile file,
 			@RequestPart("user") UserDto userDto, HttpServletRequest request) {
-		System.out.println(file + " " + userDto + " " + request);
 		final BasicResponse result = new BasicResponse();
 		int uid = jwtService.getUserUid();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
-//		System.out.println(userOpt.toString());
 		// 회원번호로 검색한 것이 있다면 수정세팅
 		if (!userOpt.isPresent()) {
 			result.status = false;
@@ -477,7 +472,6 @@ public class UserController {
 					e.printStackTrace();
 					return result;
 				}
-				System.out.println("hello");
 				ProfileImageDto tmpProfileImageDto = profileImageDao.findByUserDto(userDto);
 				ProfileImageDto profileImageDto = new ProfileImageDto();
 				profileImageDto.setUserDto(userDto);
@@ -506,7 +500,6 @@ public class UserController {
 		int uid = jwtService.getUserUid();
 		Optional<UserDto> userOpt = userDao.findByUid(uid);
 
-//		System.out.println(userOpt.toString());
 		if (!userOpt.isPresent()) {
 			result.status = false;
 			result.message = FAIL;
@@ -521,11 +514,6 @@ public class UserController {
 
 	}
 
-//	@GetMapping("/test")
-//	@ApiOperation(value ="회원이름으로 찾기")
-//	public void test(HttpServletRequest request){
-//		System.out.println(request.getHeader("access-token"));
-//		System.out.println(jwtService.getUserEmail());
-//	}
+
 
 }

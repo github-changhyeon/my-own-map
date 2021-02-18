@@ -76,7 +76,6 @@ public class NotificationApiController {
 	@PostMapping("/register")
 	public Object register(@RequestBody String token, HttpServletRequest request) {
 		final BasicResponse result = new BasicResponse();
-		System.out.println(token + " 토큰토큰 ");
 		notificationService.register(jwtService.getUserUid(), token);
 		result.status = true;
 		result.message = "토큰 생성완료";
@@ -103,7 +102,6 @@ public class NotificationApiController {
              }
 			
 			}
-		System.out.println(historyList.toString()+" /fcm/history-리스트 잘 가져옴?");
 		result.status = true;
 		result.message = "토큰 생성완료";
 		result.object= historyList;
@@ -131,7 +129,6 @@ public class NotificationApiController {
 	@PostMapping("/push")
 	private Object createReceiveNotification(@RequestBody Map<String, String> mapDto, HttpServletRequest request)
 			throws InterruptedException, ExecutionException {
-		System.out.println(mapDto.toString());
 		final BasicResponse result = new BasicResponse();
 		int receiverUid = Integer.parseInt(mapDto.get("uid"));
 		int myUid = jwtService.getUserUid();
@@ -171,7 +168,6 @@ public class NotificationApiController {
 			Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
 			//게시글이 없다면 오류 출력
 			if(!article.isPresent()) {
-				System.out.println("오류!오류! : sendPush-게시글없음");
 				result.status = false;
 				result.message = "오류!오류! 너는 삼류 : sendPush.";
 				return new ResponseEntity<>(result, HttpStatus.OK);
@@ -199,9 +195,7 @@ public class NotificationApiController {
 			Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
 			Optional<UserFavoriteDto> isFavorite = favoriteDao.findByUserDtoAndArticleDto(sender.get(), article.get());
 			// 찜한상태라면
-			if(isFavorite.isPresent()) {
-				System.out.println();
-			}
+			
 			if (!isFavorite.isPresent()) {
 				// 취소푸쉬는 xx
 				result.status = false;
@@ -226,7 +220,6 @@ public class NotificationApiController {
 		}
 
 		else {
-			System.out.println("오류!오류! : sendPush");
 			result.status = false;
 			result.message = "오류!오류! 너는 삼류 : sendPush.";
 			return new ResponseEntity<>(result, HttpStatus.OK);

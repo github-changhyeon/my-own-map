@@ -63,7 +63,6 @@ public class NaverLoginController {
             BufferedReader br;
 
             if(responseCode==200) { // 정상 호출
-            	System.out.println(1);
                 br = new BufferedReader(new InputStreamReader(con.getInputStream()));
             } else {  // 에러 발생
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
@@ -79,11 +78,9 @@ public class NaverLoginController {
                 String username, email, tmp;
                 JsonParser parser = new JsonParser();               
                 JsonElement accessElement = parser.parse(res.toString());                
-                System.out.println(accessElement);
                 access_token = accessElement.getAsJsonObject().get("access_token").getAsString();              
                 tmp = getUserInfo(access_token);               
                 JsonElement userInfoElement = parser.parse(tmp);
-                System.out.println(userInfoElement);
                 username = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("name").getAsString(); 
                 email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();  
                 access_token = createJWTToken(username, email);
@@ -91,12 +88,10 @@ public class NaverLoginController {
         } catch (Exception e) {
             System.out.println(e);
         }
-        System.out.println(access_token);
         return "redirect:http://localhost:8081/agreement?token=" + access_token;
 //        return "redirect:http://192.168.0.34/";
     }
 	private String getUserInfo(String access_token) {
-		System.out.println(3);
         String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
         try {
             String apiURL = "https://openapi.naver.com/v1/nid/me";
@@ -107,7 +102,6 @@ public class NaverLoginController {
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if(responseCode==200) { // 정상 호출
-            	System.out.println(4);
                 br = new BufferedReader(new InputStreamReader(con.getInputStream()));
             } else {  // 에러 발생
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
@@ -125,7 +119,6 @@ public class NaverLoginController {
         }
     }
 	private String createJWTToken(String username, String email) {
-		System.out.println(5);
         String token = null; 
         try {
             
@@ -146,8 +139,6 @@ public class NaverLoginController {
             	userEntity = user.get();
             }
             token= jwtService.create("uid", userEntity.getUid(), "access-token");// key, data, subject
-            System.out.println(6);
-            System.out.println(token);
             
         } catch (Exception e) {
             System.err.println("err: " + e);
