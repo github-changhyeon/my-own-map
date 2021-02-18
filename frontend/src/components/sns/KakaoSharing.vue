@@ -46,7 +46,7 @@ export default {
         console.log(this.article, 'this.article?');
         console.log(this.$route.params, 'route 파람스');
         this.tmpArticle = this.article;
-        console.log(this.tmpArticle);
+        console.log(this.tmpArticle.articleNo, 'tmp아티클');
         this.baseUrl = `http://localhost:8081/articles/${this.tmpArticle.articleNo}`;
       } else {
         alert('공유할 게시물이 없습니다.');
@@ -56,7 +56,7 @@ export default {
       Kakao.Link.sendDefault({
         objectType: 'feed',
         content: {
-          title: this.articles[0].userDto.username + '님의 소중한 지도 기록🗺',
+          title: this.tmpArticle.userDto.username + '님의 소중한 지도 기록🗺',
           // title: this.tmpArticle.title,
           // title: '',
           description: this.tmpArticle.contents,
