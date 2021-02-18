@@ -285,7 +285,6 @@ export default {
         },
         (error) => {
           console.log(error);
-          alert('서버 에러.');
         }
       );
     },
@@ -318,13 +317,10 @@ export default {
           for (let i = 0; i < this.article.hashtags.length; ++i) {
             this.hashtagNames.push(this.article.hashtags[i].hashtagName);
           }
-        } else {
-          alert('게시글 정보를 받아올 수 없습니다.');
         }
       },
       (error) => {
         console.log(error);
-        alert('서버 에러.');
       }
     );
 
@@ -343,13 +339,10 @@ export default {
           this.items = this.hashtagNames;
 
           // alert('해시태그 받기 성공');
-        } else {
-          alert('해시태그 받기 실패');
         }
       },
       (error) => {
         console.log(error);
-        alert('서버 에러.');
       }
     );
   },

@@ -267,7 +267,6 @@ export default {
           },
           (error) => {
             console.log(error);
-            alert('삭제 실패');
           }
         );
       } else {

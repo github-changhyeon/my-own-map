@@ -159,8 +159,7 @@ export default {
       }
       join(
         this.joinForm,
-        (response) => {
-          console.log(response);
+        () => {
           this.$router.push({ name: constants.URL_TYPE.USER.LOGIN });
         },
         (err) => {

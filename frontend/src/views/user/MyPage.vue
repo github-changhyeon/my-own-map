@@ -1,10 +1,14 @@
 <template>
   <div>
-    <div style="text-align:right;">
+    <div style="text-align: right">
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
     <div>
-      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUserDto="userDto" />
+      <UserPicture
+        style="margin-top: 30px"
+        :isSameUser="isSameUser"
+        :propsUserDto="userDto"
+      />
     </div>
     <div class="center">
       <!-- <span>{{ userDto }}</span> -->
@@ -14,7 +18,12 @@
       <span>{{ userDto.stateMsg }}</span>
     </div>
     <div>
-      <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
+      <UserInfo
+        style="margin-top: 50px"
+        :isSameUser="isSameUser"
+        :followerList="followerList"
+        :followingList="followingList"
+      />
     </div>
     <!-- <div>
       <TimeLine />
@@ -30,7 +39,9 @@
     <!-- <PublicNewsFeed v-if="isOpen === 1" :propsUid="uid" />
     <FavoriteNewsFeed v-if="isOpen === 2" :propsUid="uid" />
     <PrivateNewsFeed v-if="isOpen === 3" :propsUid="uid" /> -->
-    <router-link to="/changeinfo" class="changeInfobutton"><v-icon v-if="isSameUser">mdi-cog</v-icon></router-link>
+    <router-link to="/changeinfo" class="changeInfobutton"
+      ><v-icon v-if="isSameUser">mdi-cog</v-icon></router-link
+    >
     <div class="bubbles-container"></div>
     <!-- <ChangeInfo :propsUid="uid" /> -->
     <Navigation />
@@ -95,19 +106,14 @@ export default {
   methods: {
     logout() {
       deleteToken(() => {
-        console.log('token delete');
         deleteFcmToken(
           (success) => {
             if (success.data.status) {
-              console.log('토큰 delete 성공');
               localStorage.removeItem('jwt');
-            } else {
-              console.log('fcm 토큰 delete 실패');
             }
           },
           (error) => {
             console.log(error);
-            alert('서버 에러');
           }
         );
       });
@@ -116,42 +122,18 @@ export default {
     },
   },
   watch: {
-    '$route.params.uid': function(uid) {
-      console.log(uid);
+    '$route.params.uid': function () {
       const token = localStorage.getItem('jwt');
       this.tokenData = jwt_decode(token);
       this.uid = this.$route.params.uid;
-      // console.log(this.$route.params.uid, 'param <-> ', this.tokenData.uid);
       if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
-        console.log('본인입니다');
         this.isSameUser = true;
         // 팔로우버튼 자체를 on/off -> 팔로우버튼이 on -> isfollow -> +, -
         // 토큰 디코드해서 찍힌 uid or email로 article controller에 게시글 요청. 받아서 Userinfo components에 props,emit
       } else {
-        console.log('본인이아님');
         this.isSameUser = false;
         this.userDto = this.$route.params;
       }
-      // findFollowing(
-      //   this.uid,
-      //   (response) => {
-      //     this.followingList = response.data.object;
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     console.log('findfollowing');
-      //   }
-      // );
-      // findFollower(
-      //   this.uid,
-      //   (response) => {
-      //     this.followerList = response.data.object;
-      //     console.log(this.followerList);
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //   }
-      // );
     },
   },
   created() {
@@ -164,10 +146,8 @@ export default {
     // // 하단 네브바로 mypage로 안오고 다른 사람의 페이지를 볼때는 게시글이나 이런걸 타고들어오니까
     // // params가 있을거니까 여기에 userDto이런걸로 axios요청을 보내서 채운다.
     if (Number(this.$route.params.uid) === Number(this.tokenData.uid)) {
-      console.log('본인입니다');
       this.isSameUser = true;
     } else {
-      console.log('본인이아님');
       this.isSameUser = false;
       this.userDto = this.$route.params;
     }
@@ -176,37 +156,13 @@ export default {
       (response) => {
         if (response.data.status) {
           this.userDto = response.data.object;
-          console.log(this.userDto, 'mypage의 getuserinfo');
           this.storePassword = this.userDto.password;
-        } else {
-          alert('유저 정보를 받아올 수 없습니다.');
         }
       },
       (error) => {
         console.log(error);
-        alert('서버 에러');
       }
     );
-    // findFollowing(
-    //   this.uid,
-    //   (response) => {
-    //     this.followingList = response.data.object;
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //     console.log('findfollowing');
-    //   }
-    // );
-    // findFollower(
-    //   this.uid,
-    //   (response) => {
-    //     this.followerList = response.data.object;
-    //     console.log(this.followerList);
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // );
   },
 };
 </script>
@@ -236,7 +192,8 @@ h1 {
   display: flex;
   align-content: center;
   justify-content: center;
-  background-image: linear-gradient(to bottom, #00c9ff 0%, #92fe9d 100%), url(https://images.unsplash.com/photo-1502726299822-6f583f972e02);
+  background-image: linear-gradient(to bottom, #00c9ff 0%, #92fe9d 100%),
+    url(https://images.unsplash.com/photo-1502726299822-6f583f972e02);
   background-blend-mode: multiply;
   background-size: cover;
   overflow: hidden;

@@ -283,13 +283,11 @@ export default {
               }
               return resolve();
             } else {
-              alert('hashtag list 실패');
               return reject();
             }
           },
           (error) => {
             console.log(error);
-            alert('hashtag list 받기에 실패했습니다.');
             return reject();
           }
         );
@@ -310,13 +308,11 @@ export default {
               }
               return resolve();
             } else {
-              alert('hashtag list 실패');
               return reject();
             }
           },
           (error) => {
             console.log(error);
-            alert('hashtag list 받기에 실패했습니다.');
             return reject();
           }
         );
@@ -345,13 +341,11 @@ export default {
                 : this.addScript();
               resolve();
             } else {
-              alert('article list 실패');
               reject();
             }
           },
           (error) => {
             console.log(error);
-            alert('article list 받기에 실패했습니다.');
             reject();
           }
         );
@@ -377,7 +371,6 @@ export default {
           },
           (error) => {
             console.log(error);
-            alert('팔로우하는 유저 리스트를 받아올 수 없습니다.');
             return reject();
           }
         );
@@ -436,7 +429,6 @@ export default {
           },
           (error) => {
             console.log(error);
-            alert('서버 에러');
             return reject();
           }
         );
@@ -632,7 +624,6 @@ export default {
         },
         (error) => {
           console.log(error);
-          alert('해당 유저의 게시물들을 받아올 수 없습니다.');
         }
       );
     },
@@ -673,9 +664,7 @@ export default {
         params: { articleNo: article.articleNo, article: article },
       });
     },
-    goToMyPage() {
-      alert('마이페이지로 이동');
-    },
+
     clickHashtagSwitch(isOn) {
       if (isOn) {
         this.selectAllHashtagSwitch = false;

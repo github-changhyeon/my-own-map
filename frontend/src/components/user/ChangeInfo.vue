@@ -174,13 +174,10 @@ export default {
         if (response.data.status) {
           this.userDto = response.data.object;
           this.storePassword = this.userDto.password;
-        } else {
-          alert('유저 정보를 받아올 수 없습니다.');
         }
       },
       (error) => {
         console.log(error);
-        alert('서버 에러');
       }
     );
   },
@@ -242,7 +239,6 @@ export default {
             }
           },
           (error) => {
-            alert('서버 에러');
             console.log(error);
           }
         );

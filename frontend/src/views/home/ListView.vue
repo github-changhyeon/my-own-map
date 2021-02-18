@@ -131,6 +131,15 @@ export default {
       this.$route.params.filteredData !== undefined
     ) {
       this.articles = this.$route.params.filteredData;
+      this.articles.sort(function (n1, n2) {
+        if (n1 < n2) {
+          return 1;
+        } else if (n1 > n2) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
       this.backupArticles = this.articles;
     }
   },

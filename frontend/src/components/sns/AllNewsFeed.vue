@@ -113,7 +113,6 @@ export default {
       },
       (error) => {
         console.log(error);
-        alert('모든 유저의 모든 게시글 받아오기 실패');
       }
     );
   },
@@ -130,12 +129,8 @@ export default {
           tempList.push(this.backupArticles[i]);
         }
       }
-      // alert(tempList.length);
       this.articles = tempList;
-      // this.listData.push(this.articles[0]);
-      // this.listData.push(this.articles[1]);
-      // this.listData.push(this.articles[2]);
-      // this.listData.push(this.articles[3]);
+
       this.$refs.inf.stateChanger.reset();
       this.searchData = '';
     },

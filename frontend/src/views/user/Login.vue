@@ -91,7 +91,6 @@ export default {
   },
   methods: {
     checkLogin() {
-      console.log('아무거나');
       login(
         this.loginForm,
         (response) => {
@@ -101,22 +100,17 @@ export default {
           // deleteToken();
           requestPermission((permission) => {
             if (permission === 'granted') {
-              console.log('Notification permission granted.');
               getToken((currentToken) => {
                 if (currentToken) {
-                  console.log(currentToken, '토큰토큰');
                   registFcmToken(
                     currentToken,
                     (success) => {
-                      if (success.data.status) {
-                        console.log('fcm 토큰 regist 성공');
-                      } else {
+                      if (!success.data.status) {
                         console.log('fcm 토큰 regist 실패');
                       }
                     },
                     (error) => {
                       console.log(error);
-                      alert('서버 에러');
                     }
                   );
                   // Send the token to your server and update the UI if necessary
@@ -136,7 +130,6 @@ export default {
               console.log('Unable to get permission to notify.');
             }
           });
-          // console.log(t, 't');
           this.$router.replace({
             name: constants.URL_TYPE.HOME.MAIN,
             params: { uid: this.tokenData.uid },
@@ -144,7 +137,6 @@ export default {
         },
         (error) => {
           console.log(error);
-          alert('실패.');
         }
       );
     },

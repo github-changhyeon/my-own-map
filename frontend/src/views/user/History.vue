@@ -102,7 +102,6 @@ export default {
           if (success.data.status) {
             let tempHistories = success.data.object;
             this.histories = [];
-            console.log(tempHistories, '히스토리즈');
             if (tempHistories.length > 0) {
               let tempArr = new Array();
               tempArr.push(tempHistories[0]);
@@ -122,13 +121,10 @@ export default {
                 this.histories.push(tempArr);
               }
             }
-          } else {
-            console.log('history 리스트를 받아올 수 없습니다.');
           }
         },
         (error) => {
           console.log(error);
-          alert('서버 에러');
         }
       );
     }

@@ -71,7 +71,6 @@ export default {
       },
       (error) => {
         console.log(error);
-        alert('모든 게시글 받아오기 실패');
       }
     );
   },

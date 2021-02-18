@@ -58,8 +58,6 @@ export default {
           if (response.data.status) {
             this.profileImageUrl = response.data.object.profileImagePath;
             this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
-          } else {
-            alert('실패');
           }
         },
         (error) => {

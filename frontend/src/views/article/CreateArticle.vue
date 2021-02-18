@@ -265,7 +265,6 @@ export default {
         },
         (error) => {
           console.log(error);
-          alert('서버 에러.');
         }
       );
     },
@@ -289,13 +288,10 @@ export default {
             this.items.push(tempHashtagObjs[i].hashtagName);
           }
           // alert('해시태그 받기 성공');
-        } else {
-          alert('해시태그 받기 실패');
         }
       },
       (error) => {
         console.log(error);
-        alert('서버 에러.');
       }
     );
   },

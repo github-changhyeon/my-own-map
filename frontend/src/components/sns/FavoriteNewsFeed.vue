@@ -70,7 +70,6 @@ export default {
       },
       (error) => {
         console.log(error);
-        alert('게시글 받아오기 실패');
       }
     );
   },
