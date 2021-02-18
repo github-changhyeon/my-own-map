@@ -20,7 +20,7 @@
               <v-list-item-avatar>
                 <v-img
                   :src="
-                    require(`@/assets/profileImages/${history.userFrom.profileImagePath}`)
+                    `@/assets/profileImages/${history.userFrom.profileImagePath}`
                   "
                 ></v-img>
                 <!-- {{ item.userDto.username }} -->

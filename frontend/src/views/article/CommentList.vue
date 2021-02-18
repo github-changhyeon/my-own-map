@@ -6,17 +6,40 @@
     </div>
     <v-card width="800" class="mx-auto">
       <template>
-        <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
+        <v-list-item
+          class="commentlist"
+          v-for="(item, index) in items"
+          :key="index"
+        >
           <v-list-item-avatar @click="goToMyPage(item)">
-            <v-img :src="require(`@/assets/profileImages/${item.userDto.profileImagePath}`)"></v-img>
+            <v-img
+              :src="
+                require(`@/assets/profileImages/${item.userDto.profileImagePath}`)
+              "
+            ></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             {{ item.userDto.username }}
-            <v-list-item-title v-if="!isModify[index]" v-html="item.content"></v-list-item-title>
-            <CommentCreate v-if="isModify[index]" :updateContent="item.content" :index="index" @create-comment="checkUpdateComment" />
+            <v-list-item-title
+              v-if="!isModify[index]"
+              v-html="item.content"
+            ></v-list-item-title>
+            <CommentCreate
+              v-if="isModify[index]"
+              :updateContent="item.content"
+              :index="index"
+              @create-comment="checkUpdateComment"
+            />
           </v-list-item-content>
-          <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"><v-icon small>mdi-pencil-outline</v-icon></v-btn>
-          <v-btn x-small v-if="!isModify[index]" @click="checkDeleteComment(item)"><v-icon small>mdi-trash-can</v-icon></v-btn>
+          <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"
+            ><v-icon small>mdi-pencil-outline</v-icon></v-btn
+          >
+          <v-btn
+            x-small
+            v-if="!isModify[index]"
+            @click="checkDeleteComment(item)"
+            ><v-icon small>mdi-trash-can</v-icon></v-btn
+          >
         </v-list-item>
       </template>
     </v-card>
@@ -26,7 +49,12 @@
 
 <script>
 import constants from '@/lib/constants.js';
-import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
+import {
+  getComment,
+  createComment,
+  deleteComment,
+  updateComment,
+} from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
 import { notifyAction } from '@/api/fcm.js';
 import jwt_decode from 'jwt-decode';

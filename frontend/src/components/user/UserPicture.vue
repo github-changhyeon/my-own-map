@@ -1,7 +1,18 @@
 <template>
   <div>
-    <img class="profileImage" :src="require(`@/assets/profileImages/${profileImageUrl}`)" />
-    <v-file-input v-if="isSameUser" class="addbutton" v-model="profileImage" accept="image/*" hide-input prepend-icon="mdi-plus" @change="changeProfileFunc"></v-file-input>
+    <img
+      class="profileImage"
+      :src="`@/assets/profileImages/${profileImageUrl}`"
+    />
+    <v-file-input
+      v-if="isSameUser"
+      class="addbutton"
+      v-model="profileImage"
+      accept="image/*"
+      hide-input
+      prepend-icon="mdi-plus"
+      @change="changeProfileFunc"
+    ></v-file-input>
   </div>
 </template>
 
@@ -42,7 +53,10 @@ export default {
       const formData = new FormData();
       formData.append('file', e);
       this.userDto = this.propsUserDto;
-      formData.append('user', new Blob([JSON.stringify(this.userDto)], { type: 'application/json' }));
+      formData.append(
+        'user',
+        new Blob([JSON.stringify(this.userDto)], { type: 'application/json' })
+      );
       console.log('여기들어왔나');
       console.log(this.userDto, '들어왓나');
       updateUser(
@@ -50,7 +64,8 @@ export default {
         (response) => {
           if (response.data.status) {
             console.log(response.data.object, '성공');
-            this.profileImageUrl = '@/assets/profileImages/' + response.data.object.profileImagePath;
+            this.profileImageUrl =
+              '@/assets/profileImages/' + response.data.object.profileImagePath;
           } else {
             alert('실패');
           }
