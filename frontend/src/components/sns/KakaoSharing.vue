@@ -1,6 +1,14 @@
 <template>
   <div>
-    <v-btn v-if="this.article !== undefined" icon @click="share" class="ma-2" fab small x-light>
+    <v-btn
+      v-if="this.article !== undefined"
+      icon
+      @click="share"
+      class="ma-2"
+      fab
+      small
+      x-light
+    >
       <v-icon>mdi-share-variant</v-icon>
     </v-btn>
     <v-btn v-else @click="share" class="ma-2" fab x-small light>
@@ -58,7 +66,7 @@ export default {
       Kakao.Link.sendDefault({
         objectType: 'feed',
         content: {
-          title: this.articles[0].userDto.username + '님의 소중한 지도 기록🗺',
+          title: this.tmpArticle.userDto.username + '님의 소중한 지도 기록🗺',
           // title: this.tmpArticle.title,
           // title: '',
           description: this.tmpArticle.contents,

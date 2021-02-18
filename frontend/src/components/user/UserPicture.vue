@@ -1,9 +1,6 @@
 <template>
   <div>
-    <img
-      class="profileImage"
-      :src="`https://i4b107.p.ssafy.io/images/profileImages/${profileImageUrl}`"
-    />
+    <img class="profileImage" :src="fullProfileUrl" />
     <v-file-input
       v-if="isSameUser"
       class="addbutton"
@@ -18,7 +15,6 @@
 
 <script>
 import { updateUser } from '@/api/user.js';
-// import jwt_decode from 'jwt-decode';
 
 export default {
   name: 'UserPicture',
@@ -26,12 +22,13 @@ export default {
   props: ['isSameUser', 'propsUserDto'],
   data: function () {
     return {
-      profileImageUrl: 'basic_user.png',
-      // profileImageUrl: 'https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif',
+      profileImageUrl: 'DefaultProfileImage.png',
       profileImage: {},
       uid: '',
       tokenData: '',
       userDto: {},
+      fullProfileUrl:
+        'https://i4b107.p.ssafy.io/images/profileImages/DefaultProfileImage.png',
     };
   },
   watch: {
@@ -39,10 +36,12 @@ export default {
       console.log(this.userDto, 'watch');
       this.userDto = val;
       this.profileImageUrl = this.userDto.profileImagePath;
+      this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
     },
     profileImageUrl: function (val) {
       this.profileImageUrl = val;
       console.log(this.profileImageUrl, 'watch 중');
+      this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
     },
   },
   methods: {
@@ -64,9 +63,8 @@ export default {
         (response) => {
           if (response.data.status) {
             console.log(response.data.object, '성공');
-            this.profileImageUrl =
-              'https://i4b107.p.ssafy.io/images/profileImages/' +
-              response.data.object.profileImagePath;
+            this.profileImageUrl = response.data.object.profileImagePath;
+            this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
           } else {
             alert('실패');
           }
@@ -78,10 +76,7 @@ export default {
     },
   },
   computed: {},
-  created() {
-    console.log(this.userDto, 'userpicture created userdto');
-    console.log(this.propsUserDto, 'userpicture created userdto');
-  },
+  created() {},
 };
 </script>
 
