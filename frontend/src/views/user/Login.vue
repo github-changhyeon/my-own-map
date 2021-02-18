@@ -35,6 +35,7 @@
           </div>
         </v-form>
       </main>
+      <bubbles />
     </v-app>
   </div>
 </template>
@@ -53,11 +54,13 @@ import {
   getToken,
 } from '@/api/notification.js';
 import MyOwnMap from '../../components/MyOwnMap.vue';
+import Bubbles from '../../components/Bubbles.vue';
 
 export default {
   name: 'Login',
   components: {
     MyOwnMap,
+    Bubbles,
     // NaverLogin,
   },
   data() {

@@ -7,13 +7,25 @@
     </v-row>
 
     <v-row justify="end" v-if="isSameUser">
-      <v-btn class="ma-2" fab x-small light @click="followDrawer = !followDrawer" style="position: fixed; top: 20px; z-index: 2">
+      <v-btn class="ma-2" fab x-small light @click="followDrawer = !followDrawer" style="position: fixed; top: 100px; z-index: 2">
         <v-icon dark> mdi-account-heart-outline</v-icon>
       </v-btn>
     </v-row>
 
+    <v-row justify="end" v-if="isSameUser && !isShowFavorites">
+      <v-btn class="ma-2" fab x-small light @click="clickShowFavoriteSwitch" style="position: fixed; top: 140px; z-index: 2">
+        <v-icon> mdi-heart-outline</v-icon>
+      </v-btn>
+    </v-row>
+
+    <v-row justify="end" v-if="isSameUser && isShowFavorites">
+      <v-btn class="ma-2" fab x-small light @click="clickShowFavoriteSwitch" style="position: fixed; top: 140px; z-index: 2">
+        <v-icon> mdi-heart</v-icon>
+      </v-btn>
+    </v-row>
+
     <v-row justify="end">
-      <KakaoSharing :filteredHashtagSwitches="userHashtagSwitches" :isShowFavorites="isShowFavorites" :articles="articles" fab x-small dark style="position: fixed; top: 100px; z-index: 2" />
+      <KakaoSharing :filteredHashtagSwitches="userHashtagSwitches" :isShowFavorites="isShowFavorites" :articles="articles" fab x-small dark style="position: fixed; top: 20px; z-index: 2" />
     </v-row>
 
     <v-row justify="center">
@@ -64,9 +76,7 @@
       <v-list-item>
         <v-switch @click="clickShowAllHashtagSwitch(selectAllHashtagSwitch)" v-model="selectAllHashtagSwitch" label="전체보기"></v-switch>
       </v-list-item>
-      <!-- <v-list-item v-if="isSameUser">
-        <v-switch @click="clickShowFavoriteSwitch(isShowFavorites)" v-model="isShowFavorites" label="스크랩한 게시물 보기"></v-switch>
-      </v-list-item> -->
+
       <div v-if="selectedHashtagNames.length == 0">
         <v-list-item v-for="(hashtag, i) in userHashtags" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
@@ -111,6 +121,9 @@
       </v-list-item>
 
       <div v-if="selectedFollowUserNames.length == 0">
+        <v-list-item v-if="isSameUser">
+          <v-switch @click="clickShowFavoriteSwitch(isShowFavorites)" v-model="isShowFavorites" label="스크랩한 게시물 보기"></v-switch>
+        </v-list-item>
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch @click="clickFollowUserSwitch(followUserMap.get(followUser.username))" v-model="followUserSwitches[followUserMap.get(followUser.username)]" :label="followUser.username"></v-switch>
@@ -128,7 +141,7 @@
 
     <!-- </div> -->
 
-    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 100px; z-index: 2" depressed><v-icon>mdi-view-list</v-icon></v-btn>
+    <v-btn @click="goToFilteredDataList" style="position: fixed; bottom: 100px; z-index: 2;" depressed light small><v-icon>mdi-view-list</v-icon></v-btn>
 
     <Navigation />
   </div>
@@ -393,9 +406,7 @@ export default {
         }
       }
       storedObj.followIdx = followIdx;
-      if (followIdx > -1) {
-        storedObj.followMarkers = this.followMarkers;
-      }
+      storedObj.isSelectAll = this.selectAllHashtagSwitch;
       storedObj.hashtagSwitches = this.userHashtagSwitches;
       sessionStorage.setItem('storedData', JSON.stringify(storedObj));
 
@@ -619,8 +630,9 @@ export default {
       this.userHashtagSwitches = [];
       this.articles = [];
     },
-    clickShowFavoriteSwitch(isOn) {
-      if (isOn) {
+    clickShowFavoriteSwitch() {
+      this.isShowFavorites = !this.isShowFavorites;
+      if (this.isShowFavorites) {
         this.clusterer.addMarkers(this.favoriteMarkers);
       } else {
         this.clusterer.removeMarkers(this.favoriteMarkers);
@@ -716,9 +728,8 @@ export default {
         }
       }
       storedObj.followIdx = followIdx;
-      if (followIdx > -1) {
-        storedObj.followMarkers = this.followMarkers;
-      }
+      storedObj.isSelectAll = this.selectAllHashtagSwitch;
+
       storedObj.hashtagSwitches = this.userHashtagSwitches;
       sessionStorage.setItem('storedData', JSON.stringify(storedObj));
 
@@ -931,26 +942,23 @@ export default {
       }
       if (storedObj.followIdx > -1) {
         this.followUserSwitches[storedObj.followIdx] = true;
-        this.followMarkers = storedObj.followMarkers;
-        this.clusterer.addMarkers(this.followMarkers);
+        this.clickFollowUserSwitch(storedObj.followIdx);
+        // this.clusterer.addMarkers(this.followMarkers);
       }
-      let cnt = 0;
       for (let i = 0; i < this.fullHashtagNames.length; ++i) {
         // if(storedObj.hashtagSwitches.length >= i){
         //   break;
         // }
         if (storedObj.hashtagSwitches[i] && this.userHashtagNames.includes(this.fullHashtagNames[i])) {
           this.userHashtagSwitches[this.userHashtagMap.get(this.fullHashtagNames[i])] = true;
-          cnt += 1;
         }
       }
       let paramArticles = this.articles;
       if (!this.isSameUser) {
         paramArticles = this.publicArticles;
       }
-      if (cnt > 0) {
-        this.selectAllHashtagSwitch = false;
-      }
+      this.selectAllHashtagSwitch = storedObj.isSelectAll;
+
       let currentMarkers = this.getCurrentMarkers(paramArticles);
       this.clusterer.removeMarkers(this.kakaoMarkers);
       this.clusterer.addMarkers(currentMarkers);

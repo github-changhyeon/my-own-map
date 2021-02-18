@@ -67,8 +67,4 @@ public class History {
 		this.userTo = userTo;
 		this.state = state;
 	}
-	
-	
-	
-	
 }

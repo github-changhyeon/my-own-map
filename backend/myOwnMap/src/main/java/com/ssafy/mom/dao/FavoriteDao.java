@@ -3,6 +3,8 @@ package com.ssafy.mom.dao;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.mom.model.ArticleDto;
@@ -16,5 +18,7 @@ public interface FavoriteDao extends JpaRepository<UserFavoriteDto, Integer>{
 	Optional<UserFavoriteDto> findByUserDtoAndArticleDto(UserDto userDto, ArticleDto articleDto);
 
 	List<UserFavoriteDto> findAllByUserDto(UserDto userDto);
+	@Transactional
+	void deleteByArticleDto(ArticleDto articleDto);
 
 }
