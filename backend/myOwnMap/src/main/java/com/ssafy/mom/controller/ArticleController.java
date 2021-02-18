@@ -96,7 +96,7 @@ public class ArticleController {
 	@GetMapping
 	@ApiOperation(value = "전체 공개 게시물을 받아온다", response = List.class)
 	public Object retrievePublicArticles() {
-		List<ArticleDto> list = articleDao.findAllByIsPrivate(false);
+		List<ArticleDto> list = articleDao.findAllByIsPrivateOrderByRegiTimeDesc(false);
 		for (int i = 0; i < list.size(); i++) {
 			ArticleDto articleDto = list.get(i);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articleDto);

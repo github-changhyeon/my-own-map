@@ -7,7 +7,7 @@
         x-small
         light
         @click="hashtagDrawer = !hashtagDrawer"
-        style="position:fixed; top: 60px; z-index: 2"
+        style="position: fixed; top: 60px; z-index: 2"
       >
         <v-icon dark> mdi-pound </v-icon>
       </v-btn>
@@ -78,7 +78,7 @@
         style="position: fixed; top: 10px; z-index: 2"
       >
         <template slot="no-data">
-          <div class="center ml-2" style="font-size:0.8em">
+          <div class="center ml-2" style="font-size: 0.8em">
             검색 후보가 존재하지 않아요 :(
           </div>
         </template>
@@ -103,7 +103,7 @@
           label="검색어를 입력해주세요"
         >
           <template slot="no-data">
-            <div class="center ml-2" style="font-size:0.8em">
+            <div class="center ml-2" style="font-size: 0.8em">
               검색 후보가 존재하지 않아요 :(
             </div>
           </template></v-autocomplete
@@ -171,7 +171,7 @@
           label="검색어를 입력해주세요"
         >
           <template slot="no-data">
-            <div class="center ml-2" style="font-size:0.8em">
+            <div class="center ml-2" style="font-size: 0.8em">
               검색 후보가 존재하지 않아요 :(
             </div>
           </template></v-autocomplete
@@ -179,13 +179,6 @@
       </v-list-item>
 
       <div v-if="selectedFollowUserNames.length == 0">
-        <v-list-item v-if="isSameUser">
-          <v-switch
-            @click="clickShowFavoriteSwitch(isShowFavorites)"
-            v-model="isShowFavorites"
-            label="스크랩한 게시물 보기"
-          ></v-switch>
-        </v-list-item>
         <v-list-item v-for="(followUser, i) in followUsers" :key="i" link>
           <!-- <v-list-item-title v-text="hashtag"></v-list-item-title> -->
           <v-switch
@@ -213,13 +206,13 @@
       </div>
     </v-navigation-drawer>
 
-    <div id="map" style="height: 100vh; width:810px; z-index: 1"></div>
+    <div id="map" style="height: 100vh; width: 810px; z-index: 1"></div>
 
     <!-- </div> -->
 
     <v-btn
       @click="goToFilteredDataList"
-      style="position: fixed; bottom: 100px; z-index: 2;"
+      style="position: fixed; bottom: 100px; z-index: 2"
       depressed
       light
       small
@@ -284,7 +277,7 @@ export default {
   },
   mounted() {},
   watch: {
-    '$route.params.uid': function(uid) {
+    '$route.params.uid': function (uid) {
       console.log(uid);
       this.initPage();
     },
@@ -459,7 +452,7 @@ export default {
                 kakao.maps.event.addListener(
                   favoriteMarker,
                   'click',
-                  function() {
+                  function () {
                     overlay.setMap(_this.map);
                   }
                 );
@@ -495,6 +488,11 @@ export default {
       }
       if (this.isShowFavorites) {
         for (let i = 0; i < this.favoriteArticles.length; ++i) {
+          if (
+            filteredArticleNoArr.includes(this.favoriteArticles[i].articleNo)
+          ) {
+            continue;
+          }
           filteredData.push(this.favoriteArticles[i]);
           filteredArticleNoArr.push(this.favoriteArticles[i].articleNo);
         }
@@ -702,9 +700,13 @@ export default {
 
               overlay.setContent(wrapDiv);
 
-              kakao.maps.event.addListener(favoriteMarker, 'click', function() {
-                overlay.setMap(_this.map);
-              });
+              kakao.maps.event.addListener(
+                favoriteMarker,
+                'click',
+                function () {
+                  overlay.setMap(_this.map);
+                }
+              );
               overlay.setMap(null);
               this.favoriteMarkers.push(favoriteMarker);
             }
@@ -818,7 +820,7 @@ export default {
 
               overlay.setContent(wrapDiv);
 
-              kakao.maps.event.addListener(followMarker, 'click', function() {
+              kakao.maps.event.addListener(followMarker, 'click', function () {
                 overlay.setMap(_this.map);
               });
               overlay.setMap(null);
@@ -838,7 +840,8 @@ export default {
     },
     clickSearchTitleBar() {
       this.searchTitle = '';
-      this.clusterer.clear();
+      // this.clusterer.clear();
+      this.clearAll();
       let markers = [];
       for (let i = 0; i < this.articles.length; ++i) {
         if (this.selectedArticleTitles.includes(this.articles[i].title)) {
@@ -1045,7 +1048,7 @@ export default {
 
         overlay.setContent(wrapDiv);
 
-        kakao.maps.event.addListener(nowMarker, 'click', function() {
+        kakao.maps.event.addListener(nowMarker, 'click', function () {
           overlay.setMap(_this.map);
         });
 
@@ -1184,7 +1187,7 @@ export default {
       let closeDiv = document.createElement('div');
       closeDiv.className = 'close';
       closeDiv.title = '닫기';
-      closeDiv.onclick = function() {
+      closeDiv.onclick = function () {
         // alert('a');
         overlay.setMap(null);
       };
@@ -1237,7 +1240,7 @@ export default {
       descDiv.appendChild(ratingDiv);
       let aTag = document.createElement('button');
       aTag.textContent = '게시물 보기';
-      aTag.onclick = function() {
+      aTag.onclick = function () {
         _this.goToArticleDetail(data);
         // _this.$router.push({
         //   name: constants.URL_TYPE.ARTICLE.ARTICLEDETAIL,
@@ -1259,7 +1262,7 @@ export default {
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAOMAP_KEY}&libraries=services,clusterer`;
       let _this = this;
       script.onload = () =>
-        kakao.maps.load(function() {
+        kakao.maps.load(function () {
           _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
