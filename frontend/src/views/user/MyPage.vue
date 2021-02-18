@@ -5,6 +5,15 @@
     </div>
     <div>
       <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUserDto="userDto" />
+    </div>
+    <div class="center">
+      <!-- <span>{{ userDto }}</span> -->
+      <span style="font-size: 30px; bold;">{{ userDto.username }}</span>
+    </div>
+    <div class="center">
+      <span>{{ userDto.stateMsg }}</span>
+    </div>
+    <div>
       <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
     </div>
     <!-- <div>
@@ -207,5 +216,10 @@ export default {
   margin-bottom: 70px;
   margin-right: 20px;
   text-decoration: none;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 </style>
