@@ -155,7 +155,7 @@
 
     <v-navigation-drawer v-model="followDrawer" absolute right temporary>
       <v-list-item>
-        <h3>팔로잉</h3>
+        <h3>팔로우</h3>
       </v-list-item>
       <v-list-item>
         <v-autocomplete
@@ -1089,13 +1089,13 @@ export default {
         storedObj.centerPosition !== null &&
         storedObj.centerPosition !== undefined
       ) {
+        this.map.setLevel(4);
         this.map.setCenter(
           new window.kakao.maps.LatLng(
             storedObj.centerPosition.positionLat,
             storedObj.centerPosition.positionLng
           )
         );
-        this.map.setLevel(4);
       }
 
       this.clearAll();
