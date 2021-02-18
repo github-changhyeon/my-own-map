@@ -110,6 +110,7 @@ export default {
           (success) => {
             if (success.data.status) {
               localStorage.removeItem('jwt');
+              this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
             }
           },
           (error) => {
@@ -118,7 +119,6 @@ export default {
         );
       });
       // location.reload();
-      this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
     },
   },
   watch: {
