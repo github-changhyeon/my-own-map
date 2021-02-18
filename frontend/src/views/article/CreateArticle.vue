@@ -195,7 +195,6 @@ export default {
     },
     selectDate(e) {
       this.article.visitDate = e;
-      console.log(e);
     },
     getPos(positions) {
       this.article.positionLat = positions.positionLat;
@@ -230,7 +229,6 @@ export default {
         return;
       }
 
-      // console.log(this.article.images[0])
       // var params = new URLSearchParams();
       // params.append('file', this.images);
       // params.append('article', this.article);
@@ -243,14 +241,11 @@ export default {
       const formData = new FormData();
 
       this.images.forEach((image) => formData.append('file[]', image));
-      console.log(this.images, '이미지 몇개등록인가요');
       // formData.append("file", this.images);
       formData.append(
         'article',
         new Blob([JSON.stringify(this.article)], { type: 'application/json' })
       );
-      // console.log("file",formData.get("file"));
-      // console.log("file",formData.get("article").hashtags);
       this.article.visitDate = this.date;
       const token = localStorage.getItem('jwt');
       let uid = jwt_decode(token).uid;
@@ -258,7 +253,6 @@ export default {
       createArticle(
         formData,
         (response) => {
-          // console.log(response.data);
           if (response.data.status) {
             alert('작성 성공');
             this.$router.push({
@@ -286,7 +280,6 @@ export default {
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
     this.article.userDto.uid = uid;
-    console.log(this.article.userDto.uid);
     getUserHashtags(
       uid,
       (response) => {

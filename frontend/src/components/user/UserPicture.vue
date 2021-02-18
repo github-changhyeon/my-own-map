@@ -33,22 +33,18 @@ export default {
   },
   watch: {
     propsUserDto: function (val) {
-      console.log(this.userDto, 'watch');
       this.userDto = val;
       this.profileImageUrl = this.userDto.profileImagePath;
       this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
     },
     profileImageUrl: function (val) {
       this.profileImageUrl = val;
-      console.log(this.profileImageUrl, 'watch 중');
       this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
     },
   },
   methods: {
     changeProfileFunc(e) {
-      console.log(e, typeof e, '이미지 e');
       this.profileImageUrl = URL.createObjectURL(this.profileImage);
-      console.log(this.profileImageUrl, '이미지url');
       const formData = new FormData();
       formData.append('file', e);
       this.userDto = this.propsUserDto;
@@ -56,13 +52,10 @@ export default {
         'user',
         new Blob([JSON.stringify(this.userDto)], { type: 'application/json' })
       );
-      console.log('여기들어왔나');
-      console.log(this.userDto, '들어왓나');
       updateUser(
         formData,
         (response) => {
           if (response.data.status) {
-            console.log(response.data.object, '성공');
             this.profileImageUrl = response.data.object.profileImagePath;
             this.fullProfileUrl = `https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}`;
           } else {

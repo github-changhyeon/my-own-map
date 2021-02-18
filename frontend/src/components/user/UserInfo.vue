@@ -76,10 +76,7 @@ export default {
         this.uid,
         config,
         (response) => {
-          console.log('isfollow?');
-          // console.log(response);
           this.isFollow = response.data.status;
-          console.log(this.isFollow);
         },
         (error) => {
           console.log(error);
@@ -180,15 +177,12 @@ export default {
           notifyAction(
             body,
             (success) => {
-              if (success.data.status) {
-                console.log('알림 ok');
-              } else {
+              if (!success.data.status) {
                 console.log('알림을 할 수 없습니다.');
               }
             },
             (error) => {
               console.log(error);
-              alert('서버에러');
             }
           );
         },
@@ -202,9 +196,7 @@ export default {
     const config = this.setToken();
     const uid = this.$route.params.uid;
     this.uid = uid;
-    // console.log(uid);
     // => isMine = true/false로 판단해서 버튼 가리기 트루면 본인이니까 axios 안하고
-    // console.log(config);
     // props로 mypage받은 user정보를 이용해서(token말고 uid나 email 이런걸로) axios 요청. 본인의 팔로워 팔로잉 받아오는거.
     findFollowing(
       this.uid,
@@ -213,7 +205,6 @@ export default {
       },
       (error) => {
         console.log(error);
-        console.log('findfollowing');
       }
     );
 
@@ -221,7 +212,6 @@ export default {
       this.uid,
       (response) => {
         this.followerList = response.data.object;
-        console.log(this.followerList);
       },
       (error) => {
         console.log(error);
@@ -232,10 +222,7 @@ export default {
       this.uid,
       config,
       (response) => {
-        console.log('isfollow?');
-        // console.log(response);
         this.isFollow = response.data.status;
-        console.log(this.isFollow);
       },
       (error) => {
         console.log(error);

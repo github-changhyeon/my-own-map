@@ -42,9 +42,9 @@
             >
           </v-layout>
           <!-- <NaverLogin /> -->
-          <div class="findPassword">
+          <!-- <div class="findPassword">
             <a href="">비밀번호 찾기</a>
-          </div>
+          </div> -->
         </v-form>
       </main>
       <bubbles />

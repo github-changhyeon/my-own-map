@@ -288,7 +288,6 @@ export default {
       this.$route.params.articleNo,
       (response) => {
         this.article = response.data.object;
-        console.log(this.article, 'article detail');
         if (
           token !== null &&
           token !== undefined &&

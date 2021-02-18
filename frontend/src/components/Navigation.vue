@@ -111,8 +111,6 @@ export default {
           (success) => {
             if (success.data.status) {
               this.$router.push({ name: constants.URL_TYPE.USER.HISTORY });
-            } else {
-              console.log('zero 만들기 실패');
             }
           },
           (error) => {
@@ -168,8 +166,6 @@ export default {
         (success) => {
           if (success.data.status) {
             this.messages = success.data.object.notificationCheck;
-          } else {
-            console.log('유저 정보 받아오기 실패');
           }
         },
         (error) => {

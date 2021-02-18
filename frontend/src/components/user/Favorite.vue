@@ -38,25 +38,20 @@ export default {
     },
     checkFavorited() {
       const config = this.setToken();
-      console.log(this.article.articleNo, '클릭하고 articleNO');
       doFavorite(
         this.article.articleNo,
         config,
-        (response) => {
-          console.log(response, '좋아요');
+        () => {
           this.isFavorited = !this.isFavorited;
           let body = {
             uid: this.article.userDto.uid,
             articleNo: this.article.articleNo,
-            // uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'LIKE',
           };
           notifyAction(
             body,
             (success) => {
-              if (success.data.status) {
-                console.log('알림 ok');
-              } else {
+              if (!success.data.status) {
                 console.log('알림을 할 수 없습니다.');
               }
             },
@@ -79,7 +74,6 @@ export default {
       this.$route.params.articleNo,
       config,
       (response) => {
-        // console.log(response.data.status, 'is favorite?');
         this.isFavorited = response.data.status;
       },
       (error) => {

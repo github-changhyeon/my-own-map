@@ -44,7 +44,6 @@ export default {
   },
   methods: {
     share() {
-      console.log(this.articles, '메서드의 articles');
       // this.articles !== undefined || this.articles !== null || this.articles.length !== 0
       if (this.articles !== undefined && this.articles.length > 0) {
         this.tmpArticle = this.articles[0];
@@ -53,16 +52,12 @@ export default {
           this.articles[0].userDto.uid
         }?jsonQueryData=${JSON.stringify(this.filteredHashtagSwitches)}`;
       } else if (this.article !== undefined) {
-        console.log(this.article, 'this.article?');
-        console.log(this.$route.params, 'route 파람스');
         this.tmpArticle = this.article;
-        console.log(this.tmpArticle);
         this.baseUrl = `https://i4b107.p.ssafy.io/articles/${this.tmpArticle.articleNo}`;
       } else {
         alert('공유할 게시물이 없습니다.');
         return;
       }
-      console.log(this.baseUrl);
       Kakao.Link.sendDefault({
         objectType: 'feed',
         content: {

@@ -108,16 +108,10 @@ export default {
             for (let i = 0; i < this.items.length; i++) {
               this.isModify.push(false);
             }
-            console.log(response.data.object, 'getcomment의 items');
-            console.log(response, 'getcomment의 msg');
-            console.log('댓글 가져오기 성공.');
-          } else {
-            console.log('실패');
           }
         },
         (error) => {
           console.log(error);
-          alert('댓글 가져오기 실패');
         }
       );
     },
@@ -131,32 +125,27 @@ export default {
       // this.items.push(tempContent);
       createComment(
         this.comment,
-        (response) => {
-          console.log(response, '작성성공');
+        () => {
           this.checkGetComment();
           let body = {
             uid: this.propsUid,
-            // uid: jwt_decode(localStorage.getItem('jwt')).uid,
             articleNo: this.articleNo,
             message: 'COMMENT',
           };
           notifyAction(
             body,
             (success) => {
-              if (success.data.status) {
-                console.log('알림 ok');
-              } else {
+              if (!success.data.status) {
                 console.log('알림을 할 수 없습니다.');
               }
             },
             (error) => {
               console.log(error);
-              alert('서버에러');
             }
           );
         },
         (error) => {
-          console.log(error, '작성실패');
+          console.log(error);
         }
       );
     },
@@ -164,7 +153,6 @@ export default {
       if (confirm('삭제하시겠습니까?') == true) {
         // OK
         const config = this.setToken();
-        console.log(item, '삭제할comment');
         const commentNo = item.commentNo;
         deleteComment(
           commentNo,
@@ -192,8 +180,6 @@ export default {
         this.commentDto,
         config,
         () => {
-          console.log(this.commentDto, '수정후dto');
-
           this.checkGetComment();
         },
         (error) => {

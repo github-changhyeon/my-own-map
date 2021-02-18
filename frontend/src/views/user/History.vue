@@ -97,19 +97,6 @@ export default {
       this.uid = jwt_decode(token).uid;
     }
     if (this.uid > 0) {
-      // setZero(
-      //   (success) => {
-      //     if (success.data.status) {
-      //       console.log('zero 만들기 성공');
-      //     } else {
-      //       console.log('zero 만들기 실패');
-      //     }
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     alert('서버 에러');
-      //   }
-      // );
       getHistory(
         (success) => {
           if (success.data.status) {

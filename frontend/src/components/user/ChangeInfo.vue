@@ -167,7 +167,6 @@ export default {
   created() {
     const token = localStorage.getItem('jwt');
     // this.tokenData = jwt_decode(token);
-    console.log(jwt_decode(token));
     this.uid = jwt_decode(token).uid;
     getUserInfo(
       this.uid,
@@ -190,10 +189,7 @@ export default {
       // 뒤로가기
       this.$router.go(-1);
     },
-    // changeProfileFunc(e) {
-    //   console.log(e);
-    //   this.profileImageUrl = URL.createObjectURL(this.profileImage);
-    // },
+
     changePasswordFunc() {
       this.userDto.password = '';
       this.isChangePassword = true;
@@ -228,9 +224,7 @@ export default {
           'user',
           new Blob([JSON.stringify(this.userDto)], { type: 'application/json' })
         );
-        console.log(new Blob([JSON.stringify(this.userDto)]));
-        console.log('file', formData.get('file'));
-        console.log('user', formData.get('user'));
+
         updateUser(
           formData,
           (response) => {

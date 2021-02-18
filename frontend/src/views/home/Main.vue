@@ -258,8 +258,7 @@ export default {
   },
   mounted() {},
   watch: {
-    '$route.params.uid': function (uid) {
-      console.log(uid);
+    '$route.params.uid': function () {
       this.initPage();
     },
   },
@@ -373,7 +372,6 @@ export default {
               }
               return resolve();
             } else {
-              console.log('팔로우하는 유저 리스트를 받아올 수 없습니다.');
               return reject();
             }
           },
@@ -393,7 +391,6 @@ export default {
           (response) => {
             if (response.data.status) {
               this.favoriteArticles = response.data.object;
-              console.log(this.favoriteArticles);
               let favoriteImageSize = new kakao.maps.Size(
                 MARKER_WIDTH,
                 MARKER_HEIGHT
@@ -434,7 +431,6 @@ export default {
               this.clusterer.addMarkers(this.favoriteMarkers);
               return resolve();
             } else {
-              console.log('스크랩 리스트를 받아올 수 없습니다.');
               return reject();
             }
           },
@@ -513,9 +509,6 @@ export default {
         this.promiseGetUserHashtags()
           .then(this.promiseGetFollowingUsers())
           .then(this.promiseGetArticles())
-          .then(() => {
-            console.log('promise완료');
-          })
           .catch(() => {
             console.log('promise실패');
           });
@@ -524,9 +517,6 @@ export default {
           .then(this.promiseGetFollowingUsers())
           .then(this.promiseGetUserPublicHashtags())
           .then(this.promiseGetArticles())
-          .then(() => {
-            console.log('promise완료');
-          })
           .catch(() => {
             console.log('promise실패');
           });
@@ -638,8 +628,6 @@ export default {
             }
 
             this.clusterer.addMarkers(this.followMarkers);
-          } else {
-            console.log('해당 유저의 게시물들을 받아올 수 없습니다.');
           }
         },
         (error) => {
@@ -870,7 +858,6 @@ export default {
       if (this.isSameUser) {
         this.promiseGetMyFavorites()
           .then(() => {
-            console.log('ok');
             this.setMainUsingFilteredData();
           })
           .catch(() => {

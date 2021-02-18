@@ -4,9 +4,7 @@
       >네아로
       <!-- <img src="@/assets/Naver_Login.PNG" alt="" /> -->
     </a>
-    <div @click="naverLogin">
-      네이버로그인
-    </div>
+    <div @click="naverLogin">네이버로그인</div>
   </div>
 </template>
 
@@ -21,7 +19,8 @@ export default {
       redirectURL: 'http://localhost:8080/naver/login',
       //  FIXME state 값 random string 으로 변경
       state: 123,
-      naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code',
+      naverLoginURL:
+        'https://nid.naver.com/oauth2.0/authorize?response_type=code',
 
       loginForm: {
         username: '',
@@ -32,11 +31,11 @@ export default {
   methods: {
     naverLogin() {
       axios
-        .get(`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${this.CLIENT_ID}&redirect_uri=${this.redirectURI}&state=${this.state}`)
+        .get(
+          `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${this.CLIENT_ID}&redirect_uri=${this.redirectURI}&state=${this.state}`
+        )
         .then((response) => {
-          // console.log(response.request);
           this.responseURL = response.request.responseURL;
-          // this.$router.push(response.request.responseURL);
         })
         .catch((err) => {
           console.log(err);
