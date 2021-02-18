@@ -1,9 +1,6 @@
 <template>
   <div>
-    <img
-      class="profileImage"
-      :src="`https://i4b107.p.ssafy.io/images/profileImages/${profileImageUrl}`"
-    />
+    <img class="profileImage" :src="`${profileTotalUrl}`" />
     <v-file-input
       v-if="isSameUser"
       class="addbutton"
@@ -26,12 +23,14 @@ export default {
   props: ['isSameUser', 'propsUserDto'],
   data: function () {
     return {
-      profileImageUrl: 'basic_user.png',
+      profileImageUrl: 'DefaultProfileImage.png',
       // profileImageUrl: 'https://ssl.pstatic.net/static/newsstand/up/2013/0813/nsd114516931.gif',
       profileImage: {},
       uid: '',
       tokenData: '',
       userDto: {},
+      profileTotalUrl:
+        'https://i4b107.p.ssafy.io/images/profileImages/DefaultProfileImage.png',
     };
   },
   watch: {
@@ -39,9 +38,12 @@ export default {
       console.log(this.userDto, 'watch');
       this.userDto = val;
       this.profileImageUrl = this.userDto.profileImagePath;
+      this.profileTotalUrl = `"https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}";`;
     },
     profileImageUrl: function (val) {
       this.profileImageUrl = val;
+      this.profileTotalUrl = `"https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}";`;
+
       console.log(this.profileImageUrl, 'watch 중');
     },
   },
@@ -64,9 +66,11 @@ export default {
         (response) => {
           if (response.data.status) {
             console.log(response.data.object, '성공');
+
             this.profileImageUrl =
               'https://i4b107.p.ssafy.io/images/profileImages/' +
               response.data.object.profileImagePath;
+            this.profileTotalUrl = `"https://i4b107.p.ssafy.io/images/profileImages/${this.profileImageUrl}";`;
           } else {
             alert('실패');
           }
