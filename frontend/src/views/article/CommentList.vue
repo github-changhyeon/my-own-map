@@ -11,7 +11,7 @@
           v-for="(item, index) in items"
           :key="index"
         >
-          <v-list-item-avatar>
+          <v-list-item-avatar @click="goToMyPage(item)">
             <v-img
               :src="
                 require(`@/assets/profileImages/${item.userDto.profileImagePath}`)
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import constants from '@/lib/constants.js';
 import {
   getComment,
   createComment,
@@ -205,6 +206,12 @@ export default {
     checkModify(index) {
       this.isModify.splice(index, 1, true);
       this.commentDto.commentNo = this.items[index].commentNo;
+    },
+    goToMyPage(item) {
+      this.$router.push({
+        name: constants.URL_TYPE.USER.MYPAGE,
+        params: { uid: item.userDto.uid },
+      });
     },
   },
   created() {

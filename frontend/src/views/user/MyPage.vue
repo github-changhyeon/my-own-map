@@ -3,8 +3,19 @@
     <div style="text-align:right;">
       <v-btn v-if="isSameUser" @click="logout">로그아웃</v-btn>
     </div>
-    <UserPicture :isSameUser="isSameUser" :propsUserDto="userDto" />
-    <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
+    <div>
+      <UserPicture style="margin-top:30px;" :isSameUser="isSameUser" :propsUserDto="userDto" />
+    </div>
+    <div class="center">
+      <!-- <span>{{ userDto }}</span> -->
+      <span style="font-size: 30px; bold;">{{ userDto.username }}</span>
+    </div>
+    <div class="center">
+      <span>{{ userDto.stateMsg }}</span>
+    </div>
+    <div>
+      <UserInfo style="margin-top:50px;" :isSameUser="isSameUser" :followerList="followerList" :followingList="followingList" />
+    </div>
     <!-- <div>
       <TimeLine />
     </div> -->
@@ -206,6 +217,11 @@ export default {
   margin-bottom: 70px;
   margin-right: 20px;
   text-decoration: none;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 @import url('https://fonts.googleapis.com/css?family=Exo+2:900');
 h1 {

@@ -95,7 +95,6 @@ public class UserController {
 	@Autowired
 	private ProfileImageDao profileImageDao;
 
-	
 //	@ApiOperation(value = "이메일 중복 확인", response = List.class)
 //	@PostMapping("/checkDuplicatedEmail")
 //	public ResponseEntity<BasicResponse> checkDuplicatedEmail(@RequestParam(value = "email", required = false) String email){
@@ -104,7 +103,7 @@ public class UserController {
 //		result.message = "success";
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //	}
-	
+
 	// 나의 메인페이지
 	@ApiOperation(value = "해당 유저의 최신 게시물 10개를 받아온다", response = List.class)
 	@GetMapping("/{uid}/recentArticles")
@@ -121,11 +120,11 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			if(tmpImages.size() != 0) {
+			if (tmpImages.size() != 0) {
 				for (int j = 0; j < tmpImages.size(); j++) {
 					tmpImagePaths.add(tmpImages.get(j).getPostImage());
 				}
-			}else {
+			} else {
 				tmpImagePaths.add("DefaultProfileImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
@@ -157,12 +156,11 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			if(tmpImages.size() != 0)
-			{
+			if (tmpImages.size() != 0) {
 				for (int j = 0; j < tmpImages.size(); j++) {
 					tmpImagePaths.add(tmpImages.get(j).getPostImage());
 				}
-			}else {
+			} else {
 				tmpImagePaths.add("DefaultProfileImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
@@ -195,20 +193,20 @@ public class UserController {
 		result.object = hashtags;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-	
+
 	// 공개된 해쉬태그 만들기!!!!!
 	@ApiOperation(value = "해당 유저의 공개된 해쉬태그를 모두 반환한다.", response = List.class)
 	@GetMapping("/{uid}/userPublicHashtags")
 	public ResponseEntity<BasicResponse> retrievePublicHashtags(@PathVariable String uid) {
-		
+
 		Optional<UserDto> userOpt = userDao.findByUid(Integer.parseInt(uid));
 		List<UserHashtag> list = userHashtagDao.findAllByUserDtoAndPublicCntGreaterThan(userOpt.get(), 0);
-		
+
 		List<HashtagDto> hashtags = new ArrayList<HashtagDto>();
 		for (int i = 0; i < list.size(); i++) {
 			hashtags.add(list.get(i).getHashtagDto());
 		}
-		
+
 		final BasicResponse result = new BasicResponse();
 		result.status = true;
 		result.message = "success";
@@ -238,11 +236,11 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			if(tmpImages.size() != 0) {
+			if (tmpImages.size() != 0) {
 				for (int j = 0; j < tmpImages.size(); j++) {
 					tmpImagePaths.add(tmpImages.get(j).getPostImage());
 				}
-			}else {
+			} else {
 				tmpImagePaths.add("DefaultProfileImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
@@ -276,11 +274,11 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			if(tmpImages.size() != 0) {
+			if (tmpImages.size() != 0) {
 				for (int j = 0; j < tmpImages.size(); j++) {
 					tmpImagePaths.add(tmpImages.get(j).getPostImage());
 				}
-			}else {
+			} else {
 				tmpImagePaths.add("DefaultArticleImage");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
@@ -324,11 +322,11 @@ public class UserController {
 			articles.get(i).setHashtags(tmpHashtags);
 			List<ImageDto> tmpImages = imageDao.findAllByArticleDto(articles.get(i));
 			ArrayList<String> tmpImagePaths = new ArrayList<>();
-			if(tmpImages.size() != 0) {
+			if (tmpImages.size() != 0) {
 				for (int j = 0; j < tmpImages.size(); j++) {
 					tmpImagePaths.add(tmpImages.get(j).getPostImage());
 				}
-			}else {
+			} else {
 				tmpImagePaths.add("DefaultArticleImage.png");
 			}
 			articles.get(i).setImagePaths(tmpImagePaths);
@@ -384,7 +382,7 @@ public class UserController {
 		final BasicResponse result = new BasicResponse();
 		System.out.println("user: " + user);
 		user.setRole("ROLE_USER");
-		user.setStateMsg("input stateMsg");
+		user.setStateMsg("상태 메세지");
 		userDao.save(user);
 		result.object = user;
 		result.status = true;
@@ -422,27 +420,27 @@ public class UserController {
 		}
 	}
 
-    @GetMapping("/findByUid/{uid}")
-    @ApiOperation(value = "회원번호로 찾기")
-    public Object retrieveUserByUid(@PathVariable String uid) {
-        final BasicResponse result = new BasicResponse();
-        Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
-        if (!findUser.isPresent()) {
-            result.status = false;
-            result.message = FAIL;
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        } else {
-            if(profileImageDao.findByUserDto(findUser.get()) != null) {
-                findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
-            }else {
-                findUser.get().setProfileImagePath("DefaultProfileImage.png");
-            }
-            result.status = true;
-            result.message = SUCCESS;
-            result.object = findUser;
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-    }
+	@GetMapping("/findByUid/{uid}")
+	@ApiOperation(value = "회원번호로 찾기")
+	public Object retrieveUserByUid(@PathVariable String uid) {
+		final BasicResponse result = new BasicResponse();
+		Optional<UserDto> findUser = userDao.findByUid(Integer.parseInt(uid));
+		if (!findUser.isPresent()) {
+			result.status = false;
+			result.message = FAIL;
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		} else {
+			if (profileImageDao.findByUserDto(findUser.get()) != null) {
+				findUser.get().setProfileImagePath(profileImageDao.findByUserDto(findUser.get()).getProfileImage());
+			} else {
+				findUser.get().setProfileImagePath("DefaultProfileImage.png");
+			}
+			result.status = true;
+			result.message = SUCCESS;
+			result.object = findUser;
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+	}
 
 	@PutMapping
 	@ApiOperation(value = "회원정보 수정")
@@ -484,7 +482,7 @@ public class UserController {
 				ProfileImageDto profileImageDto = new ProfileImageDto();
 				profileImageDto.setUserDto(userDto);
 				profileImageDto.setProfileImage(uuidFilename);
-				if(tmpProfileImageDto != null) {
+				if (tmpProfileImageDto != null) {
 					profileImageDto.setId(tmpProfileImageDto.getId());
 				}
 				profileImageDao.save(profileImageDto);

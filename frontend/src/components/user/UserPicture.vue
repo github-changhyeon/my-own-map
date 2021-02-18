@@ -36,7 +36,7 @@ export default {
   },
   watch: {
     propsUserDto: function(val) {
-      console.log('watch');
+      console.log(this.userDto, 'watch');
       this.userDto = val;
       this.profileImageUrl = this.userDto.profileImagePath;
     },

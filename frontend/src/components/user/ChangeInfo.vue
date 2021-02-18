@@ -192,6 +192,7 @@ export default {
               this.storePassword = this.userDto.password;
               this.stateMsg = this.userDto.stateMsg;
               alert('정보수정에 성공했습니다.');
+              this.$router.push({ name: constants.URL_TYPE.USER.MYPAGE, params: { uid: this.userDto.uid } });
             } else {
               alert('회원 정보 수정을 할 수 없습니다.');
             }
