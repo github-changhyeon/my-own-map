@@ -85,7 +85,13 @@
       </v-autocomplete>
     </v-row>
 
-    <v-navigation-drawer v-model="hashtagDrawer" absolute right temporary>
+    <v-navigation-drawer
+      v-model="hashtagDrawer"
+      absolute
+      right
+      temporary
+      touchless
+    >
       <v-list-item>
         <h3>해시태그</h3>
       </v-list-item>
@@ -153,7 +159,13 @@
       </div>
     </v-navigation-drawer>
 
-    <v-navigation-drawer v-model="followDrawer" absolute right temporary>
+    <v-navigation-drawer
+      v-model="followDrawer"
+      absolute
+      right
+      temporary
+      touchless
+    >
       <v-list-item>
         <h3>팔로우</h3>
       </v-list-item>
