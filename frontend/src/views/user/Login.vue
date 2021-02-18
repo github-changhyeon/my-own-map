@@ -142,9 +142,17 @@ export default {
     },
   },
   created() {
-    // this.naverLoginURL += '&client_id=' + this.CLIENT_ID;
-    // this.naverLoginURL += '&redirect_uri=' + this.redirectURI;
-    // this.naverLoginURL += '&state=' + this.state;
+    if (
+      localStorage.getItem('jwt') !== null &&
+      localStorage.getItem('jwt') !== undefined
+    ) {
+      const token = localStorage.getItem('jwt');
+      let uid = jwt_decode(token).uid;
+      this.$router.replace({
+        name: constants.URL_TYPE.HOME.MAIN,
+        params: { uid: uid },
+      });
+    }
   },
 };
 </script>
