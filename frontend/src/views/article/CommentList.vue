@@ -7,7 +7,7 @@
     <v-card width="800" class="mx-auto">
       <template>
         <v-list-item class="commentlist" v-for="(item, index) in items" :key="index">
-          <v-list-item-avatar>
+          <v-list-item-avatar @click="goToMyPage(item)">
             <v-img :src="require(`@/assets/profileImages/${item.userDto.profileImagePath}`)"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import constants from '@/lib/constants.js';
 import { getComment, createComment, deleteComment, updateComment } from '@/api/comment.js';
 import CommentCreate from '@/views/article/CommentCreate.vue';
 import { notifyAction } from '@/api/fcm.js';
@@ -177,6 +178,12 @@ export default {
     checkModify(index) {
       this.isModify.splice(index, 1, true);
       this.commentDto.commentNo = this.items[index].commentNo;
+    },
+    goToMyPage(item) {
+      this.$router.push({
+        name: constants.URL_TYPE.USER.MYPAGE,
+        params: { uid: item.userDto.uid },
+      });
     },
   },
   created() {
