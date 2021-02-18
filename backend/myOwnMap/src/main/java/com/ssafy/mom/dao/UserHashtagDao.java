@@ -31,6 +31,11 @@ public interface UserHashtagDao extends JpaRepository<UserHashtag, String> {
 	UserHashtag findAllByHashtagDto(HashtagDto hashtagDto);
 
 	List<UserHashtag> findAllByUserDtoAndPublicCntGreaterThan(UserDto userDto, int num);
+
+	UserHashtag findByHashtagDtoAndUserDto(HashtagDto hashtagDto, UserDto userDto);
+
+	@Transactional
+	void deleteByHashtagDtoAndUserDto(HashtagDto hashtagDto, UserDto userDto);
 	
  
 //	UserHashtag findAllByUserDtoAndHashtagDto(Optional<UserDto> findByUid, HashtagDto hashtagDto);
