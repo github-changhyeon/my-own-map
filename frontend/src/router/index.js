@@ -26,7 +26,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/main/:uid',
+    path: '/maps/:uid',
     // name: 'Main',
     name: constants.URL_TYPE.HOME.MAIN,
     component: Main,
