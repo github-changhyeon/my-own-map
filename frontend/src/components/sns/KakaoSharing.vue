@@ -48,7 +48,7 @@ export default {
       if (this.articles !== undefined && this.articles.length > 0) {
         this.tmpArticle = this.articles[0];
 
-        this.baseUrl = `https://i4b107.p.ssafy.io/main/${
+        this.baseUrl = `https://i4b107.p.ssafy.io/maps/${
           this.articles[0].userDto.uid
         }?jsonQueryData=${JSON.stringify(this.filteredHashtagSwitches)}`;
       } else if (this.article !== undefined) {
