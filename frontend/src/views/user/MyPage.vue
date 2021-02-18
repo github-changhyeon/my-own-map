@@ -108,9 +108,8 @@ export default {
       deleteToken(() => {
         deleteFcmToken(
           (success) => {
-            if (success.data.status) {
-              localStorage.removeItem('jwt');
-              this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
+            if (!success.data.status) {
+              console.log('fcm 토큰 제거 에러');
             }
           },
           (error) => {
@@ -118,6 +117,8 @@ export default {
           }
         );
       });
+      localStorage.removeItem('jwt');
+      this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
       // location.reload();
     },
   },

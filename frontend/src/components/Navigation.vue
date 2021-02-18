@@ -153,6 +153,9 @@ export default {
       case 'articles':
         this.value = 2;
         break;
+      case 'history':
+        this.value = 3;
+        break;
       case 'users':
         this.value = 4;
         break;
