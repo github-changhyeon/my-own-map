@@ -313,13 +313,18 @@ public class ArticleController {
 		if (alreadyArticleHashtags == null)
 			alreadyArticleHashtags = new ArrayList<>();
 		for (int i = 0; i < alreadyArticleHashtags.size(); ++i) {
-			int cnt = (int) articleHashtagDao
-					.findAllByHashtagNo(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo());
+			int cnt = 0;
+			List<ArticleHashtag> tempArticleHastags = articleHashtagDao.findAllByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			for(int j = 0; j < tempArticleHastags.size(); ++j) {
+				if(articleOpt.get().getUserDto().getUid() == tempArticleHastags.get(j).getArticleDto().getUserDto().getUid()) {
+					cnt += 1;
+				}
+			}
 			System.out.println("I found " + cnt);
-			UserHashtag userHashtag = userHashtagDao.findByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			UserHashtag userHashtag = userHashtagDao.findByHashtagDtoAndUserDto(alreadyArticleHashtags.get(i).getHashtagDto(), articleOpt.get().getUserDto());
 			if (cnt == 1) {
-				System.out.println("지우는거맞지?" + alreadyArticleHashtags.get(i).getHashtagDto());
-				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+//				System.out.println("지우는거맞지?" + alreadyArticleHashtags.get(i).getHashtagDto());
+				userHashtagDao.deleteByHashtagDtoAndUserDto(alreadyArticleHashtags.get(i).getHashtagDto(), articleOpt.get().getUserDto());
 			} else if (!articleOpt.get().isPrivate()) {
 				userHashtag.setPublicCnt(userHashtag.getPublicCnt() - 1);
 			}
@@ -426,16 +431,23 @@ public class ArticleController {
 //			int cnt = userHashtagDao.countByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
 //			UserHashtag userHashtag = userHashtagDao.findAll(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo());
 //			List<UserHashtag> tmpUserHashtags = userHashtagDao.findAllByHashtagNo(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo()); 
-			int cnt = (int) articleHashtagDao
-					.findAllByHashtagNo(alreadyArticleHashtags.get(i).getHashtagDto().getHashtagNo());
+			int cnt = 0;
+			List<ArticleHashtag> tempArticleHastags = articleHashtagDao.findAllByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			for(int j = 0; j < tempArticleHastags.size(); ++j) {
+				if(articleOpt.get().getUserDto().getUid() == tempArticleHastags.get(j).getArticleDto().getUserDto().getUid()) {
+					cnt += 1;
+				}
+			}
 			System.out.println("I found " + cnt);
 //			System.out.println(alreadyArticleHashtags.get(i).getHashtagDto() + "카운트는" + tmpUserHashtags.size() + "찾은건");
 			System.out.println(666666666);
+//			System.out.println(alreadyArticleHashtags.get(i));
 
-			UserHashtag userHashtag = userHashtagDao.findByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+			UserHashtag userHashtag = userHashtagDao.findByHashtagDtoAndUserDto(alreadyArticleHashtags.get(i).getHashtagDto(), articleOpt.get().getUserDto());
 			// 혹시 해당 해쉬태그로 검색한 게시글이 하나면 지우기
+			System.out.println("###############");
 			if (cnt == 1) {
-				userHashtagDao.deleteByHashtagDto(alreadyArticleHashtags.get(i).getHashtagDto());
+				userHashtagDao.deleteByHashtagDtoAndUserDto(alreadyArticleHashtags.get(i).getHashtagDto(), articleOpt.get().getUserDto());
 				// 게시글은 여러개지만, 현재 지우는 게시물이 public한 게시물이라면, 해당 userHashtag관계의 publicCnt를 1 감소시킨다
 			} else if (!articleOpt.get().isPrivate()) {
 				userHashtag.setPublicCnt(userHashtag.getPublicCnt() - 1);

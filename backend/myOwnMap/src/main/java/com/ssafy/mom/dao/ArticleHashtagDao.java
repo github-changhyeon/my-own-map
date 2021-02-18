@@ -23,8 +23,7 @@ public interface ArticleHashtagDao extends JpaRepository<ArticleHashtag, String>
 	void deleteByArticleDto(ArticleDto articleDto);
 
 	
-	@Query(value = "SELECT count(*) FROM articleHashtag where hashtagNo = (:hashtagNo)")
-	long findAllByHashtagNo(@Param("hashtagNo") int hashtagNo);
+	List<ArticleHashtag> findAllByHashtagDto(HashtagDto hashtagDto);
 //	List<Integer> findHashtagNoByUserDto(UserDto userDto);
 
 	ArticleHashtag findByArticleDtoAndHashtagDto(ArticleDto articleDto, HashtagDto alreadyExist);
