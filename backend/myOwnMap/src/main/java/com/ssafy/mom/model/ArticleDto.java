@@ -5,18 +5,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -52,15 +53,25 @@ public class ArticleDto {
 //	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	@UpdateTimestamp
 	private LocalDateTime updateTime;
-
-	private int evaluation;
+	
+	private String visitDate;
+	
+	private double evaluation;
 	@Transient
 	private ArrayList<HashtagDto> hashtags;
-//	private int uid;
+	@Transient
+	private ArrayList<String> imagePaths;
+	
+	@Column(columnDefinition="tinyint(1) default 0")
+	private boolean isPrivate;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "uid") // 외래키의 주인
 	private UserDto userDto;
+	
+	@OneToMany(orphanRemoval = true)
+	@Transient
+	private ImageDto imageDto;
 	
 	
 }

@@ -41,7 +41,6 @@ public class EmailServiceImpl implements EmailService {
         String VERIFICATION_LINK = "http://localhost:8080/account/verify/";
         if(user==null) { 
         	
-//        	System.out.println("멤버가 조회되지 않음");
         	throw new NotFoundException("멤버가 조회되지 않음");
         }
         UUID uuid = UUID.randomUUID();
@@ -52,7 +51,6 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void verifyEmail(String key) throws NotFoundException {
         String username = redisUtil.getData(key);
-        //System.out.println();
         Optional<UserDto> userOpt = userDao.findByUsername(username);
         if(!userOpt.isPresent()) throw new NotFoundException("멤버가 조회되지않음");
         userOpt.get().setRole("ROLE_USER"); //정회원        

@@ -4,19 +4,19 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.ssafy.mom.config.jwt.JwtServiceImpl;
@@ -24,8 +24,8 @@ import com.ssafy.mom.dao.UserDao;
 import com.ssafy.mom.model.UserDto;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
-@RestController
-@RequestMapping(value = "/naver")
+@Controller
+@RequestMapping(value = "/naver" , method= RequestMethod.GET)
 public class NaverLoginController {
 	@Value("${naverClientSecret}")
 	String naverClientSecret;
@@ -44,7 +44,7 @@ public class NaverLoginController {
             @RequestParam(value = "code") String code,
             @RequestParam(value = "state") String state
     ) throws Exception {
-        String clientId = "fsL4vVVgvsoOwkPoWPO4";//애플리케이션 클라이언트 아이디값";
+        String clientId = "yPZ8zfbupxQS3jRvZDvP";//애플리케이션 클라이언트 아이디값";
         
         //성공code와 state clientPw로 네이버에 토큰 요청
         String apiURL;
@@ -74,24 +74,22 @@ public class NaverLoginController {
             }
             br.close();
             if(responseCode==200) { // 성공적으로 토큰을 가져온다면
-                //int id;
-                String nickName, email, tmp;
-                JsonParser parser = new JsonParser();
-                JsonElement accessElement = parser.parse(res.toString());
-                access_token = accessElement.getAsJsonObject().get("access_token").getAsString();
-
-                tmp = getUserInfo(access_token);
+                //int id;            	
+                String username, email, tmp;
+                JsonParser parser = new JsonParser();               
+                JsonElement accessElement = parser.parse(res.toString());                
+                access_token = accessElement.getAsJsonObject().get("access_token").getAsString();              
+                tmp = getUserInfo(access_token);               
                 JsonElement userInfoElement = parser.parse(tmp);
-                //id = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsInt();
-                nickName = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();
-                email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();
-
-                access_token = createJWTToken(nickName, email);
+                username = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("name").getAsString(); 
+                email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();  
+                access_token = createJWTToken(username, email);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
         return "redirect:http://localhost:8081/agreement?token=" + access_token;
+//        return "redirect:http://192.168.0.34/";
     }
 	private String getUserInfo(String access_token) {
         String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
@@ -120,40 +118,28 @@ public class NaverLoginController {
             return "Err";
         }
     }
-	private String createJWTToken(String nickname, String email) {
-        String token = null;
-        //DecodedJWT jwt = null;       
-        
+	private String createJWTToken(String username, String email) {
+        String token = null; 
         try {
-//            Long EXPIRATION_TIME = 1000L * 60L * 10L;
-//            Date issuedAt = new Date();
-//            Date notBefore = new Date(issuedAt.getTime());
-//            Date expiresAt = new Date(issuedAt.getTime() + EXPIRATION_TIME);
             
             //네아로가 처음이라면 회원가입!
-            UserDto user = userDao.findByEmail(email);
-            if(user== null) {
+        	Optional<UserDto>  user = userDao.findByEmail(email);
+        	UserDto userEntity ;
+            if(!user.isPresent()) {
             	UserDto userSave = UserDto.builder()
-            			.username(nickname)
+            			.username(username)
             			.email(email)
             			.role("ROLE_USER")
+            			.stateMsg("상태메시지를 입력해주세요")
             			.build();
             	
-            	user = userDao.save(userSave);
+            	userEntity = userDao.save(userSave);
             }
-            token= jwtService.create("email", user.getEmail(), "access-token");// key, data, subject
-
+            else {
+            	userEntity = user.get();
+            }
+            token= jwtService.create("uid", userEntity.getUid(), "access-token");// key, data, subject
             
-//            Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
-//            
-//            token = JWT.create()
-//                    .withIssuer("auth0")
-//                    .withSubject(user.getUsername())
-//                    .withClaim("id", user.getUid())
-//                    .withClaim("email", user.getEmail())
-//                    .withNotBefore(notBefore)
-//                    .withExpiresAt(expiresAt)
-//                    .sign(algorithm);
         } catch (Exception e) {
             System.err.println("err: " + e);
         }

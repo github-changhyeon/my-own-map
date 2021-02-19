@@ -1,0 +1,42 @@
+//헤드 추가 스크립트
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+//버튼 링크
+<a id="kakao-link-btn" href="javascript:sendLink()">
+  카카오톡 공유하기 버튼
+</a>
+
+//하단 추가 스크립트
+<script type='text/javascript'>
+  //<![CDATA[
+    // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('애플리케이션 추가 시 발급 받은 javascript 키 입력');
+    // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+    Kakao.Link.createDefaultButton({
+      container: '#kakao-link-btn',
+      objectType: 'feed',
+      content: {
+        title: $('meta[property="og:title"]').attr( 'content' ),
+        description: $('meta[property="og:description"]').attr( 'content' ),
+        imageUrl: $( 'meta[property="og:image"]' ).attr( 'content' ),
+        link: {
+          mobileWebUrl: window.location.href,
+          webUrl: window.location.href
+        }
+      },
+      social: {
+        likeCount: 286,
+        commentCount: 45,
+        sharedCount: 845
+      },
+      buttons: [
+        {
+          title: '웹으로 보기',
+          link: {
+            webUrl: window.location.href
+          }
+        }
+      ]
+    });
+  //]]>
+</script>

@@ -23,6 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
+// TODO: 디버깅시 필요성 확인
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ArticleHashtag {
 	@Id
