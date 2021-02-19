@@ -105,20 +105,28 @@ export default {
   },
   methods: {
     logout() {
-      deleteToken(() => {
-        deleteFcmToken(
-          (success) => {
-            if (!success.data.status) {
-              console.log('fcm 토큰 제거 에러');
+      deleteToken(
+        () => {
+          deleteFcmToken(
+            (success) => {
+              if (!success.data.status) {
+                console.log('fcm 토큰 제거 에러');
+              }
+            },
+            (error) => {
+              console.log(error);
             }
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      });
-      localStorage.removeItem('jwt');
-      this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
+          );
+          localStorage.removeItem('jwt');
+          this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
+        },
+        (error) => {
+          console.log('Unable to delete token. ', error);
+          localStorage.removeItem('jwt');
+          this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
+        }
+      );
+
       // location.reload();
     },
   },
