@@ -114,6 +114,8 @@ export default {
               }
             },
             (error) => {
+              localStorage.removeItem('jwt');
+              this.$router.replace({ name: constants.URL_TYPE.USER.LOGIN });
               console.log(error);
             }
           );
