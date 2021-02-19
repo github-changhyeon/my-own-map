@@ -29,8 +29,6 @@ function receiveMessage() {
   // - the user clicks on an app notification created by a service worker
   //   `messaging.onBackgroundMessage` handler.
   messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
-
     let title = payload.notification.title;
     let options = {
       body: payload.notification.body,
@@ -40,30 +38,12 @@ function receiveMessage() {
 
     // new Notification(title, options);
     navigator.serviceWorker.ready
-      .then(function(registration) {
-        console.log(registration, '레지레지');
+      .then(function (registration) {
         registration.showNotification(title, options);
       })
       .catch((error) => {
-        console.log(error, '에러입메');
+        console.log(error);
       });
-
-    // let _window = window;
-
-    // if (
-    //   window.sessionStorage.getItem('history') === null ||
-    //   window.sessionStorage.getItem('history') === undefined
-    // ) {
-    //   window.sessionStorage.setItem('history', 'true');
-    // } else {
-    //   if (window.sessionStorage.getItem('history') === 'true') {
-    //     window.sessionStorage.setItem('history', 'false');
-    //   } else {
-    //     window.sessionStorage.setItem('history', 'true');
-    //   }
-    // }
-
-    // ...
   });
 
   // [END messaging_receive_message]

@@ -6,11 +6,25 @@
 <template>
   <v-card>
     <v-app>
-      <div class="detail-main" style="vertical-align:middle;">
-        <v-btn icon size="30" style="position: fixed; display:flex; top: 25px; z-index: 2" @click="goBack">
+      <div class="detail-main" style="vertical-align: middle">
+        <v-btn
+          icon
+          size="30"
+          style="position: fixed; display: flex; top: 25px; z-index: 2"
+          @click="goBack"
+        >
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div style="position: fixed; display:flex; top: 25px; left: 50px; z-index: 2; vertical-align: middle;">
+        <div
+          style="
+            position: fixed;
+            display: flex;
+            top: 25px;
+            left: 50px;
+            z-index: 2;
+            vertical-align: middle;
+          "
+        >
           <!-- <v-avatar>
             {{ article.userDto.profileImagePath }}
           </v-avatar> -->
@@ -19,8 +33,27 @@
           </span>
         </div>
 
-        <Favorite :article="article" style="position: fixed; display:flex; right:60px; top: 25px; z-index: 2" />
-        <KakaoSharing :article="article" size="30" style="position: fixed; display:flex; right:10px; top: 13px; z-index: 2" />
+        <Favorite
+          :article="article"
+          style="
+            position: fixed;
+            display: flex;
+            right: 60px;
+            top: 25px;
+            z-index: 2;
+          "
+        />
+        <KakaoSharing
+          :article="article"
+          size="30"
+          style="
+            position: fixed;
+            display: flex;
+            right: 10px;
+            top: 13px;
+            z-index: 2;
+          "
+        />
       </div>
 
       <div class="total-contents">
@@ -30,25 +63,48 @@
             <b>{{ article.title }}</b>
           </span>
         </div>
-        <div style="text-align: center; max-width:500px; width: 100%">
+        <div style="text-align: center; max-width: 500px; width: 100%">
           <v-carousel v-if="hasImages">
-            <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src" append reverse-transition="fade-transition" transition="fade-transition" multiple="true"></v-carousel-item>
+            <v-carousel-item
+              v-for="(item, i) in items"
+              :key="i"
+              :src="item.src"
+              append
+              reverse-transition="fade-transition"
+              transition="fade-transition"
+              multiple="true"
+            ></v-carousel-item>
           </v-carousel>
           <div>
-            <v-rating v-model="this.article.evaluation" background-color="grey lighten-1" color="primary" half-increments length="5" readonly large> </v-rating>
+            <v-rating
+              v-model="this.article.evaluation"
+              background-color="grey lighten-1"
+              color="primary"
+              half-increments
+              length="5"
+              readonly
+              large
+            >
+            </v-rating>
           </div>
         </div>
-        <div style="margin-top:10px;">
+        <div style="margin-top: 10px">
           <!-- hashtags -->
           <v-icon>mdi-pound</v-icon>
-          <span class="hashbox" v-for="(hashtag, idx) in article.hashtags" :key="idx"> {{ hashtag.hashtagName }} </span>
+          <span
+            class="hashbox"
+            v-for="(hashtag, idx) in article.hashtags"
+            :key="idx"
+          >
+            {{ hashtag.hashtagName }}
+          </span>
         </div>
-        <div style="margin-top:10px;">
+        <div style="margin-top: 10px">
           <v-icon>mdi-calendar</v-icon>
           <!-- {{ article.regiTime.split('T')[0] }} -->
           {{ article.visitDate }}
         </div>
-        <div style="margin-top:10px;">
+        <div style="margin-top: 10px">
           <v-icon>mdi-map-marker</v-icon>
           <span class="map">{{ article.address }}</span>
         </div>
@@ -62,22 +118,38 @@
 
       <div class="buttons" v-if="isOwnArticle">
         <!-- <div class="buttons"  > -->
-        <v-btn fab small @click="goToUpdateArticle" variant="outline-primary" class="updatebutton">
+        <v-btn
+          fab
+          small
+          @click="goToUpdateArticle"
+          variant="outline-primary"
+          class="updatebutton"
+        >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn fab small @click="checkDelete" variant="danger" class="deletebutton">
+        <v-btn
+          fab
+          small
+          @click="checkDelete"
+          variant="danger"
+          class="deletebutton"
+        >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
-        <v-btn fab small @click="findRoute" style="margin-right:10px;">
+        <v-btn fab small @click="findRoute" style="margin-right: 10px">
           <v-icon>mdi-map</v-icon>
         </v-btn>
       </div>
       <div class="buttons" v-if="!isOwnArticle">
-        <v-btn fab small @click="findRoute" style="margin-right:10px;">
+        <v-btn fab small @click="findRoute" style="margin-right: 10px">
           <v-icon>mdi-map</v-icon>
         </v-btn>
       </div>
-      <CommentList style="margin-bottom:50px;" :articleNo="$route.params.articleNo" :propsUid="article.userDto.uid" />
+      <CommentList
+        style="margin-bottom: 50px"
+        :articleNo="$route.params.articleNo"
+        :propsUid="article.userDto.uid"
+      />
       <Navigation />
     </v-app>
   </v-card>
@@ -135,20 +207,7 @@ export default {
         userDto: {},
         imagePaths: null,
       },
-      items: [
-        // {
-        //   src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        // },
-        // {
-        //   src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        // },
-        // {
-        //   src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-        // },
-        // {
-        //   src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-        // },
-      ],
+      items: [],
     };
   },
   methods: {
@@ -165,7 +224,9 @@ export default {
 
     findRoute() {
       // window.open(`https://map.kakao.com/link/to/${this.$route.params.article.address},${this.$route.params.article.positionLat},${this.$route.params.article.positionLng}`);
-      window.open(`https://map.kakao.com/link/to/${this.article.address},${this.article.positionLat},${this.article.positionLng}`);
+      window.open(
+        `https://map.kakao.com/link/to/${this.article.address},${this.article.positionLat},${this.article.positionLng}`
+      );
     },
 
     goBack() {
@@ -185,7 +246,10 @@ export default {
     },
 
     goToMyPage(uid) {
-      this.$router.push({ name: constants.URL_TYPE.USER.MYPAGE, params: { uid: uid } });
+      this.$router.push({
+        name: constants.URL_TYPE.USER.MYPAGE,
+        params: { uid: uid },
+      });
     },
 
     checkDelete() {
@@ -203,7 +267,6 @@ export default {
           },
           (error) => {
             console.log(error);
-            alert('삭제 실패');
           }
         );
       } else {
@@ -219,17 +282,28 @@ export default {
     if (token !== null && token !== undefined) {
       uid = jwt_decode(token).uid;
     }
+
     getArticle(
       this.$route.params.articleNo,
       (response) => {
         this.article = response.data.object;
-        console.log(this.article, 'article detail');
-        if (token !== null && token !== undefined && this.article.userDto.uid === uid) {
+        if (
+          token !== null &&
+          token !== undefined &&
+          this.article.userDto.uid === uid
+        ) {
           this.isOwnArticle = true;
         }
-        for (var i = 0; i < this.article.imagePaths.length; ++i) {
+        for (let i = 0; i < this.article.imagePaths.length; ++i) {
           this.items.push({
-            src: '@/assets/upload/' + this.article.imagePaths[i],
+            src:
+              'https://i4b107.p.ssafy.io/images/uploads/' +
+              this.article.imagePaths[i],
+          });
+        }
+        if (this.article.imagePaths.length === 0) {
+          this.items.push({
+            src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
           });
         }
         if (this.article.imagePaths[0] !== 'DefaultArticleImage.png') {

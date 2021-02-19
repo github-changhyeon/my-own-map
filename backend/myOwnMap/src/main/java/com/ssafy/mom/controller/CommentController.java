@@ -71,10 +71,8 @@ public class CommentController {
 			@RequestBody @ApiParam(value = "댓글 작성시 필요한 정보(댓글내용, 유저id, 게시글no).", required = true) Map<String, String> dtoMap) {
 		final BasicResponse result = new BasicResponse();
 		int uid = Integer.parseInt(dtoMap.get("uid"));
-		System.out.println(uid + "uid");
 
 		int articleNo = Integer.parseInt(dtoMap.get("articleNo"));
-		System.out.println(articleNo + "articleNo");
 		Optional<ArticleDto> article = articleDao.findByArticleNo(articleNo);
 		Optional<UserDto> user = userDao.findByUid(uid);
 		CommentDto comment = new CommentDto();

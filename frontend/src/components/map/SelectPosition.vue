@@ -28,8 +28,10 @@
 
 <script>
 const KAKAOMAP_KEY = process.env.VUE_APP_KAKAOMAP_KEY;
-const STAR_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-const SPRITE_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
+const STAR_IMAGE_SRC =
+  'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+const SPRITE_IMAGE_SRC =
+  'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
 export default {
   name: 'SelectPosition',
   components: {},
@@ -51,7 +53,7 @@ export default {
 
       let ps = new kakao.maps.services.Places();
       // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-      ps.keywordSearch(keyword, function(data, status, pagination) {
+      ps.keywordSearch(keyword, function (data, status, pagination) {
         _this.searchPlacesCB(data, status, pagination);
       });
     },
@@ -99,16 +101,16 @@ export default {
         // 마커와 검색결과 항목에 mouseover 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
-        (function(marker, title) {
-          kakao.maps.event.addListener(marker, 'mouseover', function() {
+        (function (marker, title) {
+          kakao.maps.event.addListener(marker, 'mouseover', function () {
             _this.displayInfowindow(marker, title);
           });
 
-          kakao.maps.event.addListener(marker, 'mouseout', function() {
+          kakao.maps.event.addListener(marker, 'mouseout', function () {
             _this.infowindow.close();
           });
 
-          kakao.maps.event.addListener(marker, 'click', function() {
+          kakao.maps.event.addListener(marker, 'click', function () {
             _this.starMarker.setPosition(placePosition);
             _this.map.setLevel(4);
             _this.map.setCenter(placePosition);
@@ -118,14 +120,14 @@ export default {
             _this.$emit('emitSelectPosition', _this.positions);
           });
 
-          itemEl.onmouseover = function() {
+          itemEl.onmouseover = function () {
             _this.displayInfowindow(marker, title);
           };
 
-          itemEl.onmouseout = function() {
+          itemEl.onmouseout = function () {
             _this.infowindow.close();
           };
-          itemEl.onclick = function() {
+          itemEl.onclick = function () {
             _this.starMarker.setPosition(placePosition);
             _this.map.setLevel(4);
             _this.map.setCenter(placePosition);
@@ -160,7 +162,11 @@ export default {
         spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
         offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
       };
-      let markerImage = new kakao.maps.MarkerImage(SPRITE_IMAGE_SRC, imageSize, imgOptions);
+      let markerImage = new kakao.maps.MarkerImage(
+        SPRITE_IMAGE_SRC,
+        imageSize,
+        imgOptions
+      );
       let marker = new kakao.maps.Marker({
         position: position, // 마커의 위치
         image: markerImage,
@@ -173,7 +179,14 @@ export default {
     },
     getListItem(index, places) {
       let el = document.createElement('li'),
-        itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' + '<div class="infos">' + '   <h5>' + places.place_name + '</h5>';
+        itemStr =
+          '<span class="markerbg marker_' +
+          (index + 1) +
+          '"></span>' +
+          '<div class="infos">' +
+          '   <h5>' +
+          places.place_name +
+          '</h5>';
 
       itemStr += '    <span>' + places.address_name + '</span>';
 
@@ -211,8 +224,8 @@ export default {
         if (i === pagination.current) {
           el.className = 'on';
         } else {
-          el.onclick = (function(i) {
-            return function() {
+          el.onclick = (function (i) {
+            return function () {
               pagination.gotoPage(i);
             };
           })(i);
@@ -227,7 +240,7 @@ export default {
       let geocoder = new kakao.maps.services.Geocoder();
       // 지도에 클릭 이벤트를 등록합니다
       // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-      kakao.maps.event.addListener(_this.map, 'click', function(mouseEvent) {
+      kakao.maps.event.addListener(_this.map, 'click', function (mouseEvent) {
         // 클릭한 위도, 경도 정보를 가져옵니다
         let latlng = mouseEvent.latLng;
 
@@ -238,15 +251,19 @@ export default {
         //  = { positionLat: latlng.getLat(), positionLng: latlng.getLng() };
         _this.infowindow.close();
 
-        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
-          if (status === kakao.maps.services.Status.OK) {
-            let detailAddr = result[0].address.address_name;
-            _this.positions.address = detailAddr;
-            _this.$emit('emitSelectPosition', _this.positions);
-          } else {
-            _this.$emit('emitSelectPosition', _this.positions);
+        geocoder.coord2Address(
+          latlng.getLng(),
+          latlng.getLat(),
+          function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              let detailAddr = result[0].address.address_name;
+              _this.positions.address = detailAddr;
+              _this.$emit('emitSelectPosition', _this.positions);
+            } else {
+              _this.$emit('emitSelectPosition', _this.positions);
+            }
           }
-        });
+        );
       });
     },
     initMap() {
@@ -258,7 +275,10 @@ export default {
         };
 
       _this.map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-      if (this.propsPositionObj === undefined || this.propsPositionObj === null) {
+      if (
+        this.propsPositionObj === undefined ||
+        this.propsPositionObj === null
+      ) {
         let geocoder = new kakao.maps.services.Geocoder();
         // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
 
@@ -266,7 +286,10 @@ export default {
           let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
           let message = '위치 연동을 허용해주세요..';
           let imageSize = new kakao.maps.Size(24, 35);
-          let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+          let markerImage = new kakao.maps.MarkerImage(
+            STAR_IMAGE_SRC,
+            imageSize
+          );
           _this.starMarker = new kakao.maps.Marker({
             map: _this.map,
             position: locPosition,
@@ -283,11 +306,14 @@ export default {
           this.setMarkerListener();
 
           // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-          navigator.geolocation.getCurrentPosition(function(position) {
+          navigator.geolocation.getCurrentPosition(function (position) {
             _this.positions.positionLat = position.coords.latitude;
             _this.positions.positionLng = position.coords.longitude;
 
-            locPosition = new kakao.maps.LatLng(_this.positions.positionLat, _this.positions.positionLng); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+            locPosition = new kakao.maps.LatLng(
+              _this.positions.positionLat,
+              _this.positions.positionLng
+            ); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
 
             message = '<div style="padding:5px;">여기에 계시군요!</div>';
             // imageSize = new kakao.maps.Size(24, 35);
@@ -297,21 +323,28 @@ export default {
             _this.infowindow.setContent(iwContent);
             _this.infowindow.open(_this.map, _this.starMarker);
             _this.map.setCenter(locPosition);
-            geocoder.coord2Address(_this.positions.positionLng, _this.positions.positionLat, function(result, status) {
-              if (status === kakao.maps.services.Status.OK) {
-                let detailAddr = result[0].address.address_name;
-                _this.positions.address = detailAddr;
-                _this.$emit('emitSelectPosition', _this.positions);
-              } else {
-                _this.$emit('emitSelectPosition', _this.positions);
+            geocoder.coord2Address(
+              _this.positions.positionLng,
+              _this.positions.positionLat,
+              function (result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                  let detailAddr = result[0].address.address_name;
+                  _this.positions.address = detailAddr;
+                  _this.$emit('emitSelectPosition', _this.positions);
+                } else {
+                  _this.$emit('emitSelectPosition', _this.positions);
+                }
               }
-            });
+            );
           });
         } else {
           let locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
           let message = 'geolocation을 사용할수 없어요..';
           let imageSize = new kakao.maps.Size(24, 35);
-          let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
+          let markerImage = new kakao.maps.MarkerImage(
+            STAR_IMAGE_SRC,
+            imageSize
+          );
           _this.starMarker = new kakao.maps.Marker({
             map: _this.map,
             position: locPosition,
@@ -328,7 +361,10 @@ export default {
           this.setMarkerListener();
         }
       } else {
-        let locPosition = new kakao.maps.LatLng(this.propsPositionObj.positionLat, this.propsPositionObj.positionLng);
+        let locPosition = new kakao.maps.LatLng(
+          this.propsPositionObj.positionLat,
+          this.propsPositionObj.positionLng
+        );
         let message = '이 장소군요!!';
         let imageSize = new kakao.maps.Size(24, 35);
         let markerImage = new kakao.maps.MarkerImage(STAR_IMAGE_SRC, imageSize);
@@ -355,14 +391,14 @@ export default {
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAOMAP_KEY}&libraries=services,clusterer`;
       let _this = this;
       script.onload = () =>
-        kakao.maps.load(function() {
+        kakao.maps.load(function () {
           _this.initMap();
         });
       //  kakao.maps.load(this.showMap); 과 비교
       document.head.appendChild(script);
     },
   },
-  data: function() {
+  data: function () {
     return {
       infowindow: {},
       map: {},
@@ -535,7 +571,8 @@ export default {
 }
 #placesList .infos .jibun {
   padding-left: 26px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
 }
 #placesList .infos .tel {
   color: #009900;
@@ -546,7 +583,8 @@ export default {
   width: 36px;
   height: 37px;
   margin: 10px 0 0 10px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat;
 }
 #placesList .item .marker_1 {
   background-position: 0 -10px;

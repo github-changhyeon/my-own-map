@@ -1,55 +1,104 @@
 <template>
   <div id="app">
     <v-app class="center">
-      <main class="center" style="margin-top:50px; width:350px;">
-        <img class="logo" src="@/assets/MOM_Logo.png" alt="" />
+      <main class="center" style="margin-top: 50px; width: 350px">
+        <img
+          class="logo"
+          src="https://i4b107.p.ssafy.io/images/MOM_Logo.png"
+          alt=""
+        />
         <div class="titlebar">
           이미 회원이신가요?
           <router-link to="/"><a href="">로그인하기</a></router-link>
         </div>
         <!-- <v-form v-model="valid" ref="form"> -->
         <v-form ref="form">
-          <div class="InfoName">
-            이메일
-          </div>
+          <div class="InfoName">이메일</div>
 
           <ValidationProvider rules="email|required" v-slot="{ errors }">
-            <v-text-field style="padding-top:0px;" placeholder="이메일을 입력해 주세요." v-model="joinForm.email"></v-text-field>
+            <v-text-field
+              style="padding-top: 0px"
+              placeholder="이메일을 입력해 주세요."
+              v-model="joinForm.email"
+            ></v-text-field>
             <div>
-              <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
+              <span
+                style="
+                  color: red;
+                  font-size: 10px;
+                  bottom: 10px;
+                  position: relative;
+                "
+                >{{ errors[0] }}</span
+              >
             </div>
           </ValidationProvider>
 
           <ValidationObserver>
-            <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
-              <div class="InfoName">
-                비밀번호
-              </div>
+            <ValidationProvider
+              name="password"
+              rules="password|required"
+              v-slot="{ errors }"
+            >
+              <div class="InfoName">비밀번호</div>
 
-              <v-text-field style="padding-top:0px;" placeholder="비밀번호를 입력해 주세요." type="password" v-model="joinForm.password" min="8"></v-text-field>
+              <v-text-field
+                style="padding-top: 0px"
+                placeholder="비밀번호를 입력해 주세요."
+                type="password"
+                v-model="joinForm.password"
+                min="8"
+              ></v-text-field>
 
               <div>
-                <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
+                <span
+                  style="
+                    color: red;
+                    font-size: 10px;
+                    bottom: 10px;
+                    position: relative;
+                  "
+                  >{{ errors[0] }}</span
+                >
               </div>
             </ValidationProvider>
 
-            <ValidationProvider rules="required|pwdConfirm:@password" v-slot="{ errors }">
-              <div class="InfoName">
-                비밀번호 확인
-              </div>
-              <v-text-field style="padding-top:0px;" placeholder="비밀번호를 다시 입력해주세요." type="password" v-model="joinForm.passwordConfirm" min="8"></v-text-field>
+            <ValidationProvider
+              rules="required|pwdConfirm:@password"
+              v-slot="{ errors }"
+            >
+              <div class="InfoName">비밀번호 확인</div>
+              <v-text-field
+                style="padding-top: 0px"
+                placeholder="비밀번호를 다시 입력해주세요."
+                type="password"
+                v-model="joinForm.passwordConfirm"
+                min="8"
+              ></v-text-field>
 
               <div>
-                <span style="color:red; font-size:10px;  bottom: 10px; position: relative;">{{ errors[0] }}</span>
+                <span
+                  style="
+                    color: red;
+                    font-size: 10px;
+                    bottom: 10px;
+                    position: relative;
+                  "
+                  >{{ errors[0] }}</span
+                >
               </div>
             </ValidationProvider>
           </ValidationObserver>
 
-          <div class="InfoName">
-            닉네임
-          </div>
-          <v-text-field style="padding-top:0px;" placeholder="닉네임을 입력해 주세요." v-model="joinForm.username"></v-text-field>
-          <v-btn class="joinbar" color="primary" height="50" @click="joinUser()">가입하기</v-btn>
+          <div class="InfoName">닉네임</div>
+          <v-text-field
+            style="padding-top: 0px"
+            placeholder="닉네임을 입력해 주세요."
+            v-model="joinForm.username"
+          ></v-text-field>
+          <v-btn class="joinbar" color="primary" height="50" @click="joinUser()"
+            >가입하기</v-btn
+          >
         </v-form>
       </main>
     </v-app>
@@ -74,7 +123,8 @@ extend('password', {
   validate: (value) => {
     return /^.*(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$@$!%*#?&]).{8,}$/.test(value);
   },
-  message: '비밀번호는 영어, 숫자, 특수문자를 포함한 8자리 이상으로 구성하여주세요',
+  message:
+    '비밀번호는 영어, 숫자, 특수문자를 포함한 8자리 이상으로 구성하여주세요',
 });
 extend('pwdConfirm', {
   params: ['target'],
@@ -109,8 +159,7 @@ export default {
       }
       join(
         this.joinForm,
-        (response) => {
-          console.log(response);
+        () => {
           this.$router.push({ name: constants.URL_TYPE.USER.LOGIN });
         },
         (err) => {

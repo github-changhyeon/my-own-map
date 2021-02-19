@@ -32,7 +32,13 @@
 
           <v-card-title @click="goToDetail(article)"
             ><span
-              style="width:300px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+              style="
+                width: 300px;
+                display: block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
             >
               {{ article.title }}</span
             >
@@ -70,13 +76,13 @@
     <infinite-loading ref="inf" @infinite="infiniteHandler" spinner="waveDots">
       <div
         slot="no-more"
-        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px"
       >
         목록의 끝입니다
       </div>
       <div
         slot="no-results"
-        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px"
       >
         데이터가 없습니다
       </div>
@@ -103,13 +109,10 @@ export default {
         if (response.data.status) {
           this.articles = response.data.object;
           this.backupArticles = this.articles;
-        } else {
-          console.log('모든 유저의 게시글을 받아올 수 없습니다.');
         }
       },
       (error) => {
         console.log(error);
-        alert('모든 유저의 모든 게시글 받아오기 실패');
       }
     );
   },
@@ -126,12 +129,8 @@ export default {
           tempList.push(this.backupArticles[i]);
         }
       }
-      // alert(tempList.length);
       this.articles = tempList;
-      // this.listData.push(this.articles[0]);
-      // this.listData.push(this.articles[1]);
-      // this.listData.push(this.articles[2]);
-      // this.listData.push(this.articles[3]);
+
       this.$refs.inf.stateChanger.reset();
       this.searchData = '';
     },

@@ -34,8 +34,6 @@ export default {
     };
   },
   created() {
-    console.log(this.users, 'follow.vue의 콘솔');
-    console.log(this.$route.params.follow);
     this.follow = this.$route.params.follow;
   },
 };

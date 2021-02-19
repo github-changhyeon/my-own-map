@@ -19,16 +19,14 @@
             <v-list-item v-for="(history, j) in historiesOfOneDay" :key="i + j">
               <v-list-item-avatar>
                 <v-img
-                  :src="
-                    `@/assets/profileImages/${history.userFrom.profileImagePath}`
-                  "
+                  :src="`https://i4b107.p.ssafy.io/images/profileImages/${historiesOfOneDay[j].userFrom.profileImagePath}`"
                 ></v-img>
                 <!-- {{ item.userDto.username }} -->
               </v-list-item-avatar>
               <v-list-item-content v-if="history.state === 'FOLLOW'">
                 <div>
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToUserPage(history.userFrom.uid)"
                   >
                     {{ history.userFrom.username }}
@@ -39,14 +37,14 @@
               <v-list-item-content v-if="history.state === 'LIKE'">
                 <div>
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToUserPage(history.userFrom.uid)"
                   >
                     {{ history.userFrom.username }}
                   </button>
                   님이
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToArticleDetail(history.articleDto.articleNo)"
                   >
                     {{ history.articleDto.articleNo }}번 게시글</button
@@ -56,14 +54,14 @@
               <v-list-item-content v-if="history.state === 'COMMENT'">
                 <div>
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToUserPage(history.userFrom.uid)"
                   >
                     {{ history.userFrom.username }}
                   </button>
                   님이
                   <button
-                    style="color:#ff1f96"
+                    style="color: #ff1f96"
                     @click="goToArticleDetail(history.articleDto.articleNo)"
                   >
                     {{ history.articleDto.articleNo }}번 게시글</button
@@ -99,25 +97,11 @@ export default {
       this.uid = jwt_decode(token).uid;
     }
     if (this.uid > 0) {
-      // setZero(
-      //   (success) => {
-      //     if (success.data.status) {
-      //       console.log('zero 만들기 성공');
-      //     } else {
-      //       console.log('zero 만들기 실패');
-      //     }
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     alert('서버 에러');
-      //   }
-      // );
       getHistory(
         (success) => {
           if (success.data.status) {
             let tempHistories = success.data.object;
             this.histories = [];
-            console.log(tempHistories, '히스토리즈');
             if (tempHistories.length > 0) {
               let tempArr = new Array();
               tempArr.push(tempHistories[0]);
@@ -137,13 +121,10 @@ export default {
                 this.histories.push(tempArr);
               }
             }
-          } else {
-            console.log('history 리스트를 받아올 수 없습니다.');
           }
         },
         (error) => {
           console.log(error);
-          alert('서버 에러');
         }
       );
     }
@@ -163,7 +144,7 @@ export default {
       });
     },
   },
-  data: function() {
+  data: function () {
     return {
       uid: 0,
       histories: [

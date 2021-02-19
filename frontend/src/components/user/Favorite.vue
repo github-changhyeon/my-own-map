@@ -1,14 +1,17 @@
 <template>
-  <div style="color: #FF70BC">
+  <div style="color: #ff70bc">
     <v-btn icon color="primary">
-      <v-icon size="30" v-if="isFavorited" @click="checkFavorited">mdi-heart</v-icon>
-      <v-icon size="30" v-if="!isFavorited" @click="checkFavorited">mdi-heart-outline</v-icon>
+      <v-icon size="30" v-if="isFavorited" @click="checkFavorited"
+        >mdi-heart</v-icon
+      >
+      <v-icon size="30" v-if="!isFavorited" @click="checkFavorited"
+        >mdi-heart-outline</v-icon
+      >
     </v-btn>
   </div>
 </template>
 
 <script>
-import jwt_decode from 'jwt-decode';
 import { doFavorite, isFavorite } from '@/api/user.js';
 import { notifyAction } from '@/api/fcm.js';
 export default {
@@ -24,7 +27,7 @@ export default {
     };
   },
   methods: {
-    setToken: function() {
+    setToken: function () {
       const token = localStorage.getItem('jwt');
       const config = {
         headers: {
@@ -35,31 +38,25 @@ export default {
     },
     checkFavorited() {
       const config = this.setToken();
-      console.log(this.article.articleNo, '클릭하고 articleNO');
       doFavorite(
         this.article.articleNo,
         config,
-        (response) => {
-          console.log(response, '좋아요');
+        () => {
           this.isFavorited = !this.isFavorited;
           let body = {
-            // uid: this.article.userDto.uid,
+            uid: this.article.userDto.uid,
             articleNo: this.article.articleNo,
-            uid: jwt_decode(localStorage.getItem('jwt')).uid,
             message: 'LIKE',
           };
           notifyAction(
             body,
             (success) => {
-              if (success.data.status) {
-                console.log('알림 ok');
-              } else {
+              if (!success.data.status) {
                 console.log('알림을 할 수 없습니다.');
               }
             },
             (error) => {
               console.log(error);
-              alert('서버에러');
             }
           );
         },
@@ -76,7 +73,6 @@ export default {
       this.$route.params.articleNo,
       config,
       (response) => {
-        // console.log(response.data.status, 'is favorite?');
         this.isFavorited = response.data.status;
       },
       (error) => {
