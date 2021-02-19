@@ -29,12 +29,15 @@
               @create-comment="checkUpdateComment"
             />
           </v-list-item-content>
-          <v-btn x-small v-if="!isModify[index]" @click="checkModify(index)"
+          <v-btn
+            x-small
+            v-if="!isModify[index] && uid === item.userDto.uid"
+            @click="checkModify(index)"
             ><v-icon small>mdi-pencil-outline</v-icon></v-btn
           >
           <v-btn
             x-small
-            v-if="!isModify[index]"
+            v-if="!isModify[index] && uid === item.userDto.uid"
             @click="checkDeleteComment(item)"
             ><v-icon small>mdi-trash-can</v-icon></v-btn
           >
@@ -81,6 +84,7 @@ export default {
         content: null,
         articleNo: 0,
       },
+      uid: 0,
     };
   },
   props: {
@@ -201,6 +205,7 @@ export default {
     this.checkGetComment();
     const token = localStorage.getItem('jwt');
     let uid = jwt_decode(token).uid;
+    this.uid = uid;
     this.comment.uid = uid;
     this.comment.articleNo = this.articleNo;
   },
